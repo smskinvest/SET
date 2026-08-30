@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SET Watch — ศูนย์รวม Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #f6faf9;
+    --card: #ffffff;
+    --ink: #1f2a2e;
+    --muted: #64707a;
+    --teal: #0f6f66;
+    --teal-deep: #0b4f49;
+    --amber: #c98a2c;
+    --line: #dfe8e5;
+    --up: #1f8a5f;
+    --down: #c0563f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 400px at 10% -10%, #eaf5f1 0%, transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Inter', -apple-system, 'Segoe UI', sans-serif;
+    padding:48px 24px 80px;
+  }
+  .wrap{max-width:920px; margin:0 auto;}
+
+  header{margin-bottom:36px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px;height:7px;border-radius:50%;
+    background:var(--up);
+    box-shadow:0 0 0 3px rgba(31,138,95,.15);
+  }
+  h1{
+    font-family:'Source Serif 4', serif;
+    font-weight:700;
+    font-size:clamp(28px,4vw,38px);
+    margin:0 0 8px;
+    color:var(--teal-deep);
+    letter-spacing:-.01em;
+  }
+  header p{color:var(--muted); margin:0; font-size:15px; max-width:56ch; line-height:1.6;}
+
+  .group{margin-top:38px;}
+  .group h2{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 14px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+    gap:14px;
+  }
+
+  a.card{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 18px 16px;
+    text-decoration:none;
+    color:var(--ink);
+    transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  a.card::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0;
+    width:3px;
+    background:var(--accent, var(--teal));
+    opacity:0;
+    transition:opacity .15s ease;
+  }
+  a.card:hover{
+    border-color:var(--accent, var(--teal));
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px -12px rgba(15,111,102,.35);
+  }
+  a.card:hover::before{opacity:1;}
+  a.card:focus-visible{
+    outline:2px solid var(--teal);
+    outline-offset:2px;
+  }
+
+  .ticker-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .ticker{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:.03em;
+    color:var(--accent, var(--teal-deep));
+  }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    padding:3px 7px;
+    border-radius:99px;
+    background:#eef4f2;
+    color:var(--muted);
+  }
+  .card-title{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    font-size:17px;
+    line-height:1.35;
+  }
+  .card-desc{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.55;
+  }
+  .go{
+    margin-top:2px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--accent, var(--teal));
+    display:flex; align-items:center; gap:4px;
+  }
+  .go svg{width:12px;height:12px;transition:transform .15s ease;}
+  a.card:hover .go svg{transform:translateX(3px);}
+
+  .empty-hint{
+    font-size:13px;
+    color:var(--muted);
+    border:1px dashed var(--line);
+    border-radius:12px;
+    padding:16px 18px;
+    grid-column:1/-1;
+  }
+  .empty-hint code{
+    font-family:'IBM Plex Mono', monospace;
+    background:#eef4f2;
+    padding:1px 5px;
+    border-radius:4px;
+    font-size:12px;
+  }
+
+  footer{
+    margin-top:48px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    color:var(--muted);
+    font-family:'IBM Plex Mono', monospace;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Live board</div>
+    <h1>SET Watch</h1>
+    <p>ศูนย์รวมลิงก์ไปยัง Dashboard วิเคราะห์หุ้นและสัญญาณต่าง ๆ ที่จัดทำขึ้น — เพิ่มการ์ดใหม่ได้จากไฟล์เดียว ไม่ต้องแก้ HTML</p>
+  </header>
+
+  <div id="board"></div>
+
+  <footer>index.html · เก็บไว้ที่รากของโฟลเดอร์ set-portal/ ให้อยู่ระดับเดียวกับโฟลเดอร์ย่อยแต่ละหุ้น</footer>
+</div>
+
+<script>
+/*
+  ==========================================================
+  เพิ่ม Dashboard ใหม่: เติม object ลงใน LINKS ด้านล่างนี้เท่านั้น
+  ไม่ต้องแก้ CSS หรือ HTML ส่วนอื่น
+
+  group : ชื่อหมวด (การ์ดที่ group เดียวกันจะถูกจัดกลุ่มไว้ด้วยกัน)
+  ticker: สัญลักษณ์สั้น ๆ ที่จะโชว์บนการ์ด เช่น "VIH", "BDMS", "SIGNAL"
+  title : ชื่อเต็มของ dashboard
+  desc  : คำอธิบายสั้น ๆ
+  href  : path ไปยังโฟลเดอร์ หรือไฟล์ html (relative path เช่น "hospital/bh/")
+  tag   : ป้ายกำกับเล็ก ๆ มุมขวาบน เช่น "Healthcare", "Signal"
+  accent: (ไม่บังคับ) สีเน้นของการ์ด เช่น "#0f6f66"
+  ==========================================================
+*/
+const LINKS = [
+  {
+    group: "Healthcare",
+    ticker: "BH",
+    title: "โรงพยาบาลกรุงเทพ (BH)",
+    desc: "Dashboard ติดตามผลประกอบการและมูลค่าหุ้น",
+    href: "hospital/bh/",
+    tag: "Healthcare"
+  },
+  {
+    group: "Healthcare",
+    ticker: "VIH",
+    title: "โรงพยาบาลวิภาวดี (VIH)",
+    desc: "งบการเงินรายไตรมาส, P/E, P/BV, upside เป้าหมาย",
+    href: "hospital/vih/",
+    tag: "Healthcare",
+    accent: "#0f6f66"
+  },
+  {
+    group: "Healthcare",
+    ticker: "BDMS",
+    title: "กรุงเทพดุสิตเวชการ (BDMS)",
+    desc: "เปรียบเทียบเชิงลึกกับ VIH แบบ head-to-head 9 แท็บ",
+    href: "hospital/bdms/",
+    tag: "Healthcare",
+    accent: "#0f6f66"
+  },
+  {
+    group: "Signals",
+    ticker: "SIGNAL",
+    title: "Insider Purchase Signals",
+    desc: "สัญญาณซื้อหุ้นของผู้บริหารจากแบบฟอร์ม 59-2 ทั่วตลาด SET",
+    href: "insider-signals/",
+    tag: "Form 59-2",
+    accent: "#c98a2c"
+  }
+];
+
+function arrowIcon(){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+}
+
+function render(links){
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  if(links.length === 0){
+    board.innerHTML = `<div class="empty-hint">ยังไม่มีลิงก์ — เพิ่ม object เข้าไปใน <code>LINKS</code> ในสคริปต์ท้ายไฟล์</div>`;
+    return;
+  }
+
+  const groups = [...new Set(links.map(l => l.group || "Other"))];
+
+  groups.forEach(groupName => {
+    const section = document.createElement('div');
+    section.className = 'group';
+
+    const heading = document.createElement('h2');
+    heading.textContent = groupName;
+    section.appendChild(heading);
+
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+
+    links.filter(l => (l.group || "Other") === groupName).forEach(l => {
+      const card = document.createElement('a');
+      card.className = 'card';
+      card.href = l.href;
+      if(l.accent) card.style.setProperty('--accent', l.accent);
+
+      card.innerHTML = `
+        <div class="ticker-row">
+          <span class="ticker">${l.ticker || ''}</span>
+          ${l.tag ? `<span class="tag">${l.tag}</span>` : ''}
+        </div>
+        <div class="card-title">${l.title}</div>
+        <div class="card-desc">${l.desc || ''}</div>
+        <div class="go">เปิด dashboard ${arrowIcon()}</div>
+      `;
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    board.appendChild(section);
+  });
+}
+
+render(LINKS);
+</script>
+
+</body>
+</html>
