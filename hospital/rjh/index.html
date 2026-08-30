@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RJH โรงพยาบาลราชธานี | รายงานวิเคราะห์เชิงลึก 2Q26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f1923; --accent:#1a6b4a; --accent2:#2ea870;
+  --gold:#c8973a; --gold2:#f0c96a; --red:#b83232; --red2:#e05555;
+  --blue:#1a4a7a; --blue2:#3b82c4; --bg:#f5f2eb; --card:#fdfcf8;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:'Noto Sans Thai',sans-serif; background:var(--bg); color:var(--ink); line-height:1.6;}
+h1,h2,h3,.serif{font-family:'DM Serif Display',serif;}
+.mono{font-family:'DM Mono',monospace;}
+
+/* STRIPE / WAR BANNER */
+.stripe{background:var(--ink); color:var(--gold2); text-align:center; font-size:.82rem; padding:8px 12px; letter-spacing:.02em;}
+.stripe b{color:var(--gold);}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,var(--ink) 0%,#16283a 100%); color:#fff; padding:36px 24px 28px;}
+.hero-top{max-width:1180px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:20px;}
+.hero-name{font-size:2.1rem;}
+.hero-sub{color:#b9c3ca; font-size:.95rem; margin-top:4px;}
+.hero-meta{color:#8fa0ab; font-size:.8rem; margin-top:10px;}
+.price-box{background:rgba(255,255,255,.06); border:1px solid rgba(240,201,106,.3); border-radius:14px; padding:16px 22px; min-width:230px;}
+.price-now{font-size:2.2rem; font-family:'DM Mono',monospace; color:var(--gold2);}
+.price-row{display:flex; justify-content:space-between; font-size:.83rem; color:#c9d2d8; margin-top:6px;}
+.pill{display:inline-block; padding:5px 14px; border-radius:20px; font-size:.8rem; font-weight:600; margin-top:10px;}
+.pill.hold{background:var(--gold); color:var(--ink);}
+.kpi-grid{max-width:1180px; margin:24px auto 0; display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+.kpi{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:14px 16px;}
+.kpi .lbl{font-size:.72rem; color:#9fb0ba; text-transform:uppercase; letter-spacing:.04em;}
+.kpi .val{font-family:'DM Mono',monospace; font-size:1.35rem; color:#fff; margin-top:4px;}
+.kpi .chg{font-size:.76rem; margin-top:3px;}
+.up{color:var(--accent2);} .down{color:var(--red2);}
+
+/* NAV */
+nav.tabs{position:sticky; top:0; z-index:50; background:var(--card); border-bottom:2px solid var(--gold); box-shadow:0 2px 8px rgba(0,0,0,.06); overflow-x:auto; white-space:nowrap;}
+.tabs-inner{max-width:1180px; margin:0 auto; display:flex; gap:4px; padding:8px 12px;}
+.tab-btn{flex:0 0 auto; background:none; border:none; padding:10px 16px; font-family:'Noto Sans Thai'; font-weight:600; font-size:.88rem; color:#5c6b73; border-radius:8px; cursor:pointer; transition:.15s;}
+.tab-btn:hover{background:var(--bg);}
+.tab-btn.active{background:var(--accent); color:#fff;}
+
+main{max-width:1180px; margin:0 auto; padding:28px 20px 80px;}
+.section{display:none; animation:fade .25s ease;}
+.section.active{display:block;}
+@keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+h2.tab-title{font-size:1.7rem; color:var(--ink); border-bottom:3px solid var(--gold); display:inline-block; padding-bottom:6px; margin-bottom:18px;}
+.card{background:var(--card); border:1px solid #e8e2d3; border-radius:14px; padding:20px 22px; margin-bottom:20px; box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.card h3{font-family:'Noto Sans Thai'; font-weight:700; font-size:1.05rem; color:var(--blue); margin-bottom:10px;}
+.note{font-size:.82rem; color:#7a8189; background:#f1ede2; border-left:3px solid var(--gold); padding:8px 12px; border-radius:4px; margin-top:10px;}
+
+/* KPI grid in-body */
+.kpi-grid2{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;}
+@media(max-width:900px){.kpi-grid2{grid-template-columns:repeat(2,1fr);}}
+.kpi2{background:var(--card); border:1px solid #e8e2d3; border-radius:12px; padding:14px; text-align:center;}
+.kpi2 .lbl{font-size:.72rem; color:#7a8189;}
+.kpi2 .val{font-family:'DM Mono',monospace; font-size:1.2rem; color:var(--accent); margin-top:4px;}
+
+table{width:100%; border-collapse:collapse; font-size:.88rem;}
+.table-wrap{overflow-x:auto;}
+th,td{padding:9px 10px; text-align:right; border-bottom:1px solid #e8e2d3; white-space:nowrap;}
+th{background:var(--ink); color:#fff; font-weight:600; font-size:.78rem;}
+td:first-child,th:first-child{text-align:left;}
+tr:nth-child(even) td{background:#f8f5ec;}
+.g{color:var(--accent);} .r{color:var(--red);}
+
+.prog-row{margin-bottom:12px;}
+.prog-lbl{display:flex; justify-content:space-between; font-size:.85rem; margin-bottom:4px;}
+.prog-bar{background:#e8e2d3; border-radius:20px; height:14px; overflow:hidden;}
+.prog-fill{height:100%; border-radius:20px; background:linear-gradient(90deg,var(--blue),var(--blue2));}
+.prog-fill.gold{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+
+.bb-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:800px){.bb-grid{grid-template-columns:1fr;}}
+.bb-box{border-radius:12px; padding:18px; }
+.bb-box.bull{background:#eaf6ef; border:1px solid var(--accent2);}
+.bb-box.bear{background:#fbeaea; border:1px solid var(--red2);}
+.bb-box h4{margin-bottom:10px;}
+.bb-box.bull h4{color:var(--accent);} .bb-box.bear h4{color:var(--red);}
+.bb-box ul{padding-left:18px; font-size:.88rem;}
+.bb-box li{margin-bottom:8px;}
+
+.risk-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+@media(max-width:800px){.risk-grid{grid-template-columns:1fr;}}
+.risk-card{border-radius:10px; padding:14px; color:#fff;}
+.risk-card.crit{background:var(--red);} .risk-card.high{background:#c96a2e;} .risk-card.med{background:var(--gold);color:var(--ink);} .risk-card.low{background:var(--accent);}
+.risk-card .lvl{font-size:.72rem; text-transform:uppercase; opacity:.85;}
+.risk-card .name{font-weight:700; margin:4px 0 8px; font-size:.95rem;}
+.risk-card .pi{font-size:.76rem; opacity:.9;}
+
+.timeline{display:flex; overflow-x:auto; gap:0; padding:10px 0;}
+.tl-step{flex:0 0 190px; position:relative; padding:14px; margin-right:10px; border-radius:10px; background:var(--card); border:1px solid #e8e2d3;}
+.tl-step:not(:last-child)::after{content:'→'; position:absolute; right:-18px; top:50%; transform:translateY(-50%); color:var(--gold); font-size:1.2rem;}
+.tl-step .ph{font-size:.72rem; color:var(--gold); font-weight:700; text-transform:uppercase;}
+.tl-step .tt{font-weight:700; margin:4px 0;}
+.tl-step p{font-size:.8rem; color:#5c6b73;}
+
+.scenario3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+@media(max-width:800px){.scenario3{grid-template-columns:1fr;}}
+.sc-box{border-radius:12px; padding:18px; text-align:center; color:#fff;}
+.sc-box.bull{background:linear-gradient(160deg,var(--accent),var(--accent2));}
+.sc-box.base{background:linear-gradient(160deg,var(--blue),var(--blue2));}
+.sc-box.bear{background:linear-gradient(160deg,var(--red),var(--red2));}
+.sc-box .tp{font-size:1.9rem; font-family:'DM Mono',monospace; margin:8px 0;}
+.sc-box .up{color:#fff; font-weight:700;}
+.sc-box p{font-size:.8rem; opacity:.92; margin-top:8px; text-align:left;}
+
+.forensic-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+@media(max-width:800px){.forensic-grid{grid-template-columns:1fr;}}
+.forensic-box{background:#fbf8f1; border:1px solid var(--gold); border-radius:12px; padding:16px;}
+.forensic-box h4{color:var(--gold); font-size:.9rem; margin-bottom:8px;}
+.forensic-box p{font-size:.85rem;}
+
+.acc-item{border:1px solid #e8e2d3; border-radius:10px; margin-bottom:10px; overflow:hidden;}
+.acc-btn{width:100%; text-align:left; background:var(--card); border:none; padding:14px 16px; font-family:'Noto Sans Thai'; font-weight:600; font-size:.92rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center;}
+.acc-btn::after{content:'+'; font-size:1.2rem; color:var(--accent);}
+.acc-btn.open::after{content:'−';}
+.acc-btn.open{background:#eaf6ef;}
+.acc-body{max-height:0; overflow:hidden; transition:max-height .25s ease; background:#fff; font-size:.87rem; padding:0 16px;}
+.acc-body.open{max-height:400px; padding:14px 16px;}
+
+.verdict-box{background:linear-gradient(160deg,var(--ink),#16283a); color:#fff; border-radius:16px; padding:26px; text-align:center;}
+.verdict-box .call{font-size:2rem; color:var(--gold2); font-family:'DM Serif Display';}
+.verdict-box .score{font-size:2.6rem; font-family:'DM Mono',monospace; margin:10px 0; color:#fff;}
+.verdict-box p{max-width:640px; margin:8px auto 0; font-size:.9rem; color:#c9d2d8;}
+
+.calc-box{background:#fff; border:1px solid #e8e2d3; border-radius:12px; padding:18px;}
+.calc-box label{display:block; font-size:.82rem; color:#5c6b73; margin:10px 0 4px;}
+.calc-box input,.calc-box select{width:100%; padding:8px 10px; border:1px solid #d8d2c2; border-radius:8px; font-family:'DM Mono',monospace;}
+.calc-box button{margin-top:14px; background:var(--accent); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer;}
+.calc-out{margin-top:14px; background:#eaf6ef; border-radius:10px; padding:14px; font-family:'DM Mono',monospace; font-size:.95rem;}
+
+footer{text-align:center; padding:20px; font-size:.78rem; color:#8fa0ab;}
+</style>
+</head>
+<body>
+
+<div class="stripe">⚠ <b>Macro Watch:</b> ดอกเบี้ยนโยบายไทยทรงตัวระดับต่ำ, กำลังซื้อผู้ป่วยเงินสด (Non-SW) ยังฟื้นตัวไม่เต็มที่, ติดตามอัตราเบิกจ่ายกองทุนประกันสังคม (SW) ซึ่งเป็นสัดส่วนรายได้หลักของ RJH (56% ใน 2Q26)</div>
+
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="hero-name">RJH <span style="font-weight:400;font-size:1.1rem;color:var(--gold2)">บมจ. โรงพยาบาลราชธานี</span></div>
+      <div class="hero-sub">Rajthanee Hospital PLC · SET Healthcare · งบ 2Q/2025 (2Q26 ปีบัญชีไทย)</div>
+      <div class="hero-meta">โรงพยาบาลในเครือ: ราชธานี · ราชธานี โรจนะ · รังสีรักษาราชธานี (ม.ค. 2567) · ราชธานี หนองแค (ต.ค. 2567) · ข้อมูล ณ 28 ส.ค. 2569</div>
+    </div>
+    <div class="price-box">
+      <div style="font-size:.8rem;color:#9fb0ba;">ราคาล่าสุด (วันนี้)</div>
+      <div class="price-now">15.30 <span style="font-size:1rem;color:#9fb0ba;">THB</span></div>
+      <div class="price-row"><span>P/E (TTM)</span><span class="mono">≈ 12.0x</span></div>
+      <div class="price-row"><span>P/BV (ประมาณ)</span><span class="mono">≈ 1.8x</span></div>
+      <div class="price-row"><span>เป้าหมายเฉลี่ยนักวิเคราะห์</span><span class="mono">14.25</span></div>
+      <div class="pill hold">HOLD — ราคาวิ่งนำหน้าเป้าหมาย</div>
+    </div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="lbl">รายได้ รพ. 2Q26</div><div class="val">781 ลบ.</div><div class="chg up">▲ +17.2% YoY · +7.5% QoQ</div></div>
+    <div class="kpi"><div class="lbl">กำไรสุทธิ 2Q26</div><div class="val">114 ลบ.</div><div class="chg up">มาร์จิ้น 15% (จาก 9% ปีก่อน)</div></div>
+    <div class="kpi"><div class="lbl">EBITDA 2Q26</div><div class="val">193 ลบ.</div><div class="chg up">มาร์จิ้น 25% (จาก 20%)</div></div>
+    <div class="kpi"><div class="lbl">รายได้ประกันสังคม (SW)</div><div class="val">440 ลบ.</div><div class="chg up">▲ +50.2% YoY</div></div>
+    <div class="kpi"><div class="lbl">สินทรัพย์รวม (โดยประมาณ)</div><div class="val">~4.40 พันลบ.</div><div class="chg">อ้างอิงข้อมูลบุคคลที่สาม</div></div>
+    <div class="kpi"><div class="lbl">Current Ratio (โดยประมาณ)</div><div class="val">~0.73x</div><div class="chg down">ต่ำกว่า 1 เท่า — ต้องติดตาม</div></div>
+    <div class="kpi"><div class="lbl">ROE (TTM โดยประมาณ)</div><div class="val">~15-16%</div><div class="chg">ROA ~8.5%</div></div>
+    <div class="kpi"><div class="lbl">เงินสด (โดยประมาณ)</div><div class="val">~140 ลบ.</div><div class="chg down">เทียบหนี้สินรวม ~1.59 พันลบ.</div></div>
+  </div>
+</div>
+
+<nav class="tabs">
+  <div class="tabs-inner" id="tabnav">
+    <button class="tab-btn active" onclick="showTab('overview')">📊 ภาพรวม</button>
+    <button class="tab-btn" onclick="showTab('business')">🏥 ธุรกิจ</button>
+    <button class="tab-btn" onclick="showTab('financial')">💰 การเงิน</button>
+    <button class="tab-btn" onclick="showTab('growth')">🚀 การเติบโต</button>
+    <button class="tab-btn" onclick="showTab('risk')">⚠️ ความเสี่ยง</button>
+    <button class="tab-btn" onclick="showTab('esg')">🌱 ESG</button>
+    <button class="tab-btn" onclick="showTab('valuation')">🎯 มูลค่า</button>
+    <button class="tab-btn" onclick="showTab('dividend')">💵 ปันผล</button>
+    <button class="tab-btn" onclick="showTab('oppday')">📢 OppDay</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- TAB 1 OVERVIEW -->
+<section id="tab-overview" class="section active">
+  <h2 class="tab-title">ภาพรวมกิจการ (Overview)</h2>
+
+  <div class="card">
+    <h3>สรุปโมเดลธุรกิจ</h3>
+    <p>RJH เป็นผู้ประกอบการโรงพยาบาลเอกชนรายใหญ่ในจังหวัดพระนครศรีอยุธยาและภาคกลาง มีโรงพยาบาลในเครือ 4 แห่ง ได้แก่ รพ.ราชธานี, รพ.ราชธานี โรจนะ, รพ.รังสีรักษาราชธานี (เปิดให้บริการ ม.ค. 2567 เน้นรักษามะเร็งด้วยรังสี) และ รพ.ราชธานี หนองแค (เปิด ต.ค. 2567) รายได้หลักแบ่งเป็น 2 กลุ่มคือผู้ป่วยประกันสังคม (Social Security, SW) และผู้ป่วยเงินสด/ประกันเอกชน (Non-SW) ซึ่งใน 2Q26 มีสัดส่วนใกล้เคียงกันที่ Non-SW : SW = 44 : 56 โดยฝั่ง SW เป็นตัวขับเคลื่อนการเติบโตหลักในช่วงนี้จากจำนวนผู้ประกันตนที่เพิ่มขึ้นต่อเนื่อง</p>
+  </div>
+
+  <div class="card">
+    <h3>ผลประกอบการรายไตรมาส (1Q25 – 2Q26)</h3>
+    <div class="table-wrap">
+    <table>
+      <tr><th>รายการ (ลบ.)</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26</th><th>QoQ</th><th>YoY</th></tr>
+      <tr><td>รายได้ รพ. รวม</td><td>655</td><td>666</td><td>704</td><td>716</td><td>726</td><td>781</td><td class="g">+7.5%</td><td class="g">+17.2%</td></tr>
+      <tr><td>กำไรขั้นต้น</td><td>156</td><td>151</td><td>179</td><td>182</td><td>187</td><td>213</td><td class="g">+13.9%</td><td class="g">+41.1%</td></tr>
+      <tr><td>% Gross Margin</td><td>24%</td><td>23%</td><td>25%</td><td>25%</td><td>26%</td><td>27%</td><td>+1pp</td><td>+4pp</td></tr>
+      <tr><td>EBITDA (excl. extra)</td><td>128</td><td>125</td><td>151</td><td>130</td><td>128.6</td><td>193</td><td class="g">+50.1%</td><td class="g">+54.4%</td></tr>
+      <tr><td>% EBITDA Margin</td><td>20%</td><td>19%</td><td>21%</td><td>18%</td><td>18%</td><td>25%</td><td>+7pp</td><td>+6pp</td></tr>
+      <tr><td>กำไรสุทธิ (excl. extra)</td><td>57</td><td>58</td><td>80</td><td>89</td><td>92</td><td>114</td><td class="g">+23.9%</td><td class="g">+96.6%</td></tr>
+      <tr><td>% Net Margin</td><td>9%</td><td>9%</td><td>11%</td><td>12%</td><td>13%</td><td>15%</td><td>+2pp</td><td>+6pp</td></tr>
+    </table>
+    </div>
+    <div class="note">ข้อมูลอ้างอิงจากเอกสาร OppDay 2Q/2026 ของบริษัทเท่านั้น (ไม่รวม CSV ที่ผู้ใช้แนบเนื่องจากไฟล์ไม่สามารถอ่านได้จากระบบในขณะประมวลผล) รายงานนี้จึงแสดงข้อมูลย้อนหลัง 6 ไตรมาสแทนตาราง 3 ปีเต็มตามที่ร้องขอ</div>
+  </div>
+
+  <div class="bb-grid">
+    <div class="bb-box bull">
+      <h4>✅ Bull Case — จุดแข็ง</h4>
+      <ul>
+        <li>รายได้ประกันสังคม (SW) โตแรง +50.2% YoY จากผู้ประกันตนเพิ่มต่อเนื่องเป็น 257,200 คน (2Q26) ส่วนหนึ่งจากคนไข้ย้ายมาเนื่องจาก รพ.คู่แข่งใกล้เคียงหยุดรับสิทธิ SW</li>
+        <li>มาร์จิ้นขยายตัวชัดเจนต่อเนื่อง 4 ไตรมาส — Net Margin จาก 9% → 15% ภายใน 1 ปี</li>
+        <li>อัตราการใช้บริการ OPD สูงขึ้นต่อเนื่องแตะ 72.0% ใน 2Q26 (จาก 65.3% ใน 1Q25)</li>
+        <li>โรงพยาบาลใหม่ (รังสีรักษา, หนองแค) เริ่มผ่านช่วงขาดทุนเริ่มต้น หนุน EBITDA margin ให้กระโดดจาก ~18-20% เป็น 25%</li>
+      </ul>
+    </div>
+    <div class="bb-box bear">
+      <h4>⚠️ Bear Case — ปัจจัยเสี่ยง</h4>
+      <ul>
+        <li>รายได้ IPD ฝั่ง Non-SW หดตัวต่อเนื่อง จาก 195 ลบ. (1Q25) เหลือ 145 ลบ. (2Q26) และรายได้ต่อหัวลดลงจาก 61,130 เหลือ 55,142 บาท/หัว</li>
+        <li>สภาพคล่องระยะสั้นตึงตัว — Current Ratio ประมาณ 0.73 เท่า (สินทรัพย์หมุนเวียนน้อยกว่าหนี้สินหมุนเวียน)</li>
+        <li>อัตราส่วนหนี้สินต่อทุนค่อนข้างสูงจากการลงทุนขยายสาขา (D/E โดยประมาณ ~68%)</li>
+        <li>ราคาหุ้นปัจจุบัน (15.30 บาท) วิ่งขึ้นเหนือราคาเป้าหมายเฉลี่ยของนักวิเคราะห์ (14.25 บาท) และเหนือกรอบ 52 สัปดาห์เดิมแล้ว</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TAB 2 BUSINESS -->
+<section id="tab-business" class="section">
+  <h2 class="tab-title">วิเคราะห์ธุรกิจ (Business Analysis)</h2>
+
+  <div class="card">
+    <h3>โครงสร้างรายได้ตามประเภทผู้ป่วย (2Q26)</h3>
+    <div class="prog-row">
+      <div class="prog-lbl"><span>ผู้ป่วยประกันสังคม (SW)</span><span>56% · 440 ลบ. (+50.2% YoY)</span></div>
+      <div class="prog-bar"><div class="prog-fill gold" style="width:56%"></div></div>
+    </div>
+    <div class="prog-row">
+      <div class="prog-lbl"><span>ผู้ป่วยเงินสด/ประกันเอกชน (Non-SW)</span><span>44% · 341 ลบ.</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:44%"></div></div>
+    </div>
+    <p style="font-size:.85rem;margin-top:8px;">สัดส่วนรายได้กำลังเปลี่ยนไปทางฝั่ง SW มากขึ้นเรื่อยๆ (จาก 42:58 ใน 1Q25 เป็น 44:56 ใน 2Q26 ในทิศทางตรงข้าม) ซึ่งเป็นกลุ่มรายได้ที่เติบโตเร็วแต่มีมาร์จิ้นต่อหน่วยต่ำกว่าฝั่งเงินสดโดยทั่วไป — เป็นประเด็นสำคัญที่ต้องติดตามผลกระทบต่อมาร์จิ้นระยะยาว</p>
+  </div>
+
+  <div class="kpi-grid2">
+    <div class="kpi2"><div class="lbl">OPD Utilization</div><div class="val">72.0%</div></div>
+    <div class="kpi2"><div class="lbl">IPD Utilization</div><div class="val">56%</div></div>
+    <div class="kpi2"><div class="lbl">OPD Visits (ไตรมาส)</div><div class="val">94.2k</div></div>
+    <div class="kpi2"><div class="lbl">ผู้ประกันตน SW</div><div class="val">257.2k</div></div>
+  </div>
+
+  <div class="card">
+    <h3>ศูนย์ความเป็นเลิศ / Growth Driver</h3>
+    <p>ศูนย์รังสีรักษามะเร็ง (Cancer Radiation) ภายใต้ รพ.รังสีรักษาราชธานี เริ่มสร้างรายได้เสริมชัดเจนขึ้น จาก 7.43 ลบ. ใน 4Q25 เป็น 10.54 ลบ. ใน 2Q26 นอกจากนี้ยังมีศูนย์ไตเทียม (Hemo) กำลังการผลิต 80 เตียง และบริการ OPD ทั่วไปกำลังการผลิตรวม 182 หน่วย ซึ่งใช้งานเต็มประสิทธิภาพมากขึ้นทุกไตรมาส</p>
+  </div>
+
+  <div class="card">
+    <h3>โครงสร้างต้นทุน (Cost Structure)</h3>
+    <p>จากข้อมูลที่มี ต้นทุนขายคิดเป็นประมาณ 73% ของรายได้ใน 2Q26 (Gross Margin 27%) ลดลงจาก ~76-77% เมื่อ 1 ปีก่อน สะท้อน Operating Leverage ที่ดีขึ้นเมื่อรายได้เติบโตเร็วกว่าต้นทุนคงที่ (บุคลากรทางการแพทย์ ค่าเสื่อมราคาเครื่องมือแพทย์) อย่างไรก็ตาม เอกสาร OppDay ที่ให้มาไม่ได้แจกแจงต้นทุนย่อยเป็นรายหมวด (เงินเดือน/เวชภัณฑ์/ค่าเสื่อม) จึงไม่สามารถระบุสัดส่วนแต่ละรายการได้อย่างแม่นยำ</p>
+    <div class="note">หมายเหตุ: ต้องการความละเอียดเพิ่มเติมควรอ้างอิงงบการเงินฉบับเต็ม (F45-3/56-1) จาก SET</div>
+  </div>
+</section>
+
+<!-- TAB 3 FINANCIAL -->
+<section id="tab-financial" class="section">
+  <h2 class="tab-title">การเงิน & Forensic Accounting</h2>
+
+  <div class="card">
+    <h3>งบฐานะการเงินโดยสรุป (ประมาณการจากข้อมูลบุคคลที่สาม)</h3>
+    <div class="table-wrap">
+    <table>
+      <tr><th>รายการ (ลบ.)</th><th>มูลค่าโดยประมาณ</th></tr>
+      <tr><td>สินทรัพย์หมุนเวียน</td><td>~734</td></tr>
+      <tr><td>เงินสดและรายการเทียบเท่า</td><td>~140</td></tr>
+      <tr><td>สินทรัพย์รวม</td><td>~4,400</td></tr>
+      <tr><td>หนี้สินที่มีภาระดอกเบี้ย</td><td>~1,590</td></tr>
+      <tr><td>หนี้สินรวม</td><td>~2,070</td></tr>
+      <tr><td>ส่วนของผู้ถือหุ้น</td><td>~2,330</td></tr>
+      <tr><td>D/E Ratio</td><td>~68%</td></tr>
+      <tr><td>Interest Coverage (EBIT/ดอกเบี้ย)</td><td>~12.5x</td></tr>
+    </table>
+    </div>
+    <div class="note">เอกสาร OppDay 2Q26 ที่แนบมาไม่ได้รวมสไลด์งบดุลและงบกระแสเงินสดฉบับเต็ม ตัวเลขข้างต้นเป็นการประมาณจากฐานข้อมูลบุคคลที่สาม (ช่วงเวลาอาจไม่ตรงกับ 2Q26 เป๊ะ) ควรตรวจสอบยืนยันกับงบการเงินฉบับสอบทานจาก SET/SEC ก่อนใช้ตัดสินใจลงทุน</div>
+  </div>
+
+  <div class="forensic-grid">
+    <div class="forensic-box">
+      <h4>💵 กลยุทธ์เงินสด</h4>
+      <p>บริษัทถือเงินสดค่อนข้างต่ำ (~140 ลบ.) เทียบกับหนี้สินที่มีภาระดอกเบี้ย (~1,590 ลบ.) สะท้อนว่าอยู่ในช่วงลงทุนขยายสาขาโดยพึ่งพาเงินกู้เป็นหลัก มากกว่าสะสมเงินสดสำรอง (War Chest) ซึ่งเหมาะกับช่วงเติบโต แต่เพิ่มความเสี่ยงด้านสภาพคล่องหากรายได้ชะลอกะทันหัน</p>
+    </div>
+    <div class="forensic-box">
+      <h4>🔍 คุณภาพรายได้</h4>
+      <p>สัดส่วนรายได้จากกองทุนประกันสังคม (SW) เพิ่มขึ้นต่อเนื่องเป็น 56% ของรายได้ รพ. รวม รายได้กลุ่มนี้มีความสม่ำเสมอสูง (เบิกจ่ายตามจำนวนผู้ประกันตน) แต่ขึ้นอยู่กับนโยบายอัตราเบิกจ่ายของภาครัฐซึ่งเป็นปัจจัยนอกเหนือการควบคุมของบริษัท ควรติดตามว่าการเติบโตนี้มาจากปริมาณผู้ป่วยจริงหรือปรับอัตราเบิกจ่าย</p>
+    </div>
+    <div class="forensic-box">
+      <h4>📌 รายการพิเศษ</h4>
+      <p>รายการพิเศษ (Extra Income/Expense) มีขนาดเล็กมากทุกไตรมาส (ระหว่าง -1 ถึง +2 ลบ.) เทียบกับกำไรสุทธิหลักหลักร้อยล้านบาท สะท้อนว่ากำไรที่รายงานเป็นกำไรจากการดำเนินงานจริงเป็นส่วนใหญ่ ไม่ได้พึ่งพารายการพิเศษมาช่วยหนุนตัวเลข ถือเป็นสัญญาณบวกต่อคุณภาพกำไร</p>
+    </div>
+  </div>
+</section>
+
+<!-- TAB 4 GROWTH -->
+<section id="tab-growth" class="section">
+  <h2 class="tab-title">การเติบโต & โครงการอนาคต</h2>
+
+  <div class="card">
+    <h3>J-Curve ของโรงพยาบาลใหม่</h3>
+    <div class="timeline">
+      <div class="tl-step"><div class="ph">Phase 1</div><div class="tt">ลงทุนก่อสร้าง</div><p>รพ.รังสีรักษาราชธานี เปิด ม.ค. 2567 / รพ.หนองแค เปิด ต.ค. 2567 — ลงทุนเครื่องมือแพทย์และอาคาร</p></div>
+      <div class="tl-step"><div class="ph">Phase 2</div><div class="tt">Valley (ขาดทุนเริ่มต้น)</div><p>ค่าเสื่อมราคา + ต้นทุนบุคลากรใหม่กดดัน EBITDA margin ให้ต่ำช่วง 1Q26 (18%)</p></div>
+      <div class="tl-step"><div class="ph">Phase 3</div><div class="tt">Ramp-up</div><p>รายได้ศูนย์รังสีรักษาเพิ่มขึ้นต่อเนื่อง (7.4→10.5 ลบ./ไตรมาส) ผู้ป่วย SW ไหลเข้าเพิ่ม</p></div>
+      <div class="tl-step"><div class="ph">Phase 4</div><div class="tt">Breakeven ~ปัจจุบัน</div><p>EBITDA margin กระโดดเป็น 25% ใน 2Q26 บ่งชี้ธุรกิจใหม่เริ่มเข้าใกล้จุดคุ้มทุน</p></div>
+      <div class="tl-step"><div class="ph">Phase 5</div><div class="tt">Cash Machine (คาดการณ์)</div><p>หากแนวโน้มต่อเนื่อง คาดเห็นการขยายมาร์จิ้นต่อในปีถัดไป — ยังต้องติดตามยืนยัน</p></div>
+    </div>
+    <div class="note">ไทม์ไลน์ข้างต้นตีความจากแนวโน้มตัวเลขจริงใน OppDay ไม่ใช่แผนที่บริษัทประกาศอย่างเป็นทางการเป็นเฟสๆ</div>
+  </div>
+
+  <div class="card">
+    <h3>คาดการณ์ผลประกอบการ (มุมมองนักวิเคราะห์)</h3>
+    <p>บล.ดีบีเอส วิคเคอร์ส (ประเทศไทย) ประเมินกำไรปกติปี 2569 เติบโตประมาณ <b>+14% YoY</b> หนุนจากขาดทุนที่ลดลงของโรงพยาบาลใหม่ สิทธิประโยชน์ทางภาษี และรายได้เพิ่มจากบริการ Sleep Test และผ่าตัดกระเพาะในผู้ป่วยโรคอ้วนกลุ่มประกันสังคม พร้อมให้ Dividend Yield คาดการณ์ราว 4.3% ต่อปี และแนะนำ "ซื้อ" ที่ราคาเป้าหมาย 15.00 บาท (ข้อมูล ณ ช่วงต้นปี 2569 — ก่อนหน้าผลประกอบการ 2Q26 ที่ออกมาดีกว่าคาด)</p>
+    <div class="note">นี่คือมุมมองของโบรกเกอร์ ไม่ใช่ตัวเลขคาดการณ์ของผู้จัดทำรายงานนี้ ผลจริงอาจแตกต่างได้</div>
+  </div>
+</section>
+
+<!-- TAB 5 RISK -->
+<section id="tab-risk" class="section">
+  <h2 class="tab-title">ความเสี่ยง & Sensitivity Analysis</h2>
+
+  <div class="risk-grid">
+    <div class="risk-card high"><div class="lvl">High</div><div class="name">รายได้ IPD Non-SW หดตัวต่อเนื่อง</div><div class="pi">Prob. สูง · Impact ปานกลาง-สูง</div></div>
+    <div class="risk-card med"><div class="lvl">Medium-High</div><div class="name">นโยบายอัตราเบิกจ่ายกองทุนประกันสังคม</div><div class="pi">Prob. ปานกลาง · Impact สูง</div></div>
+    <div class="risk-card med"><div class="lvl">Medium-High</div><div class="name">สภาพคล่อง (Current Ratio &lt;1)</div><div class="pi">Prob. ปานกลาง · Impact ปานกลาง</div></div>
+    <div class="risk-card med"><div class="lvl">Medium</div><div class="name">ภาระหนี้สินจากการขยายสาขา</div><div class="pi">Prob. ปานกลาง · Impact ปานกลาง</div></div>
+    <div class="risk-card med"><div class="lvl">Medium</div><div class="name">การแข่งขันแย่งโควตาผู้ป่วย SW กลับคืน</div><div class="pi">Prob. ต่ำ-ปานกลาง · Impact ปานกลาง</div></div>
+    <div class="risk-card low"><div class="lvl">Low-Medium</div><div class="name">ความเสี่ยงด้านการดำเนินงาน รพ.ใหม่</div><div class="pi">Prob. ต่ำ (แนวโน้มดีขึ้น) · Impact ปานกลาง</div></div>
+  </div>
+
+  <div class="card" style="margin-top:20px;">
+    <h3>Sensitivity Analysis (ตัวอย่างประกอบ)</h3>
+    <div class="table-wrap">
+    <table>
+      <tr><th>สมมติฐาน</th><th>ผลกระทบโดยประมาณต่อกำไรก่อนภาษี (ต่อปี)</th><th>% ของกำไรสุทธิ TTM</th></tr>
+      <tr><td>ดอกเบี้ยจ่ายเพิ่มขึ้น 1% ต่อปี (บนหนี้ ~1.59 พันลบ.)</td><td class="r">-15.9 ลบ.</td><td class="r">~4%</td></tr>
+      <tr><td>อัตราเบิกจ่าย SW ลดลง 5%</td><td class="r">≈ -22 ลบ. (ประมาณการหยาบ)</td><td class="r">~6%</td></tr>
+      <tr><td>รายได้ IPD Non-SW ฟื้นตัว +10%</td><td class="g">≈ +14.5 ลบ.</td><td class="g">~4%</td></tr>
+    </table>
+    </div>
+    <div class="note">ตัวเลขข้างต้นเป็นการประมาณการอย่างง่าย (illustrative) เพื่อให้เห็นทิศทางผลกระทบ ไม่ใช่แบบจำลองทางการเงินที่แม่นยำ เนื่องจากไม่มีข้อมูลโครงสร้างต้นทุนแบบละเอียด</div>
+  </div>
+
+  <div class="card">
+    <h3>Strategic Watchlist — สิ่งที่ต้องติดตามทุกไตรมาส</h3>
+    <ul style="padding-left:20px; font-size:.9rem; line-height:1.9;">
+      <li>จำนวนผู้ประกันตน SW และอัตราการเติบโต (ล่าสุด 257.2k, +2.8% QoQ)</li>
+      <li>อัตราการใช้บริการ OPD/IPD (Utilization Rate)</li>
+      <li>แนวโน้มรายได้ IPD ฝั่ง Non-SW ว่าจะหยุดหดตัวหรือไม่</li>
+      <li>มาร์จิ้น EBITDA และ Net Margin ว่ารักษาระดับ 25%/15% ได้ต่อเนื่องหรือไม่</li>
+      <li>ผลประกอบการของ รพ.รังสีรักษาฯ และ รพ.หนองแค รายไตรมาส</li>
+      <li>อัตราส่วนหนี้สินต่อทุน (D/E) และ Current Ratio</li>
+      <li>สถานะเงินสดและแผนการลงทุนเพิ่มเติม</li>
+      <li>ความสม่ำเสมอของการจ่ายเงินปันผล</li>
+    </ul>
+  </div>
+</section>
+
+<!-- TAB 6 ESG -->
+<section id="tab-esg" class="section">
+  <h2 class="tab-title">ESG & Sustainability</h2>
+  <div class="card">
+    <h3>ข้อจำกัดของข้อมูล</h3>
+    <p>เอกสาร OppDay 2Q/2026 และไฟล์ที่แนบมาไม่ได้ระบุตัวเลขด้าน ESG โดยละเอียด (การใช้พลังงาน, การลดก๊าซเรือนกระจก, สัดส่วนพลังงานหมุนเวียน, คะแนน SET ESG Rating หรือ CGR) รายงานนี้จึงไม่สามารถระบุตัวเลขเฉพาะเจาะจงได้อย่างแม่นยำ เพื่อความถูกต้อง แนะนำให้ตรวจสอบจากรายงานความยั่งยืน (Sustainability Report) หรือแบบ 56-1 One Report ของบริษัทที่เผยแพร่บนเว็บไซต์ตลาดหลักทรัพย์แห่งประเทศไทย</p>
+  </div>
+  <div class="card">
+    <h3>ประเด็น ESG ที่มักเกี่ยวข้องกับธุรกิจโรงพยาบาล</h3>
+    <p>โดยทั่วไปธุรกิจโรงพยาบาลในไทยมักถูกประเมินด้าน (1) การจัดการขยะติดเชื้อและของเสียทางการแพทย์อย่างถูกวิธี (2) การใช้พลังงานในอาคาร/เครื่องมือแพทย์ที่ใช้พลังงานสูง เช่น MRI, เครื่องฉายรังสี และแนวโน้มการติดตั้งโซลาร์เซลล์เพื่อลดต้นทุนพลังงาน (3) การเข้าถึงบริการสุขภาพของชุมชนผ่านสิทธิประกันสังคม/บัตรทอง และ (4) ธรรมาภิบาลและความโปร่งใสของคณะกรรมการบริษัท ซึ่งเป็นกรอบทั่วไปของอุตสาหกรรม ไม่ใช่ข้อมูลเฉพาะที่ยืนยันได้ของ RJH ในรายงานฉบับนี้</p>
+  </div>
+</section>
+
+<!-- TAB 7 VALUATION -->
+<section id="tab-valuation" class="section">
+  <h2 class="tab-title">มูลค่า & กลยุทธ์การลงทุน</h2>
+
+  <div class="kpi-grid2">
+    <div class="kpi2"><div class="lbl">P/E (TTM)</div><div class="val">≈ 12.0x</div></div>
+    <div class="kpi2"><div class="lbl">P/BV (ประมาณ)</div><div class="val">≈ 1.8x</div></div>
+    <div class="kpi2"><div class="lbl">Dividend Yield (TTM)</div><div class="val">≈ 4.5-4.7%</div></div>
+    <div class="kpi2"><div class="lbl">EV/EBITDA (TTM)</div><div class="val">≈ 9.9x</div></div>
+    <div class="kpi2"><div class="lbl">Market Cap</div><div class="val">≈ 4.49 พันลบ.</div></div>
+    <div class="kpi2"><div class="lbl">จำนวนหุ้น</div><div class="val">≈ 293.5 ล้านหุ้น</div></div>
+    <div class="kpi2"><div class="lbl">52-Week Range (ล่าสุด)</div><div class="val">11.10 – 14.40</div></div>
+    <div class="kpi2"><div class="lbl">ราคาปัจจุบัน vs กรอบเดิม</div><div class="val g">+6.3% เหนือ High เดิม</div></div>
+  </div>
+  <div class="note" style="margin-bottom:20px;">ตัวเลข P/E, P/BV, EV/EBITDA คำนวณจากกำไรสุทธิ 4 ไตรมาสล่าสุดตามข้อมูล OppDay (375 ลบ.) และประมาณการหุ้น/ส่วนของผู้ถือหุ้นจากแหล่งข้อมูลบุคคลที่สาม อาจคลาดเคลื่อนจากตัวเลขทางการเล็กน้อย กรอบ 52 สัปดาห์อ้างอิงข้อมูล ณ ปลายเดือน พ.ค. 2569 ก่อนราคาจะปรับขึ้นต่อ</div>
+
+  <h3 style="margin-bottom:12px;">Scenario Analysis</h3>
+  <div class="scenario3">
+    <div class="sc-box bull"><div>Bull Case</div><div class="tp">17.50</div><div class="up">Upside ~14%</div><p>SW เติบโตต่อเนื่อง + รพ.ใหม่ทำกำไรเต็มที่ + มาร์จิ้นขยายต่อ | Probability: ~25%</p></div>
+    <div class="sc-box base"><div>Base Case</div><div class="tp">14.25</div><div class="up">Downside ~7%</div><p>สอดคล้องเป้าหมายเฉลี่ยนักวิเคราะห์ 2 โบรกเกอร์ (Hold) | Probability: ~50%</p></div>
+    <div class="sc-box bear"><div>Bear Case</div><div class="tp">12.00</div><div class="up">Downside ~22%</div><p>SW reimbursement risk + IPD อ่อนแอต่อเนื่อง + ราคาปรับฐานจาก valuation ตึงตัว | Probability: ~25%</p></div>
+  </div>
+
+  <div class="card" style="margin-top:20px;">
+    <h3>กลยุทธ์ตามประเภทนักลงทุน</h3>
+    <table>
+      <tr><th>ประเภทนักลงทุน</th><th>คำแนะนำ</th></tr>
+      <tr><td>ยังไม่มีหุ้น</td><td style="text-align:left">รอจังหวะย่อตัวเข้าใกล้แนวรับ/เป้าหมายเฉลี่ยนักวิเคราะห์ (~14.25) ก่อนพิจารณาเข้าซื้อ เนื่องจากราคาปัจจุบันวิ่งนำหน้าพื้นฐานไปพอสมควรแล้ว</td></tr>
+      <tr><td>มีหุ้นอยู่แล้ว</td><td style="text-align:left">พิจารณาทยอยลดสัดส่วนบางส่วน (Partial Profit-Taking) เนื่องจากราคาสูงกว่า consensus target แล้ว ถือส่วนที่เหลือได้เพราะพื้นฐานยังแข็งแรงต่อเนื่อง</td></tr>
+      <tr><td>ระยะเวลาถือครองที่เหมาะสม</td><td style="text-align:left">กลาง-ยาว (6 เดือนขึ้นไป) เพื่อรอผลของ รพ.ใหม่เข้าสู่ Cash Machine Phase อย่างชัดเจน</td></tr>
+      <tr><td>Stop Loss</td><td style="text-align:left">พิจารณาต่ำกว่าแนว 52-สัปดาห์เดิม (~13.50-14.00) หากราคาหลุดลงมาอย่างมีนัยสำคัญพร้อมปัจจัยพื้นฐานเปลี่ยนแปลง</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict-box">
+    <div style="font-size:.85rem;color:var(--gold2);letter-spacing:.05em;">FINAL INVESTMENT VERDICT</div>
+    <div class="call">Hold / รอจังหวะย่อ (Accumulate on Dip)</div>
+    <div class="score">6.5 <span style="font-size:1.2rem;color:#9fb0ba;">/ 10</span></div>
+    <p>พื้นฐานธุรกิจกำลังดีขึ้นชัดเจนต่อเนื่อง 4 ไตรมาส ทั้งมาร์จิ้นและการเติบโตของรายได้ SW แต่ราคาหุ้นปัจจุบัน (15.30) ได้วิ่งนำหน้าราคาเป้าหมายเฉลี่ยของนักวิเคราะห์ (14.25) และกรอบ 52 สัปดาห์เดิมไปแล้ว ทำให้ valuation ตึงตัวขึ้นในระยะสั้น ผู้ลงทุนที่ยังไม่มีสถานะควรรอจังหวะย่อ ส่วนผู้ที่ถือครองอยู่แล้วอาจพิจารณาทยอยทำกำไรบางส่วน — นี่คือมุมมองเชิงวิเคราะห์ ไม่ใช่คำแนะนำการลงทุนโดยตรง โปรดพิจารณาความเสี่ยงและปรึกษาผู้เชี่ยวชาญก่อนตัดสินใจ</p>
+  </div>
+</section>
+
+<!-- TAB 8 DIVIDEND -->
+<section id="tab-dividend" class="section">
+  <h2 class="tab-title">ปันผล & DCA Simulation</h2>
+
+  <div class="card">
+    <h3>สถานะการจ่ายปันผล (ข้อมูลที่ยืนยันได้)</h3>
+    <div class="table-wrap">
+    <table>
+      <tr><th>รายการ</th><th>ค่า</th></tr>
+      <tr><td>เงินปันผลระหว่างกาลล่าสุด</td><td>0.25 บาท/หุ้น (ขึ้น XD 26 ส.ค. 2568)</td></tr>
+      <tr><td>ความถี่การจ่ายปันผลย้อนหลัง</td><td>เฉลี่ยประมาณ 3 ครั้ง/ปี</td></tr>
+      <tr><td>Dividend Yield (TTM, โดยประมาณ)</td><td>~4.5 - 4.7%</td></tr>
+      <tr><td>Payout Ratio</td><td>ผันผวนตามช่วงเวลา (พบรายงาน 23% - 42% ในแหล่งข้อมูลต่างช่วง)</td></tr>
+    </table>
+    </div>
+    <div class="note">ไม่พบตารางเงินปันผลรายปีแบบละเอียด 5 ปีย้อนหลังที่ยืนยันได้ชัดเจนจากแหล่งข้อมูลที่ตรวจสอบ เพื่อความแม่นยำ แนะนำตรวจสอบข้อมูลทางการที่ rajthanee.com/investor-relations หรือ SETTRADE.com ก่อนใช้วางแผนกระแสเงินสด</div>
+  </div>
+
+  <div class="card">
+    <h3>🧮 เครื่องคำนวณ: ต้องใช้เงินลงทุนเท่าไรให้ได้ปันผลตามเป้าหมาย</h3>
+    <div class="calc-box">
+      <label>เป้าหมายรายได้ปันผลต่อปี (บาท)</label>
+      <input type="number" id="divTarget" value="20000">
+      <label>Dividend Yield ที่ใช้คำนวณ (%)</label>
+      <input type="number" id="divYield" value="4.6" step="0.1">
+      <button onclick="calcDivTarget()">คำนวณ</button>
+      <div class="calc-out" id="divOut"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🧮 DCA Simulator (5 ไม้)</h3>
+    <p style="font-size:.85rem;">กรอกราคาซื้อแต่ละไม้และจำนวนเงินลงทุนต่อไม้ เพื่อดูต้นทุนเฉลี่ย (Average Cost) และ Yield on Cost โดยประมาณ</p>
+    <div class="calc-box">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
+        <div><label>ไม้ 1</label><input type="number" class="dcaPrice" value="14.50"></div>
+        <div><label>ไม้ 2</label><input type="number" class="dcaPrice" value="13.80"></div>
+        <div><label>ไม้ 3</label><input type="number" class="dcaPrice" value="15.30"></div>
+        <div><label>ไม้ 4</label><input type="number" class="dcaPrice" value="14.00"></div>
+        <div><label>ไม้ 5</label><input type="number" class="dcaPrice" value="13.50"></div>
+      </div>
+      <label>เงินลงทุนต่อไม้ (บาท)</label>
+      <input type="number" id="dcaAmt" value="10000">
+      <button onclick="calcDCA()">คำนวณต้นทุนเฉลี่ย</button>
+      <div class="calc-out" id="dcaOut"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🧮 เครดิตภาษีเงินปันผล (โดยประมาณ)</h3>
+    <p style="font-size:.85rem;">เครดิตภาษีปันผลไทยคำนวณจาก อัตราภาษีเงินได้นิติบุคคลที่บริษัทจ่าย (โดยทั่วไป 20%) — สูตรโดยประมาณ: เครดิตภาษี = เงินปันผล × (อัตราภาษีนิติบุคคล ÷ (100 − อัตราภาษีนิติบุคคล))</p>
+    <div class="calc-box">
+      <label>เงินปันผลที่ได้รับ (บาท)</label>
+      <input type="number" id="taxDiv" value="5000">
+      <label>ฐานภาษีเงินได้บุคคลธรรมดาของคุณ (%)</label>
+      <select id="taxBracket">
+        <option value="0">0%</option><option value="5">5%</option><option value="10">10%</option>
+        <option value="15">15%</option><option value="20" selected>20%</option>
+        <option value="25">25%</option><option value="30">30%</option><option value="35">35%</option>
+      </select>
+      <button onclick="calcTaxCredit()">คำนวณ</button>
+      <div class="calc-out" id="taxOut"></div>
+    </div>
+    <div class="note">การคำนวณนี้เป็นสูตรพื้นฐานเพื่อความเข้าใจเบื้องต้นเท่านั้น ไม่ใช่คำแนะนำด้านภาษี โปรดปรึกษาผู้เชี่ยวชาญด้านภาษีหรือกรมสรรพากรสำหรับกรณีจริงของท่าน</div>
+  </div>
+</section>
+
+<!-- TAB 9 OPPDAY -->
+<section id="tab-oppday" class="section">
+  <h2 class="tab-title">OppDay Q2/2026 — สรุปประเด็นสำคัญ</h2>
+
+  <div class="kpi-grid2">
+    <div class="kpi2"><div class="lbl">รายได้ 6M26</div><div class="val">1,507 ลบ.</div></div>
+    <div class="kpi2"><div class="lbl">กำไรสุทธิ 6M26</div><div class="val">206 ลบ.</div></div>
+    <div class="kpi2"><div class="lbl">EBITDA 6M26</div><div class="val">321 ลบ. (21%)</div></div>
+    <div class="kpi2"><div class="lbl">รายได้เพิ่มจาก 6M25</div><div class="val g">+14.1%</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Highlights จากเอกสาร OppDay</h3>
+    <ul style="padding-left:20px; font-size:.9rem; line-height:1.9;">
+      <li>รายได้ครึ่งปีแรก 2569 เติบโต 14.1% จาก 1,321 เป็น 1,507 ลบ. หนุนจากรายได้ประกันสังคมที่โตแรง</li>
+      <li>กำไรสุทธิครึ่งปีแรกเพิ่มขึ้น 67.5% จาก 123 เป็น 206 ลบ. (excl. extra items) สะท้อน Operating Leverage ที่ดีขึ้นมาก</li>
+      <li>จำนวนผู้ประกันตน SW เพิ่มขึ้นต่อเนื่องทุกไตรมาสตั้งแต่ 1Q25 (224.1k) ถึง 2Q26 (257.2k)</li>
+      <li>อัตราการใช้บริการ OPD ปรับตัวดีขึ้นต่อเนื่อง ขณะที่รายได้ IPD ฝั่ง Non-SW ยังคงเป็นจุดที่ต้องติดตาม</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Q&A — คำถามที่นักลงทุนควรติดตามในการประชุมครั้งถัดไป</h3>
+    <div class="note" style="margin-bottom:14px;">หมายเหตุสำคัญ: เอกสาร OppDay ที่แนบมาในรายงานนี้ไม่มีบันทึกการถาม-ตอบ (Q&A Transcript) จากฝ่ายบริหารจริง เพื่อความถูกต้องและไม่ให้เกิดการเข้าใจผิดว่าเป็นคำตอบจริงจากผู้บริหาร รายการด้านล่างนี้จึงเป็น "ประเด็นที่นักวิเคราะห์ควรสอบถาม" ซึ่งจัดทำขึ้นจากการตีความตัวเลขในรายงาน ไม่ใช่คำถาม-คำตอบที่เกิดขึ้นจริงในงาน OppDay</div>
+    <div id="accordion">
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">1. เหตุใดรายได้ IPD ฝั่ง Non-SW จึงหดตัวต่อเนื่อง 5 ไตรมาสติดต่อกัน?</button>
+        <div class="acc-body"><p>ควรสอบถามฝ่ายบริหารว่าเป็นผลจากพฤติกรรมผู้ป่วยที่หันไปใช้บริการ OPD/คลินิกนอกแทนการนอนโรงพยาบาล หรือเป็นผลจากการแข่งขันด้านราคากับ รพ. คู่แข่ง และมีแผนพลิกฟื้นตัวเลขนี้อย่างไร</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">2. รพ.รังสีรักษาฯ และ รพ.หนองแค คาดว่าจะถึงจุดคุ้มทุน (Breakeven) เมื่อใด?</button>
+        <div class="acc-body"><p>EBITDA margin ที่กระโดดใน 2Q26 อาจมาจากหลายปัจจัย ควรสอบถามสัดส่วนที่มาจากโรงพยาบาลใหม่โดยเฉพาะ เพื่อประเมินความยั่งยืนของมาร์จิ้นระดับนี้</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">3. แผนบริหารสภาพคล่องและ Current Ratio ที่ต่ำกว่า 1 เท่าเป็นอย่างไร?</button>
+        <div class="acc-body"><p>ควรสอบถามแผนการรีไฟแนนซ์หนี้ระยะสั้น หรือกระแสเงินสดจากการดำเนินงานที่จะรองรับภาระหนี้สินหมุนเวียนในระยะถัดไป</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">4. นโยบายเงินปันผลในระยะการลงทุนขยายสาขานี้จะเปลี่ยนแปลงหรือไม่?</button>
+        <div class="acc-body"><p>เนื่องจากบริษัทมีภาระหนี้เพิ่มขึ้นจากการขยายสาขา ควรสอบถามว่า Payout Ratio จะยังคงระดับเดิมหรือปรับลดเพื่อสำรองเงินลงทุนเพิ่มเติม</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">5. มีแผนขยายสาขาใหม่เพิ่มเติมหลังจากหนองแคหรือไม่?</button>
+        <div class="acc-body"><p>ควรสอบถามทิศทางการลงทุนระยะ 2-3 ปีข้างหน้า และแหล่งเงินทุนที่จะใช้ (หนี้เพิ่ม / กระแสเงินสดภายใน / เพิ่มทุน)</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">6. ความเสี่ยงจากการพึ่งพารายได้ SW ที่เพิ่มสัดส่วนขึ้นเรื่อยๆ มีการบริหารจัดการอย่างไร?</button>
+        <div class="acc-body"><p>ควรสอบถามกลยุทธ์รักษาสมดุลรายได้ระหว่าง SW และ Non-SW เพื่อไม่ให้พึ่งพานโยบายภาครัฐมากเกินไปในระยะยาว</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>รายงานนี้จัดทำขึ้นเพื่อการศึกษาและสรุปข้อมูลจากเอกสาร OppDay 2Q/2026 ของ RJH ประกอบกับข้อมูลสาธารณะจากบุคคลที่สาม ไม่ถือเป็นคำแนะนำการลงทุน ผู้จัดทำมิใช่นักวิเคราะห์หรือที่ปรึกษาการลงทุนที่ได้รับใบอนุญาต โปรดตรวจสอบข้อมูลกับแหล่งทางการก่อนตัดสินใจลงทุนทุกครั้ง | ข้อมูลราคาหุ้น ณ 28 ส.ค. 2569: 15.30 บาท</footer>
+
+<script>
+function showTab(tabId){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tabId).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+function toggleAcc(btn){
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+function calcDivTarget(){
+  const target = parseFloat(document.getElementById('divTarget').value)||0;
+  const yld = parseFloat(document.getElementById('divYield').value)||1;
+  const capital = target / (yld/100);
+  document.getElementById('divOut').innerHTML =
+    `ต้องใช้เงินลงทุนประมาณ <b>${capital.toLocaleString('th-TH',{maximumFractionDigits:0})}</b> บาท<br>
+     (คิดที่ Dividend Yield ${yld}% ≈ ซื้อได้ประมาณ ${(capital/15.30).toLocaleString('th-TH',{maximumFractionDigits:0})} หุ้น ที่ราคา 15.30 บาท)`;
+}
+function calcDCA(){
+  const prices = Array.from(document.querySelectorAll('.dcaPrice')).map(i=>parseFloat(i.value)||0);
+  const amt = parseFloat(document.getElementById('dcaAmt').value)||0;
+  let totalCost=0, totalShares=0;
+  prices.forEach(p=>{ if(p>0){ totalShares += amt/p; totalCost += amt; } });
+  const avgCost = totalCost/totalShares;
+  const currentPrice = 15.30;
+  const unrealized = (currentPrice-avgCost)*totalShares;
+  document.getElementById('dcaOut').innerHTML =
+    `ต้นทุนเฉลี่ยต่อหุ้น: <b>${avgCost.toFixed(2)}</b> บาท<br>
+     จำนวนหุ้นสะสม: <b>${totalShares.toLocaleString('th-TH',{maximumFractionDigits:0})}</b> หุ้น<br>
+     เงินลงทุนรวม: <b>${totalCost.toLocaleString('th-TH')}</b> บาท<br>
+     กำไร/ขาดทุนที่ยังไม่รับรู้ (เทียบราคา 15.30): <b style="color:${unrealized>=0?'#1a6b4a':'#b83232'}">${unrealized>=0?'+':''}${unrealized.toLocaleString('th-TH',{maximumFractionDigits:0})} บาท</b>`;
+}
+function calcTaxCredit(){
+  const div = parseFloat(document.getElementById('taxDiv').value)||0;
+  const bracket = parseFloat(document.getElementById('taxBracket').value)||0;
+  const corpRate = 20;
+  const credit = div * (corpRate/(100-corpRate));
+  const grossedUp = div + credit;
+  const taxDue = grossedUp * (bracket/100);
+  const netBenefit = credit - taxDue + div - div; // credit vs additional tax
+  const finalCash = div + credit - taxDue;
+  document.getElementById('taxOut').innerHTML =
+    `เครดิตภาษี (สมมติอัตราภาษีนิติบุคคล 20%): <b>${credit.toLocaleString('th-TH',{maximumFractionDigits:0})}</b> บาท<br>
+     เงินได้ปันผลรวมเพื่อคำนวณภาษี (Grossed-up): <b>${grossedUp.toLocaleString('th-TH',{maximumFractionDigits:0})}</b> บาท<br>
+     ภาษีที่ต้องชำระตามฐาน ${bracket}%: <b>${taxDue.toLocaleString('th-TH',{maximumFractionDigits:0})}</b> บาท<br>
+     ผลสุทธิเทียบกับหักภาษี ณ ที่จ่าย 10% เลย: ${bracket<26.7? '<b style="color:#1a6b4a">คุ้มค่าที่จะเครดิตภาษีคืน</b>':'<b style="color:#b83232">อาจไม่คุ้มค่า (ฐานภาษีสูงกว่า ~27%)</b>'}`;
+}
+</script>
+</body>
+</html>
