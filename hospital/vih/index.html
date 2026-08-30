@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIH — รายงานวิเคราะห์เชิงกลยุทธ์ครบวงจร 2569</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;900&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f1923;
+  --ink2: #1e2d3d;
+  --accent: #1a6b4a;
+  --accent2: #2ea870;
+  --gold: #c8973a;
+  --gold2: #f0c96a;
+  --red: #b83232;
+  --red2: #e05555;
+  --blue: #1a4a7a;
+  --blue2: #3b82c4;
+  --bg: #f5f2eb;
+  --bg2: #eceae2;
+  --card: #fdfcf8;
+  --border: #d8d3c8;
+  --text: #1a1a1a;
+  --muted: #6b6560;
+  --warn: #c07020;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body {
+  font-family: 'Noto Sans Thai', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--ink);
+  color: #fff;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero-stripe {
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent2), var(--gold2), var(--accent2));
+}
+.hero-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 36px 28px 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: start;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,100,100,0.18);
+  border: 1px solid rgba(255,100,100,0.4);
+  color: #ff9999;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 3px;
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(30px, 4.5vw, 50px);
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+.hero-title .tick { color: var(--gold2); }
+.hero-subtitle {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 24px;
+  letter-spacing: 0.3px;
+}
+.hero-kpis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding-top: 20px;
+  margin-bottom: 0;
+}
+.hero-kpi {
+  padding: 14px 24px 14px 0;
+  margin-right: 24px;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+.hero-kpi:last-child { border-right: none; }
+.hk-label { font-size: 9.5px; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+.hk-val { font-size: 20px; font-weight: 800; line-height: 1; }
+.hk-val.green { color: #5ee89a; }
+.hk-val.gold { color: var(--gold2); }
+.hk-val.red { color: #ff8888; }
+.hk-note { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 3px; }
+
+.hero-right {
+  text-align: right;
+  padding-top: 8px;
+}
+.price-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 18px 22px;
+  min-width: 160px;
+}
+.price-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+.price-val { font-family: 'DM Mono', monospace; font-size: 32px; font-weight: 500; color: var(--gold2); }
+.price-sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+.verdict-pill {
+  display: inline-block;
+  background: rgba(46,168,112,0.25);
+  border: 1px solid rgba(46,168,112,0.5);
+  color: #5ee89a;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+/* ── WAR BANNER ── */
+.war-banner {
+  background: linear-gradient(135deg, #6b1212, #991b1b);
+  color: white;
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.war-tag {
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+  padding: 2px 8px;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* ── NAV ── */
+.nav {
+  background: var(--card);
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.nav-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 28px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 13px 15px;
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  letter-spacing: 0.2px;
+}
+.tab-btn:hover { color: var(--accent); }
+.tab-btn.active { color: var(--ink); border-bottom-color: var(--gold); }
+
+/* ── MAIN ── */
+.main { max-width: 1160px; margin: 0 auto; padding: 28px 28px 80px; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── GRID LAYOUTS ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+@media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.card-icon {
+  width: 26px; height: 26px;
+  background: var(--ink);
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* ── KPI CARDS ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.kpi {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  text-align: center;
+  transition: transform 0.15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.kpi:hover { transform: translateY(-1px); }
+.kpi.top-green { border-top: 3px solid var(--accent2); }
+.kpi.top-gold { border-top: 3px solid var(--gold); }
+.kpi.top-red { border-top: 3px solid var(--red2); }
+.kpi.top-blue { border-top: 3px solid var(--blue2); }
+.kpi.top-warn { border-top: 3px solid var(--warn); }
+.kpi-label { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 6px; }
+.kpi-val { font-size: 21px; font-weight: 800; color: var(--ink); line-height: 1; margin-bottom: 3px; }
+.kpi-val.green { color: var(--accent); }
+.kpi-val.gold { color: var(--gold); }
+.kpi-val.red { color: var(--red2); }
+.kpi-val.blue { color: var(--blue2); }
+.kpi-val.warn { color: var(--warn); }
+.kpi-sub { font-size: 10px; color: var(--muted); }
+
+/* ── TABLES ── */
+.table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px; }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+thead th {
+  background: var(--ink);
+  color: white;
+  padding: 9px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--bg2); }
+tbody tr:last-child { border: none; }
+tbody tr:hover { background: var(--bg); }
+td { padding: 9px 12px; vertical-align: top; }
+.tr { text-align: right; }
+.tc { text-align: center; }
+.tb { font-weight: 700; }
+.th-green { background: #1a5c3a !important; }
+.th-gold { background: #7a5a14 !important; }
+.th-blue { background: #1a3a6a !important; }
+
+/* badges */
+.b-green { background: #dcfce7; color: #166534; padding: 2px 7px; border-radius: 20px; font-size: 10.5px; font-weight: 700; white-space: nowrap; }
+.b-red { background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 20px; font-size: 10.5px; font-weight: 700; }
+.b-gold { background: #fef3c7; color: #78350f; padding: 2px 7px; border-radius: 20px; font-size: 10.5px; font-weight: 700; }
+.b-blue { background: #dbeafe; color: #1e40af; padding: 2px 7px; border-radius: 20px; font-size: 10.5px; font-weight: 700; }
+.b-gray { background: #f3f4f6; color: #374151; padding: 2px 7px; border-radius: 20px; font-size: 10.5px; font-weight: 600; }
+
+/* ── PROGRESS ── */
+.prog-row { margin-bottom: 12px; }
+.prog-labels { display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 4px; }
+.prog-bar { background: var(--bg2); border-radius: 6px; height: 8px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 6px; }
+.pf-green { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.pf-gold { background: linear-gradient(90deg, var(--gold), var(--gold2)); }
+.pf-blue { background: linear-gradient(90deg, var(--blue), var(--blue2)); }
+.pf-red { background: linear-gradient(90deg, var(--red), var(--red2)); }
+
+/* ── BULL/BEAR ── */
+.bb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+@media(max-width:640px){.bb-grid{grid-template-columns:1fr}}
+.bull-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 9px; padding: 18px; }
+.bear-box { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 9px; padding: 18px; }
+.bull-box h4 { color: #166534; font-size: 13px; margin-bottom: 11px; }
+.bear-box h4 { color: #9f1239; font-size: 13px; margin-bottom: 11px; }
+.bb-item { font-size: 12.5px; margin-bottom: 7px; padding-left: 2px; line-height: 1.5; }
+
+/* ── RISK GRID ── */
+.risk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.risk-card { border-radius: 7px; padding: 13px; border-left: 4px solid; }
+.rc-critical { background: #fff1f2; border-color: #e11d48; }
+.rc-high { background: #fff7ed; border-color: #f97316; }
+.rc-med { background: #fefce8; border-color: #eab308; }
+.rc-low { background: #f0fdf4; border-color: #22c55e; }
+.risk-title { font-size: 11.5px; font-weight: 700; margin-bottom: 5px; }
+.risk-detail { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 30px; }
+.timeline::before { content:''; position:absolute; left:9px; top:0; bottom:0; width:2px; background: var(--border); }
+.tl-item { position: relative; margin-bottom: 22px; }
+.tl-dot { position:absolute; left:-26px; top:3px; width:13px; height:13px; border-radius:50%; border:2px solid #fff; box-shadow: 0 0 0 2px var(--accent2); background: var(--accent2); }
+.tl-dot.gold { background: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+.tl-dot.red { background: var(--red2); box-shadow: 0 0 0 2px var(--red2); }
+.tl-dot.blue { background: var(--blue2); box-shadow: 0 0 0 2px var(--blue2); }
+.tl-date { font-size: 10.5px; font-weight: 700; color: var(--muted); margin-bottom: 3px; letter-spacing: 0.5px; }
+.tl-title { font-weight: 700; color: var(--ink); font-size: 13px; margin-bottom: 3px; }
+.tl-body { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* ── SCENARIO ── */
+.scenario { border-radius: 8px; overflow: hidden; margin-bottom: 14px; }
+.sc-head { padding: 10px 16px; font-weight: 700; font-size: 12.5px; display: flex; justify-content: space-between; align-items: center; }
+.sc-bull { background: #dcfce7; color: #166534; }
+.sc-base { background: #dbeafe; color: #1e40af; }
+.sc-bear { background: #fee2e2; color: #991b1b; }
+.sc-body { border: 1px solid var(--border); border-top: none; padding: 14px 16px; font-size: 12.5px; line-height: 1.7; }
+
+/* ── ACCORDION ── */
+.acc-item { border: 1px solid var(--border); border-radius: 7px; margin-bottom: 8px; overflow: hidden; }
+.acc-head {
+  width: 100%; background: var(--card); border: none; padding: 12px 16px;
+  font-family: 'Noto Sans Thai', sans-serif; font-size: 12.5px; font-weight: 600;
+  color: var(--ink); cursor: pointer; text-align: left; display: flex;
+  justify-content: space-between; align-items: center;
+  transition: background 0.15s;
+}
+.acc-head:hover { background: var(--bg2); }
+.acc-arrow { font-size: 11px; color: var(--muted); transition: transform 0.2s; }
+.acc-head.open .acc-arrow { transform: rotate(180deg); }
+.acc-body { display: none; padding: 12px 16px 14px; background: var(--bg); border-top: 1px solid var(--border); font-size: 12.5px; line-height: 1.75; color: var(--muted); }
+.acc-body.open { display: block; }
+
+/* ── HIGHLIGHT CARDS GRID ── */
+.highlight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.highlight-card { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--blue2); border-radius: 8px; padding: 13px 15px; }
+.highlight-card.tone-bullish { border-left-color: var(--accent2); }
+.highlight-card.tone-neutral { border-left-color: var(--blue2); }
+.highlight-card.tone-bearish { border-left-color: var(--red2); }
+.hc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; margin-bottom: 6px; }
+.hc-icon { font-size: 17px; line-height: 1; }
+.hc-title { font-weight: 700; font-size: 12px; color: var(--ink); line-height: 1.4; }
+.hc-body { font-size: 11px; color: var(--muted); line-height: 1.65; }
+
+/* ── OPPDAY Q&A ACCORDION (structured) ── */
+.accordion-item { border: 1px solid var(--border); border-radius: 7px; margin-bottom: 9px; overflow: hidden; background: var(--card); }
+.accordion-header {
+  width: 100%; background: var(--card); border: none; padding: 12px 16px;
+  font-family: 'Noto Sans Thai', sans-serif; cursor: pointer; text-align: left;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  transition: background 0.15s;
+}
+.accordion-header:hover { background: var(--bg2); }
+.accordion-header.open { background: var(--bg2); }
+.q-text { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--ink); line-height: 1.5; }
+.q-badges { display: flex; align-items: center; gap: 7px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.tone-badge { font-size: 9px; font-weight: 700; padding: 2.5px 8px; border-radius: 20px; white-space: nowrap; letter-spacing: 0.3px; text-transform: uppercase; }
+.tone-badge.bullish { background: #dcfce7; color: #166534; }
+.tone-badge.neutral { background: #dbeafe; color: #1e40af; }
+.tone-badge.bearish { background: #fee2e2; color: #991b1b; }
+.stars { color: var(--gold); font-size: 11px; letter-spacing: 1px; white-space: nowrap; }
+.conf-badge { font-size: 9px; font-weight: 700; padding: 2.5px 8px; border-radius: 20px; white-space: nowrap; letter-spacing: 0.3px; text-transform: uppercase; }
+.conf-high { background: #dcfce7; color: #166534; }
+.conf-mid { background: #fef3c7; color: #78350f; }
+.conf-low { background: #fee2e2; color: #991b1b; }
+.accordion-body { display: none; padding: 13px 16px 15px; background: var(--bg); border-top: 1px solid var(--border); font-size: 12.5px; line-height: 1.75; color: var(--muted); }
+.accordion-body.open { display: block; }
+.meta-row { display: flex; gap: 16px; flex-wrap: wrap; font-size: 10.5px; color: var(--muted); margin-top: 11px; padding-top: 9px; border-top: 1px dashed var(--border); }
+.meta-item { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+.meta-label { font-weight: 700; color: var(--ink); }
+
+/* ── ENERGY ── */
+.energy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.en-card { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 9px; padding: 16px; text-align: center; }
+.en-val { font-size: 26px; font-weight: 800; color: #166534; line-height: 1; }
+.en-label { font-size: 10.5px; color: #4d7c5f; margin-top: 4px; }
+
+/* ── VERDICT ── */
+.verdict-box {
+  background: var(--ink);
+  color: white;
+  border-radius: 12px;
+  padding: 26px;
+  margin-top: 22px;
+}
+.verdict-box h3 { color: var(--gold2); font-size: 15px; margin-bottom: 14px; }
+.verdict-box p { font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.82); }
+.verdict-score {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(200,150,50,0.2); border: 1px solid rgba(200,150,50,0.4);
+  color: var(--gold2); padding: 7px 16px; border-radius: 6px;
+  font-weight: 700; margin-top: 14px; font-size: 13.5px;
+}
+
+/* ── DIVIDEND ── */
+.div-hero {
+  background: linear-gradient(135deg, var(--ink), var(--ink2));
+  color: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 18px;
+}
+.div-hero h3 { color: var(--gold2); font-size: 14px; margin-bottom: 14px; }
+
+/* ── FORENSIC ── */
+.forensic-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 14px; }
+@media(max-width:700px){.forensic-grid{grid-template-columns:1fr}}
+.f-card { border-radius: 8px; padding: 14px; border-left: 3px solid; }
+.f-green { background: #f0fdf4; border-color: var(--accent2); }
+.f-gold { background: #fef9c3; border-color: var(--gold); }
+.f-red { background: #fff7ed; border-color: var(--warn); }
+.f-title { font-size: 11.5px; font-weight: 700; margin-bottom: 6px; }
+.f-body { font-size: 11.5px; line-height: 1.6; color: var(--muted); }
+
+/* ── WATCHLIST TABLE ── */
+.watch-banner {
+  background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px;
+  padding: 12px 16px; margin-bottom: 16px; font-size: 12.5px; color: #9a3412;
+}
+
+/* ── MONTE CARLO ── */
+.mc-bar-wrap { display: flex; gap: 3px; align-items: flex-end; height: 80px; margin: 16px 0; }
+.mc-bar { flex: 1; background: var(--accent); border-radius: 2px 2px 0 0; opacity: 0.7; transition: opacity 0.2s; cursor: pointer; position: relative; }
+.mc-bar:hover { opacity: 1; }
+.mc-bar.highlight { background: var(--gold); opacity: 1; }
+.mc-bar-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+
+/* ── FOOTER ── */
+.footer {
+  background: #111;
+  color: rgba(255,255,255,0.4);
+  font-size: 11px;
+  text-align: center;
+  padding: 16px 28px;
+  line-height: 1.9;
+}
+
+/* ── SEPARATOR ── */
+.sep { height: 1px; background: var(--border); margin: 22px 0; }
+
+/* ── HIGHLIGHT BOX ── */
+.hl-box { border-radius: 7px; padding: 12px 16px; margin-bottom: 14px; font-size: 12.5px; line-height: 1.7; }
+.hl-green { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+.hl-red { background: #fff1f2; border: 1px solid #fecdd3; color: #9f1239; }
+.hl-gold { background: #fef9c3; border: 1px solid #fde68a; color: #78350f; }
+.hl-blue { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+
+/* ── SCENARIO 3-COL ── */
+.scenario3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 18px; }
+@media(max-width:720px){.scenario3{grid-template-columns:1fr}}
+.sc3-card { border-radius: 9px; padding: 18px; text-align: center; }
+.sc3-bull { background: #f0fdf4; border: 1px solid #86efac; }
+.sc3-base { background: #eff6ff; border: 1px solid #93c5fd; }
+.sc3-bear { background: #fff1f2; border: 1px solid #fca5a5; }
+.sc3-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.sc3-bull .sc3-label { color: #166534; }
+.sc3-base .sc3-label { color: #1e40af; }
+.sc3-bear .sc3-label { color: #991b1b; }
+.sc3-price { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.sc3-bull .sc3-price { color: #166534; }
+.sc3-base .sc3-price { color: #1e40af; }
+.sc3-bear .sc3-price { color: #991b1b; }
+.sc3-sub { font-size: 10.5px; color: var(--muted); }
+.sc3-prob { font-size: 10.5px; font-weight: 700; margin-top: 8px; padding: 3px 0; border-top: 1px dashed rgba(0,0,0,0.15); }
+
+/* responsive hero */
+@media(max-width:800px){
+  .hero-inner{grid-template-columns:1fr;gap:16px}
+  .hero-right{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<div class="hero-stripe"></div>
+
+<div class="war-banner">
+  ⚠️ <span class="war-tag">UPDATED: Q2/2569 RESULTS</span>
+  ผลประกอบการ Q2/2569 แข็งแกร่งกว่าคาด — กำไรสุทธิโต +11.61% YoY เร็วกว่ารายได้ 3 เท่า · ยังคงติดตามความเสี่ยง Stagflation/ต้นทุนพลังงาน
+  <span class="war-tag">ณ 28 ส.ค. 2569 · ราคา ฿8.75</span>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">🏥 SET: VIH · Healthcare Mid-Cap · รายงานวิเคราะห์ครบวงจร</div>
+      <div class="hero-title">
+        <span class="tick">VIH</span> Srivichaivejvivat PCL<br>
+        <span style="font-family:'Noto Sans Thai';font-size:17px;font-weight:400;color:rgba(255,255,255,0.55)">บริษัท ศรีวิชัยเวชวิวัฒน์ จำกัด (มหาชน)</span>
+      </div>
+      <div class="hero-subtitle">อ้างอิงงบการเงิน Q2/2569 (30 มิ.ย. 69) · TTM (Q3/68–Q2/69) · One Report 56-1 · OppDay 28 ส.ค. 2569</div>
+      <div class="hero-kpis">
+        <div class="hero-kpi">
+          <div class="hk-label">รายได้รวม Q2/69</div>
+          <div class="hk-val">766.68 MB</div>
+          <div class="hk-note">+3.82% YoY</div>
+        </div>
+        <div class="hero-kpi">
+          <div class="hk-label">กำไรสุทธิ Q2/69</div>
+          <div class="hk-val green">108.34 MB</div>
+          <div class="hk-note">+11.61% YoY</div>
+        </div>
+        <div class="hero-kpi">
+          <div class="hk-label">Net Margin Q2/69</div>
+          <div class="hk-val gold">14.13%</div>
+          <div class="hk-note">จาก 13.14% ปีก่อน</div>
+        </div>
+        <div class="hero-kpi">
+          <div class="hk-label">D/E Ratio</div>
+          <div class="hk-val green">0.15×</div>
+          <div class="hk-note">แทบปลอดหนี้</div>
+        </div>
+        <div class="hero-kpi">
+          <div class="hk-label">EPS TTM</div>
+          <div class="hk-val">฿0.73</div>
+          <div class="hk-note">4 ไตรมาสล่าสุด</div>
+        </div>
+        <div class="hero-kpi">
+          <div class="hk-label">ปันผล 2568 (จ่ายแล้ว)</div>
+          <div class="hk-val green">฿0.40</div>
+          <div class="hk-note">Payout ~55.8%</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="price-box">
+        <div class="price-label">ราคา ณ 28 ส.ค. 69</div>
+        <div class="price-val">฿8.75</div>
+        <div class="price-sub">52W: ~6.55 – 9.50*</div>
+        <div class="price-sub">P/E (TTM): ~12.0× | P/BV: ~1.38×</div>
+        <div class="price-sub">Mkt Cap: ~5,413 MB</div>
+      </div>
+      <div class="verdict-pill">🏆 Selective Buy · Score 8.3/10</div>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="tab-btn active" onclick="showTab('overview')">📊 ภาพรวม</button>
+    <button class="tab-btn" onclick="showTab('business')">🏥 ธุรกิจ</button>
+    <button class="tab-btn" onclick="showTab('financial')">💰 การเงิน</button>
+    <button class="tab-btn" onclick="showTab('growth')">🚀 การเติบโต</button>
+    <button class="tab-btn" onclick="showTab('risk')">⚠️ ความเสี่ยง</button>
+    <button class="tab-btn" onclick="showTab('energy')">🌱 ESG</button>
+    <button class="tab-btn" onclick="showTab('valuation')">🎯 มูลค่า</button>
+    <button class="tab-btn" onclick="showTab('dividend')">💵 ปันผล/DCA</button>
+    <button class="tab-btn" onclick="showTab('oppday')">📢 OppDay Q&A</button>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ═══════════════════════════════════════════
+     TAB: OVERVIEW
+═══════════════════════════════════════════ -->
+<div id="tab-overview" class="section active">
+  <div class="kpi-grid">
+    <div class="kpi top-gold"><div class="kpi-label">รายได้รวม Q2/69</div><div class="kpi-val gold">766.68 MB</div><div class="kpi-sub">+3.82% YoY</div></div>
+    <div class="kpi top-green"><div class="kpi-label">กำไรสุทธิ Q2/69</div><div class="kpi-val green">108.34 MB</div><div class="kpi-sub">+11.61% — โตเร็วกว่ารายได้ 3 เท่า</div></div>
+    <div class="kpi top-green"><div class="kpi-label">EBITDA Growth Q2/69</div><div class="kpi-val green">+9.95%</div><div class="kpi-sub">YoY</div></div>
+    <div class="kpi top-gold"><div class="kpi-label">สินทรัพย์รวม (30 มิ.ย. 69)</div><div class="kpi-val gold">4,491 MB</div><div class="kpi-sub">+8.75% YoY (จาก 2567)</div></div>
+    <div class="kpi top-green"><div class="kpi-label">Current Ratio</div><div class="kpi-val green">~5.2×</div><div class="kpi-sub">สภาพคล่องสูงมาก</div></div>
+    <div class="kpi top-green"><div class="kpi-label">D/E Ratio</div><div class="kpi-val green">0.15×</div><div class="kpi-sub">แทบปลอดหนี้</div></div>
+    <div class="kpi top-gold"><div class="kpi-label">Cash + สินทรัพย์การเงิน</div><div class="kpi-val gold">1,416 MB</div><div class="kpi-sub">ณ 30 มิ.ย. 69</div></div>
+    <div class="kpi top-warn"><div class="kpi-label">Capex ใหม่ (วัฒนาฯ)</div><div class="kpi-val warn">2,735 MB</div><div class="kpi-sub">Tertiary Care Project</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">📋</div>สรุปภาพรวมธุรกิจ</div>
+    <p style="font-size:13.5px;line-height:1.9">
+      <strong>VIH (Vichaivej International Hospital Group)</strong> ดำเนินธุรกิจโรงพยาบาลทั่วไประดับทุติยภูมิ 4 สาขา ในเขตกรุงเทพฯ ฝั่งตะวันตกและสมุทรสาคร ได้แก่ <strong>อ้อมน้อย, หนองแขม, สมุทรสาคร และแยกไฟฉาย</strong> รายได้หลัก >98% มาจากการให้บริการทางการแพทย์ ไตรมาส 2/2569 มีรายได้รวม <strong>766.68 ล้านบาท</strong> (+3.82% YoY) และกำไรสุทธิ <strong>108.34 ล้านบาท</strong> (+11.61% YoY) ทำให้งวด 6 เดือนแรกปี 2569 มีรายได้รวม <strong>1,510.84 ล้านบาท</strong> (+4.23%) และกำไรสุทธิ <strong>207.80 ล้านบาท</strong> (+6.06%) พร้อมก้าวสู่ระดับตติยภูมิผ่านโครงการ <strong>วัฒนาเวชวิวัฒน์</strong> มูลค่า 2.7 พันล้านบาท (เปิดคาด Q1/2570)
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">📈</div>ผลประกอบการล่าสุด — รายไตรมาสและ 6 เดือนแรก (หน่วย: ล้านบาท)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>รายการ</th>
+            <th class="tr">Q2/2568</th>
+            <th class="tr th-green">Q2/2569</th>
+            <th class="tr">+/− YoY</th>
+            <th class="tr">6M/2569</th>
+            <th class="tr">+/− YoY</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="tb">รายได้รวม</td><td class="tr">738.47</td><td class="tr tb">766.68</td><td class="tr"><span class="b-green">+3.82%</span></td><td class="tr tb">1,510.84</td><td class="tr"><span class="b-green">+4.23%</span></td></tr>
+          <tr><td>รายได้จากกิจการโรงพยาบาล</td><td class="tr">725.24</td><td class="tr">753.19</td><td class="tr"><span class="b-green">+3.85%</span></td><td class="tr">1,491.08</td><td class="tr"><span class="b-green">+4.62%</span></td></tr>
+          <tr><td>— Non-Capitation</td><td class="tr">559.07</td><td class="tr">554.76</td><td class="tr"><span class="b-red">−0.77%</span></td><td class="tr">1,116.65</td><td class="tr"><span class="b-green">+1.84%</span></td></tr>
+          <tr><td>— Capitation (ประกันสังคม)</td><td class="tr">175.18</td><td class="tr">204.81</td><td class="tr"><span class="b-green">+16.92%</span></td><td class="tr">388.38</td><td class="tr"><span class="b-green">+9.70%</span></td></tr>
+          <tr><td class="tb">กำไรขั้นต้น</td><td class="tr">189.53</td><td class="tr tb">206.90</td><td class="tr"><span class="b-green">+9.16%</span></td><td class="tr tb">410.98</td><td class="tr"><span class="b-green">+8.52%</span></td></tr>
+          <tr><td>EBITDA</td><td class="tr">167.30</td><td class="tr">183.95</td><td class="tr"><span class="b-green">+9.95%</span></td><td class="tr">356.45</td><td class="tr"><span class="b-green">+6.74%</span></td></tr>
+          <tr><td class="tb">กำไรสุทธิ</td><td class="tr">97.07</td><td class="tr tb" style="color:var(--accent)">108.34</td><td class="tr"><span class="b-green">+11.61%</span></td><td class="tr tb" style="color:var(--accent)">207.80</td><td class="tr"><span class="b-green">+6.06%</span></td></tr>
+          <tr><td>Gross Margin</td><td class="tr">26.13%</td><td class="tr tb">27.47%</td><td class="tr">+1.34pp</td><td class="tr tb">27.56%</td><td class="tr">+0.99pp</td></tr>
+          <tr><td>EBITDA Margin</td><td class="tr">22.65%</td><td class="tr tb">23.99%</td><td class="tr">+1.34pp</td><td class="tr tb">23.59%</td><td class="tr">+0.56pp</td></tr>
+          <tr><td>Net Margin</td><td class="tr">13.14%</td><td class="tr tb" style="color:var(--accent)">14.13%</td><td class="tr">+0.99pp</td><td class="tr tb" style="color:var(--accent)">13.75%</td><td class="tr">+0.23pp</td></tr>
+          <tr><td>EPS (บาท)</td><td class="tr">0.16</td><td class="tr tb">0.17</td><td class="tr"><span class="b-green">+6.25%</span></td><td class="tr tb">0.34</td><td class="tr"><span class="b-green">+6.25%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:var(--muted)">อ้างอิง: งบการเงิน VIH ไตรมาส 2/2569 (OppDay 28 ส.ค. 2569) — ปี 2568 เต็มปี: รายได้รวม 3,107 MB (+8.86%), กำไรสุทธิ 437 MB (+38.65%), EPS ฿0.7168</p>
+  </div>
+
+  <div class="bb-grid">
+    <div class="bull-box">
+      <h4>🐂 Bull Case — Growth Wins</h4>
+      <div class="bb-item">✅ Net Margin Q2/69 14.13% — สูงกว่า Q2/68 (13.14%) ต่อเนื่อง</div>
+      <div class="bb-item">✅ กำไรสุทธิ Q2/69 โต +11.61% เร็วกว่ารายได้ (+3.82%) ~3 เท่า</div>
+      <div class="bb-item">✅ D/E 0.15× — แทบปลอดหนี้ เตรียม lever ขนาดใหญ่</div>
+      <div class="bb-item">✅ Cash + สินทรัพย์การเงิน 1,416 MB พร้อมลงทุน</div>
+      <div class="bb-item">✅ Capitation Q2/69 โต +16.92% — รายได้ประจำสม่ำเสมอ</div>
+      <div class="bb-item">✅ ปันผล 2568: 0.40 บ. = Yield ~4.57% ณ ฿8.75</div>
+      <div class="bb-item">✅ Neurology Center (เปิด มี.ค. 69) เริ่มส่งต่อเคสเพิ่มต่อเนื่อง</div>
+      <div class="bb-item">✅ Tertiary Hospital วัฒนาเวชฯ = Growth Driver 2027+</div>
+    </div>
+    <div class="bear-box">
+      <h4>🐻 Bear Case — ปัจจัยเสี่ยงที่ต้องติดตาม</h4>
+      <div class="bb-item">❌ Non-Capitation Q2/69 หด −0.77% YoY — คนไข้เงินสด/ประกันชีวิตกลุ่ม Simple Disease ชะลอตัว</div>
+      <div class="bb-item">❌ ตั้งสำรองค่าใช้จ่าย ~5 MB ที่สาขาหนองแขม (one-off) ดัน SG&A ผันผวนใน Q2</div>
+      <div class="bb-item">❌ ดีเซล/ต้นทุนพลังงานอาจกดดัน MMU margin</div>
+      <div class="bb-item">❌ Co-payment ประกันชีวิตกระทบคนไข้กลุ่ม 18-20% ของรายได้</div>
+      <div class="bb-item">❌ J-Curve: ค่าเสื่อมจะพุ่งขึ้นเมื่อวัฒนาเวชฯ ก่อสร้างเต็มรูปแบบ</div>
+      <div class="bb-item">❌ Timeline วัฒนาเวชฯ ยังรอความชัดเจนผังเมือง กทม. ฉบับใหม่ (คาดประกาศปี 2569)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB: BUSINESS
+═══════════════════════════════════════════ -->
+<div id="tab-business" class="section">
+  <div class="card">
+    <div class="card-title"><div class="card-icon">🏥</div>โครงสร้างธุรกิจ 4 สาขา — S-Curve Analysis</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>สาขา</th><th>จุดเด่น</th><th>Revenue Engine</th><th>Margin</th><th>กลยุทธ์</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tb">🏥 อ้อมน้อย (Flagship)<br><small style="color:var(--muted)">196 เตียง</small></td>
+            <td>MRI, Stroke Unit, AVIC, ศัลยกรรม 24 ชม., Neurology Center (มี.ค. 2569)</td>
+            <td>High-Complexity / Non-Capitation</td>
+            <td><span class="b-green">สูงสุด</span></td>
+            <td>Tertiary Engine — ดึง High Acuity</td>
+          </tr>
+          <tr>
+            <td class="tb">❤️ หนองแขม (Heart)<br><small style="color:var(--muted)">118 เตียง</small></td>
+            <td>ศูนย์หัวใจครบวงจร 24 ชม., I-SHA ชะลอวัย, Wellness</td>
+            <td>Cash Cow — หัวใจ/หลอดเลือด</td>
+            <td><span class="b-green">สูงมาก</span></td>
+            <td>Asset-light: บริหารหัตถการให้ รพ.พหลฯ</td>
+          </tr>
+          <tr>
+            <td class="tb">🏭 สมุทรสาคร (OccHealth)<br><small style="color:var(--muted)">120 เตียง</small></td>
+            <td>อาชีวเวชศาสตร์, MMU ทั่วประเทศ, เมียนมาร์</td>
+            <td>Volume Engine — Capitation + แรงงาน</td>
+            <td><span class="b-gold">ปานกลาง</span></td>
+            <td>Referral ส่งต่อเคสยากไปอ้อมน้อย</td>
+          </tr>
+          <tr>
+            <td class="tb">🧬 แยกไฟฉาย (High-Tech)<br><small style="color:var(--muted)">49 เตียง</small></td>
+            <td>ผู้มีบุตรยาก 85% success, Elite Vision, ปรับปรุงอาคาร</td>
+            <td>Self-Pay Premium — ไม่ผ่านประกัน</td>
+            <td><span class="b-green">สูง</span></td>
+            <td>Wellness/Lifestyle Premium</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="card-icon">👥</div>Revenue Mix ตาม Payer — 6M/2569</div>
+      <div class="prog-row">
+        <div class="prog-labels"><span>Non-Capitation (ทั่วไป+ประกัน)</span><span style="font-weight:700">73% · 1,116.65 MB</span></div>
+        <div class="prog-bar"><div class="prog-fill pf-green" style="width:73%"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-labels"><span>Capitation (ประกันสังคม)</span><span style="font-weight:700">27% · 388.38 MB (+9.70% YoY)</span></div>
+        <div class="prog-bar"><div class="prog-fill pf-blue" style="width:27%"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-labels"><span>รายได้อื่น</span><span>1.5%</span></div>
+        <div class="prog-bar"><div class="prog-fill pf-gold" style="width:1.5%"></div></div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);line-height:1.8">
+        💚 <strong>Cash/ประกัน:</strong> Margin สูง เงินสดเร็ว<br>
+        💛 <strong>ประกันสังคม:</strong> รายได้ประจำ A/R 60-70 วัน<br>
+        📍 <strong>100% รายได้ในประเทศ</strong> | Medical Tourism อยู่ระหว่างศึกษา
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="card-icon">🏆</div>KPIs การดำเนินงาน 2568</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th class="tr">Q2/69</th><th class="tr">6M/69</th><th class="tr">Full Year 68</th></tr></thead>
+          <tbody>
+            <tr><td>Revenue Growth YoY</td><td class="tr"><span class="b-green">+3.82%</span></td><td class="tr"><span class="b-green">+4.23%</span></td><td class="tr"><span class="b-green">+8.86%</span></td></tr>
+            <tr><td>Net Profit Growth YoY</td><td class="tr"><span class="b-green">+11.61%</span></td><td class="tr"><span class="b-green">+6.06%</span></td><td class="tr"><span class="b-green">+38.65%</span></td></tr>
+            <tr><td>OPD Utilization</td><td class="tr">80.3%</td><td class="tr">81.4%</td><td class="tr">86%</td></tr>
+            <tr><td>IPD Occupancy</td><td class="tr">40.0%</td><td class="tr">42.6%</td><td class="tr">~54%</td></tr>
+            <tr><td>Cost/Billing OPD Growth</td><td class="tr"><span class="b-green">+8.61%</span></td><td class="tr"><span class="b-green">+8.40%</span></td><td class="tr"><span class="b-green">+12.5%</span></td></tr>
+            <tr><td>Cost/Billing IPD Growth</td><td class="tr"><span class="b-green">+4.27%</span></td><td class="tr"><span class="b-green">+4.92%</span></td><td class="tr"><span class="b-green">+1.39%</span></td></tr>
+            <tr><td>เตียงใช้จริง / แพทย์ / พยาบาล</td><td colspan="3" class="tr">389 เตียง · 557 แพทย์ · 648 พยาบาล (มิ.ย. 69)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">🧬</div>ศูนย์ความเป็นเลิศ (Excellent Centers) — Revenue Drivers</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ศูนย์</th><th>เทคโนโลยี</th><th>ความสำเร็จ</th><th>Margin Impact</th></tr></thead>
+        <tbody>
+          <tr><td>🦴 Orthopedic & Sports</td><td>Computer Navigation ผ่าตัด, Micro-surgery</td><td>รักษานิ้วล็อกไม่ผ่าตัด, ต่อนิ้ว</td><td><span class="b-green">สูง</span></td></tr>
+          <tr><td>❤️ Heart & Vascular</td><td>Cardiac Cath, CABG, 24 ชม.</td><td>เคสผ่าตัดสูงสุดในกลุ่มเอกชน (67)</td><td><span class="b-green">สูงมาก</span></td></tr>
+          <tr><td>🧠 Neurology (ใหม่ มี.ค. 69)</td><td>Biplane DSA, Mechanical Thrombectomy</td><td>Stroke Fast Track 24 ชม.</td><td><span class="b-green">สูง (กำลังเร่ง)</span></td></tr>
+          <tr><td>🩺 AVIC (รังสีร่วมรักษา)</td><td>TACE/TOCE มะเร็งตับ, DSA, RFA</td><td>Competitive Differentiator</td><td><span class="b-green">สูง</span></td></tr>
+          <tr><td>🧬 อัครบุตร (IVF)</td><td>IVF, ICSI, PGD</td><td>Success Rate <strong>85%</strong></td><td><span class="b-green">สูงมาก (Self-pay)</span></td></tr>
+          <tr><td>🫁 V5 Lung AI</td><td>AI + Low-dose CT Scan</td><td>ตรวจมะเร็งปอดระยะแรก</td><td><span class="b-blue">เสริม</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">💹</div>Cost Structure 2568 (% of Revenue)</div>
+    <div class="prog-row">
+      <div class="prog-labels"><span>เงินเดือน/ค่าแรง/ผลประโยชน์พนักงาน</span><span style="font-weight:700">27.47% (853 MB)</span></div>
+      <div class="prog-bar"><div class="prog-fill pf-blue" style="width:27.47%"></div></div>
+    </div>
+    <div class="prog-row">
+      <div class="prog-labels"><span>ยา/เวชภัณฑ์/วัสดุอื่น</span><span style="font-weight:700">17.08% (530 MB)</span></div>
+      <div class="prog-bar"><div class="prog-fill pf-gold" style="width:17.08%"></div></div>
+    </div>
+    <div class="prog-row">
+      <div class="prog-labels"><span>ค่าธรรมเนียมแพทย์</span><span style="font-weight:700">17.04% (529 MB)</span></div>
+      <div class="prog-bar"><div class="prog-fill pf-green" style="width:17.04%"></div></div>
+    </div>
+    <div class="prog-row">
+      <div class="prog-labels"><span>ค่าเสื่อมราคาและตัดจำหน่าย</span><span style="font-weight:700">6.00% (186 MB)</span></div>
+      <div class="prog-bar"><div class="prog-fill pf-red" style="width:6%"></div></div>
+    </div>
+    <div class="prog-row">
+      <div class="prog-labels"><span>ค่ารักษาพยาบาลส่งต่อ</span><span style="font-weight:700">4.66% (145 MB) ↓ จาก 5.75%</span></div>
+      <div class="prog-bar"><div class="prog-fill pf-gold" style="width:4.66%"></div></div>
+    </div>
+    <div class="hl-green" style="margin-top:12px">
+      ✅ <strong>Operating Leverage Factor ปี 2568 = 4.3×</strong> — รายได้โต +8.9% แต่กำไรสุทธิโต +38.7% | Admin % of Revenue ลดต่อเนื่องจาก 12.7% → 10.9% ใน 3 ปี = Economies of Scale ชัดเจน
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB: FINANCIAL
+═══════════════════════════════════════════ -->
+<div id="tab-financial" class="section">
+  <div class="kpi-grid">
+    <div class="kpi top-green"><div class="kpi-label">Net Profit Margin Q2/69</div><div class="kpi-val green">14.13%</div><div class="kpi-sub">จาก 13.14% (Q2/68)</div></div>
+    <div class="kpi top-green"><div class="kpi-label">Gross Margin Q2/69</div><div class="kpi-val green">27.47%</div><div class="kpi-sub">จาก 26.13% (Q2/68)</div></div>
+    <div class="kpi top-green"><div class="kpi-label">EBITDA Margin Q2/69</div><div class="kpi-val green">23.99%</div><div class="kpi-sub">จาก 22.65% (Q2/68)</div></div>
+    <div class="kpi top-green"><div class="kpi-label">EPS Q2/69</div><div class="kpi-val green">฿0.17</div><div class="kpi-sub">H1/69: ฿0.34</div></div>
+    <div class="kpi top-green"><div class="kpi-label">Current Ratio</div><div class="kpi-val green">~5.2×</div><div class="kpi-sub">ณ 30 มิ.ย. 69</div></div>
+    <div class="kpi top-green"><div class="kpi-label">D/E Ratio</div><div class="kpi-val green">0.15×</div><div class="kpi-sub">แทบปลอดหนี้</div></div>
+    <div class="kpi top-gold"><div class="kpi-label">Cash + Liquid Assets</div><div class="kpi-val gold">1,416 MB</div><div class="kpi-sub">ณ 30 มิ.ย. 69</div></div>
+    <div class="kpi top-gold"><div class="kpi-label">EPS TTM</div><div class="kpi-val gold">฿0.73</div><div class="kpi-sub">4 ไตรมาสล่าสุด</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">🏛️</div>งบฐานะการเงิน ณ 30 มิ.ย. 2569 (หน่วย: ล้านบาท)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>รายการ</th><th class="tr">30 มิ.ย. 69</th><th class="tr">31 ธ.ค. 68</th><th class="tr">เปลี่ยนแปลง</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>เงินสด+สินทรัพย์ทางการเงิน</td><td class="tr">1,416.5</td><td class="tr">1,377.4</td><td class="tr"><span class="b-green">+2.8%</span></td></tr>
+          <tr><td>ลูกหนี้การค้า+ลูกหนี้อื่น</td><td class="tr">634.3</td><td class="tr">635.1</td><td class="tr">~0%</td></tr>
+          <tr><td>ที่ดิน+อาคาร+อุปกรณ์ (สุทธิ)</td><td class="tr">2,260.3</td><td class="tr">2,299.1</td><td class="tr"><span class="b-red">−1.7%</span></td></tr>
+          <tr><td class="tb">รวมสินทรัพย์</td><td class="tr tb">4,491.3</td><td class="tr">4,476.5</td><td class="tr"><span class="b-green">+0.3%</span></td></tr>
+          <tr><td class="tb">รวมหนี้สิน</td><td class="tr tb">583.4</td><td class="tr">596.9</td><td class="tr"><span class="b-green">−2.3%</span></td></tr>
+          <tr><td class="tb">รวมส่วนของผู้ถือหุ้น</td><td class="tr tb">3,907.9</td><td class="tr">3,879.7</td><td class="tr"><span class="b-green">+0.7%</span></td></tr>
+          <tr><td class="tb">D/E Ratio</td><td class="tr tb">0.15×</td><td class="tr">0.15×</td><td class="tr">คงที่</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">💸</div>กระแสเงินสด 6M/2569 (หน่วย: ล้านบาท)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>กิจกรรม</th><th class="tr">6M/2569</th><th>หมายเหตุ</th></tr></thead>
+        <tbody>
+          <tr><td class="tb">จากดำเนินงาน</td><td class="tr tb" style="color:var(--accent)">+285.89</td><td>คุณภาพกำไรดี — แปลงกำไรเป็นเงินสดต่อเนื่อง</td></tr>
+          <tr><td class="tb">จากลงทุน</td><td class="tr tb" style="color:var(--red2)">−173.42</td><td>ปรับสภาพคล่องเชิงรุกไปฝากสถาบันการเงิน + ปรับปรุงอาคาร/เครื่องมือแพทย์</td></tr>
+          <tr><td class="tb">จากจัดหาเงิน</td><td class="tr tb" style="color:var(--red2)">−185.86</td><td>จ่ายเงินปันผลผู้ถือหุ้น + รับเงินจากการใช้สิทธิซื้อหุ้นสามัญเพิ่มทุนบางส่วน</td></tr>
+          <tr><td class="tb">เงินสดปลายงวด (30 มิ.ย. 69)</td><td class="tr tb" style="color:var(--accent)">733.90</td><td>รวมเงินฝากบริหารจัดการอีก 682.58 MB = สภาพคล่องรวม 1,416.49 MB</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">🔬</div>Forensic Accounting — Key Audit Insights</div>
+    <div class="forensic-grid">
+      <div class="f-card f-green">
+        <div class="f-title" style="color:var(--accent)">💎 War Chest Strategy</div>
+        <div class="f-body">สินทรัพย์ทางการเงินหมุนเวียนพุ่ง 102M → <strong>570M</strong> ในปีเดียว = บริษัทจอดเงินสดในตราสารระยะสั้นเพื่อรอจ่ายค่าก่อสร้าง ไม่ใช่สัญญาณผิดปกติ</div>
+      </div>
+      <div class="f-card f-gold">
+        <div class="f-title" style="color:var(--gold)">📝 Revenue Quality (EY KAM)</div>
+        <div class="f-body">รายได้ค้างรับประกันสังคม <strong>141 MB</strong> (4.6% ของรายได้) = ระดับ Conservative ไม่ aggressive ไม่น่ากังวล</div>
+      </div>
+      <div class="f-card f-red">
+        <div class="f-title" style="color:var(--warn)">⚖️ Non-Recurring Gain</div>
+        <div class="f-body">จ่าย 6MB แต่กลับรายการ provision <strong>13MB</strong> = Boost กำไร 7MB แบบ Non-recurring | Core EPS จริง ~฿0.700 | Core P/E ≈ 12.9×</div>
+      </div>
+    </div>
+    <div class="hl-gold">
+      🔍 <strong>Hidden Asset:</strong> ที่ดิน+อาคาร <strong>1,358 MB</strong> ค้ำประกันวงเงินสินเชื่อธนาคารแล้ว = VIH พร้อม trigger เงินกู้ขนาดใหญ่สำหรับโครงการใหม่โดยไม่ต้องทำ Right Offering เพิ่ม
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB: GROWTH
+═══════════════════════════════════════════ -->
+<div id="tab-growth" class="section">
+  <div class="card">
+    <div class="card-title"><div class="card-icon">🏗️</div>โครงการเรือธง: วัฒนาเวชวิวัฒน์ (Tertiary Care) — บจก. ถือหุ้น 100%</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>รายการ</th><th>รายละเอียดเชิงกลยุทธ์</th></tr></thead>
+        <tbody>
+          <tr><td class="tb">มูลค่าลงทุนรวม</td><td>ไม่เกิน <strong>2,735 ล้านบาท</strong></td></tr>
+          <tr><td class="tb">ทุนจดทะเบียน</td><td>1,241 ล้านบาท (VIH ถือหุ้น 100%)</td></tr>
+          <tr><td class="tb">ที่ดินที่ซื้อแล้ว</td><td>355.92 MB + อาคารระหว่างก่อสร้าง 41.97 MB (ณ สิ้นปี 68)</td></tr>
+          <tr><td class="tb">เงินลงทุนจ่ายแล้ว</td><td>712.3 MB ณ สิ้นปี 2567</td></tr>
+          <tr><td class="tb">แหล่งเงินทุน</td><td>RO + VIH-W1 + Cash War Chest (570 MB)</td></tr>
+          <tr><td class="tb">เป้าหมาย</td><td>ศูนย์ Tertiary Care — Trauma / Orthopedic / Cardio / Neurology</td></tr>
+          <tr><td class="tb">Timeline ล่าสุด</td><td><span class="b-gold">Q1/2570 (ปรับจาก 2569 เนื่องจาก EIA)</span></td></tr>
+          <tr><td class="tb" style="color:var(--red2)">ความเสี่ยงหลัก</td><td style="color:var(--red2)">Depreciation Overhang +130-150 MB/ปี โดยไม่มีรายได้ในช่วงปรับตัว</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">📅</div>Investment Timeline (J-Curve Effect)</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2568 (ผ่านมาแล้ว)</div>
+        <div class="tl-title">Peak Efficiency — ทำ Record ทุกตัวชี้วัด</div>
+        <div class="tl-body">Net Margin 14.08%, กำไร 437MB, สะสม War Chest 570MB, เปิด Neurology Center (มี.ค. 69)</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot gold"></div>
+        <div class="tl-date">2569 (ปีนี้)</div>
+        <div class="tl-title">Transition — ก่อสร้างเต็มรูปแบบ + New Centers</div>
+        <div class="tl-body">ค่าเสื่อมเพิ่มเล็กน้อย, Neurology Center สร้าง awareness, รับ W1 exercise 78.98MB, ปันผล 0.40 บ., Payout ~56%</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot red"></div>
+        <div class="tl-date">2570 — ปีเสี่ยง (J-Curve Valley)</div>
+        <div class="tl-title">⚠️ "Value Trap" Period — จังหวะซื้อสำหรับ VI</div>
+        <div class="tl-body">ค่าเสื่อมพุ่ง +130-150MB/ปี, กำไรอาจ flat/ลดชั่วคราว แม้รายได้โต → ตลาดอาจ overreact = โอกาสทอง</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot blue"></div>
+        <div class="tl-date">2571 (เป้าหมาย Breakeven)</div>
+        <div class="tl-title">🚀 Post-Breakeven — Margin Expansion</div>
+        <div class="tl-body">Occupancy 30-40% เริ่มทำกำไร, รายได้แซงค่าเสื่อม, เป้ารายได้ ~4,850MB</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot gold"></div>
+        <div class="tl-date">2571-2572 (Full Scale)</div>
+        <div class="tl-title">💎 Cash Machine Phase — กำไรเป้า ~685MB</div>
+        <div class="tl-body">Net Margin กลับสู่ 14-15%, ปันผลอาจกลับสู่ 0.60-0.70 บ./หุ้น</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">📊</div>Projected P&L 2028 (โรงพยาบาลใหม่เต็มรูปแบบ)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>รายการ</th><th class="tr">2568 (จริง)</th><th class="tr th-green">2571 (คาดการณ์)</th><th class="tr">เติบโต</th></tr></thead>
+        <tbody>
+          <tr><td>รายได้รวม</td><td class="tr">3,107 MB</td><td class="tr tb">4,850 MB</td><td class="tr"><span class="b-green">+56%</span></td></tr>
+          <tr><td>ต้นทุนบริการ</td><td class="tr">2,221 MB</td><td class="tr">3,492 MB</td><td class="tr">Margin: 72%</td></tr>
+          <tr><td>กำไรขั้นต้น</td><td class="tr">887 MB</td><td class="tr">1,358 MB</td><td class="tr">Margin: 28%</td></tr>
+          <tr><td>ค่าเสื่อมราคา (รวม)</td><td class="tr">186 MB</td><td class="tr">321 MB</td><td class="tr">+135MB จาก Capex ใหม่</td></tr>
+          <tr><td>ดอกเบี้ยจ่าย</td><td class="tr">4.4 MB</td><td class="tr">85 MB</td><td class="tr">กู้ 1.8B @ 4.7%</td></tr>
+          <tr><td class="tb">กำไรสุทธิ</td><td class="tr tb">437 MB</td><td class="tr tb" style="color:var(--accent)">685 MB</td><td class="tr"><span class="b-green">+57%</span></td></tr>
+          <tr><td>Net Margin</td><td class="tr">14.08%</td><td class="tr">14.12%</td><td class="tr">Stable หลัง J-Curve</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB: RISK
+═══════════════════════════════════════════ -->
+<div id="tab-risk" class="section">
+  <div style="background:linear-gradient(135deg,#6b1212,#991b1b);color:white;border-radius:10px;padding:20px;margin-bottom:18px">
+    <div style="font-size:14px;font-weight:700;color:#fca5a5;margin-bottom:12px">🌍 Worst Case Macro: Iran War + Stagflation (สมมติฐานการวิเคราะห์)</div>
+    <div class="grid-2" style="gap:16px">
+      <div>
+        <div style="color:#fca5a5;font-weight:700;font-size:12px;margin-bottom:7px">ผลกระทบต่อ VIH โดยตรง:</div>
+        <div style="font-size:12px;line-height:2">🛢️ ดีเซลพุ่ง → MMU margin ลด 2-3pp<br>💊 ยา/วัสดุนำเข้าแพงขึ้น (บาทอ่อน 33+)<br>💰 Stagflation → ผู้ป่วยชะลอ Elective Surgery<br>📉 SET ตกหนัก → Sentiment ลบกดราคาหุ้น</div>
+      </div>
+      <div>
+        <div style="color:#fca5a5;font-weight:700;font-size:12px;margin-bottom:7px">Shock Absorbers ของ VIH:</div>
+        <div style="font-size:12px;line-height:2">🛡️ ประกันสังคม = Recession-proof 709MB/ปี<br>🛡️ D/E 0.15× — ไม่มีภาระดอกเบี้ยกดดัน<br>🛡️ Cash 1.4B — ไม่ต้องกู้ในภาวะดอกเบี้ยสูง<br>🛡️ พลังงาน 1.5% ของรายได้ — ควบคุมได้</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">⚠️</div>Risk Matrix — Impact × Probability</div>
+    <div class="risk-grid">
+      <div class="risk-card rc-critical">
+        <div class="risk-title" style="color:#9f1239">🔴 CRITICAL: การก่อสร้างล่าช้า</div>
+        <div class="risk-detail">ล่าช้า 1 ปี = ค่าเสื่อม 130-150MB โดยไม่มีรายได้ → กำไรหดหนัก</div>
+        <div style="margin-top:6px"><span class="b-red">Impact: สูงมาก</span> <span class="b-red">Prob: 30%</span></div>
+      </div>
+      <div class="risk-card rc-high">
+        <div class="risk-title" style="color:#9a3412">🟠 HIGH: ราคาน้ำมัน/Stagflation</div>
+        <div class="risk-detail">ดีเซล +30% กระทบ MMU margin โดยตรง, ผู้ป่วย Elective ชะลอ</div>
+        <div style="margin-top:6px"><span class="b-red">Impact: สูง</span> <span class="b-gold">Prob: 40%</span></div>
+      </div>
+      <div class="risk-card rc-high">
+        <div class="risk-title" style="color:#9a3412">🟠 HIGH: SSO Policy เปลี่ยน</div>
+        <div class="risk-detail">หาก capitation rate ลด 10% → รายได้หาย 70MB/ปี, กำไรลด ~16%</div>
+        <div style="margin-top:6px"><span class="b-red">Impact: สูง</span> <span class="b-gold">Prob: 20%</span></div>
+      </div>
+      <div class="risk-card rc-med">
+        <div class="risk-title" style="color:#713f12">🟡 MEDIUM: Labor Inflation</div>
+        <div class="risk-detail">BDMS แย่งตัวพยาบาล/แพทย์เฉพาะทาง ค่าแรง +10% = กำไรลด ~6%</div>
+        <div style="margin-top:6px"><span class="b-gold">Impact: กลาง</span> <span class="b-gold">Prob: 35%</span></div>
+      </div>
+      <div class="risk-card rc-med">
+        <div class="risk-title" style="color:#713f12">🟡 MEDIUM: Co-pay Insurance</div>
+        <div class="risk-detail">ผู้ป่วยกลุ่มประกันชีวิต (18-20% รายได้) ชะลอใช้บริการ Elective</div>
+        <div style="margin-top:6px"><span class="b-gold">Impact: กลาง</span> <span class="b-gold">Prob: 40%</span></div>
+      </div>
+      <div class="risk-card rc-low">
+        <div class="risk-title" style="color:#166534">🟢 LOW: ดอกเบี้ยขึ้น 1%</div>
+        <div class="risk-detail">Standard scenario: กระทบ Net Profit −3.5% เท่านั้น เพราะ D/E ต่ำมาก</div>
+        <div style="margin-top:6px"><span class="b-green">Impact: ต่ำ</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">📊</div>Interest Rate Sensitivity — โครงการ 2.7B THB</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Funding Strategy (Debt:Equity)</th><th class="tr">หนี้โดยประมาณ</th><th class="tr">ดอกเบี้ยต่อปี (ถ้าขึ้น 1%)</th><th class="tr">กระทบกำไรสุทธิ</th><th>การประเมิน</th></tr></thead>
+        <tbody>
+          <tr><td>Conservative (50:50)</td><td class="tr">1,350 MB</td><td class="tr">10.8 MB</td><td class="tr"><span class="b-green">−2.47%</span></td><td>ปลอดภัยมาก</td></tr>
+          <tr><td>Standard (70:30)</td><td class="tr">1,890 MB</td><td class="tr">15.1 MB</td><td class="tr"><span class="b-gold">−3.46%</span></td><td>จัดการได้</td></tr>
+          <tr><td>Aggressive (90:10)</td><td class="tr">2,430 MB</td><td class="tr">19.4 MB</td><td class="tr"><span class="b-red">−4.44%</span></td><td>ระวัง</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="hl-green">✅ VIH เข้า expansion ด้วย Interest Coverage Ratio <strong>123×</strong> (แทบปลอดหนี้) — แม้กู้ 1.8B ที่ 5-6% coverage ยังอยู่ที่ ~5-7× ซึ่งปลอดภัย</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">📋</div>Strategic Watchlist — สัญญาณเตือนที่ต้องติดตามทุกไตรมาส</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Metric</th><th>Benchmark / Target</th><th>เหตุผล</th></tr></thead>
+        <tbody>
+          <tr><td class="tb">Construction in Progress (งานระหว่างก่อสร้าง)</td><td>โต +200-300MB/ไตรมาส</td><td>ยืนยันโครงการเดินหน้าตามแผน</td></tr>
+          <tr><td class="tb">D/E Ratio</td><td>ต่ำกว่า 0.50×</td><td>เผื่อกู้ 2.7B THB</td></tr>
+          <tr><td class="tb">A/R Collection Period</td><td>ต่ำกว่า 70 วัน</td><td>ประกันสังคมจ่ายช้า = Paper Profit</td></tr>
+          <tr><td class="tb">Net Profit Margin</td><td>เกิน 12%</td><td>รักษา "New Normal" efficiency</td></tr>
+          <tr><td class="tb">Admin % of Revenue</td><td>ต่ำกว่า 11%</td><td>Economies of Scale คงอยู่</td></tr>
+          <tr><td class="tb">War Chest (570MB)</td><td>ใช้เพื่อก่อสร้าง ไม่ใช่ OPEX</td><td>ถ้าลดเพื่อ OPEX = อันตราย</td></tr>
+          <tr><td class="tb">Dividend Payout Ratio</td><td>50%+ ยังดี</td><td>ถ้าลดเหลือ <40% = ก่อสร้างแพงกว่าคาด</td></tr>
+          <tr><td class="tb">Diesel Consumption</td><td>ควบคุม YoY growth</td><td>MMU ต้นทุนหลัก — ผลกระทบสงคราม</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB: ESG
+═══════════════════════════════════════════ -->
+<div id="tab-energy" class="section">
+  <div class="energy-grid">
+    <div class="en-card"><div class="en-val">−6.62%</div><div class="en-label">ลดการใช้ไฟฟ้ารวม 2568 vs 2567</div></div>
+    <div class="en-card"><div class="en-val">−7.48%</div><div class="en-label">ลดการซื้อไฟฟ้าภายนอก</div></div>
+    <div class="en-card"><div class="en-val">−8.58%</div><div class="en-label">ลด GHG → 9,257 tCO₂e</div></div>
+    <div class="en-card"><div class="en-val">1,277K</div><div class="en-label">kWh Solar ผลิตเอง (+1.28%)</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">⚡</div>รายงานพลังงาน 2567 vs 2568</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>รายการ</th><th class="tr">2567 (ปีฐาน)</th><th class="tr">2568</th><th class="tr">เปลี่ยนแปลง</th></tr></thead>
+        <tbody>
+          <tr><td>ไฟฟ้ารวม (kWh)</td><td class="tr">12,954,697</td><td class="tr">12,096,654</td><td class="tr"><span class="b-green">−6.62%</span></td></tr>
+          <tr><td>ซื้อไฟฟ้า (kWh)</td><td class="tr">11,693,453</td><td class="tr">10,819,319</td><td class="tr"><span class="b-green">−7.48%</span></td></tr>
+          <tr><td>Solar Rooftop (kWh)</td><td class="tr">1,261,244</td><td class="tr">1,277,335</td><td class="tr"><span class="b-green">+1.28%</span></td></tr>
+          <tr><td>น้ำมันดีเซล (ลิตร)</td><td class="tr">231,850</td><td class="tr">255,851</td><td class="tr"><span class="b-red">+9.35%</span></td></tr>
+          <tr><td>น้ำมันเบนซิน (ลิตร)</td><td class="tr">6,361</td><td class="tr">5,354</td><td class="tr"><span class="b-green">−15.8%</span></td></tr>
+          <tr><td>LPG (กก.)</td><td class="tr">22,001</td><td class="tr">24,000</td><td class="tr"><span class="b-red">+9.09%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="hl-gold">⚡ <strong>Diesel Insight:</strong> ดีเซลเพิ่ม 9.35% สอดคล้องกับ MMU (ตรวจสุขภาพเคลื่อนที่) ของสมุทรสาคร — ในภาวะสงคราม/Stagflation ที่ดีเซลพุ่ง จะกระทบ margin MMU โดยตรง แต่คิดเป็นเพียง 1.5% ของรายได้รวม</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">🏆</div>ESG Milestones & รางวัล 2568</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>รางวัล/การรับรอง</th><th>ระดับ</th><th>ความสำคัญเชิงกลยุทธ์</th></tr></thead>
+        <tbody>
+          <tr><td>Corporate Governance Rating (CGR)</td><td><span class="b-green">ดีเลิศ 5 ดาว (ปีที่ 8)</span></td><td>AGM Checklist 100/100 — ดึงดูด Institutional Investors</td></tr>
+          <tr><td>SET ESG Ratings</td><td><span class="b-green">AA Rating</span></td><td>เข้าถึง ESG Fund และ Sustainability-Linked Loan</td></tr>
+          <tr><td>Thailand Cybersecurity Excellence Award</td><td><span class="b-blue">Prime Minister Award 2024</span></td><td>ปกป้องข้อมูล IVF/Health Check ผู้ป่วย</td></tr>
+          <tr><td>Carbon Footprint (CFO)</td><td><span class="b-green">ผ่านการรับรอง</span></td><td>เข้าถึงสินเชื่อดอกเบี้ยต่ำสีเขียว</td></tr>
+          <tr><td>Climate Action Leader 2568</td><td><span class="b-green">3 สาขา</span></td><td>อ้อมน้อย, หนองแขม, สมุทรสาคร</td></tr>
+          <tr><td>GREEN & CLEAN Hospital (Excellent)</td><td><span class="b-green">Excellent</span></td><td>สาขาอ้อมน้อย</td></tr>
+          <tr><td>Human Rights Organization Model</td><td><span class="b-blue">กระทรวงยุติธรรม</span></td><td>ป้องกัน Social Risk</td></tr>
+          <tr><td>Net Zero Target</td><td><span class="b-gold">ปี 2593 (Zero C Challenge)</span></td><td>ลด Carbon Tax Risk ในอนาคต</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB: VALUATION
+═══════════════════════════════════════════ -->
+<div id="tab-valuation" class="section">
+  <div class="kpi-grid">
+    <div class="kpi top-gold"><div class="kpi-label">P/E (TTM, EPS ฿0.73)</div><div class="kpi-val gold">~12.0×</div><div class="kpi-sub">ต่ำกว่า sector ~14× | ณ ฿8.75</div></div>
+    <div class="kpi top-gold"><div class="kpi-label">P/BV (BV ~฿6.32)</div><div class="kpi-val gold">~1.38×</div><div class="kpi-sub">สมเหตุสมผล</div></div>
+    <div class="kpi top-green"><div class="kpi-label">Dividend Yield</div><div class="kpi-val green">~4.57%</div><div class="kpi-sub">฿0.40/หุ้น ณ ฿8.75</div></div>
+    <div class="kpi top-gold"><div class="kpi-label">EV/EBITDA (TTM, ประมาณการ)</div><div class="kpi-val gold">~5.5×</div><div class="kpi-sub">คำนวณจาก EV ≈ MktCap − เงินสดสุทธิ</div></div>
+    <div class="kpi top-green"><div class="kpi-label">Market Cap</div><div class="kpi-val green">~5,413 MB</div><div class="kpi-sub">618.65M หุ้น (diluted) × ฿8.75</div></div>
+    <div class="kpi top-warn"><div class="kpi-label">52W Range*</div><div class="kpi-val warn">~6.55–9.50</div><div class="kpi-sub">*ประมาณการ โปรดตรวจสอบราคาล่าสุดจาก SET</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">📉</div>Scenario Analysis (3 Cases) — ณ ราคา ฿8.75</div>
+    <div class="scenario3">
+      <div class="sc3-card sc3-bull">
+        <div class="sc3-label">🐂 BULL CASE</div>
+        <div class="sc3-price">฿10.5–12.0</div>
+        <div class="sc3-sub">Upside: +20% ถึง +37%</div>
+        <div class="sc3-prob" style="color:#166534">Probability: 30%</div>
+        <div style="font-size:11px;margin-top:8px;color:var(--muted);line-height:1.6">Neurology Center + ศูนย์เฉพาะทางดันกำไรโตต่อเนื่องเกิน 10% YoY, วัฒนาเวชฯ เดินหน้าตามแผน, SSO capitation ยังโตดี | P/E: 14-15× EPS ~0.80 บ.</div>
+      </div>
+      <div class="sc3-card sc3-base">
+        <div class="sc3-label">⚖️ BASE CASE</div>
+        <div class="sc3-price">฿9.0–10.3</div>
+        <div class="sc3-sub">Upside: +3% ถึง +18%</div>
+        <div class="sc3-prob" style="color:#1e40af">Probability: 45%</div>
+        <div style="font-size:11px;margin-top:8px;color:var(--muted);line-height:1.6">รายได้โต mid-single digit ต่อเนื่องแบบ H1/69, กำไรโตเร็วกว่ารายได้จาก Operating Leverage, ปันผลคงระดับ 0.40 บ. | P/E: 12-13× EPS ~0.75 บ.</div>
+      </div>
+      <div class="sc3-card sc3-bear">
+        <div class="sc3-label">🐻 BEAR CASE</div>
+        <div class="sc3-price">฿6.8–7.8</div>
+        <div class="sc3-sub">Downside: −11% ถึง −22%</div>
+        <div class="sc3-prob" style="color:#991b1b">Probability: 25%</div>
+        <div style="font-size:11px;margin-top:8px;color:var(--muted);line-height:1.6">Non-Capitation หดตัวต่อเนื่องจากกำลังซื้อชะลอ, ต้นทุนพลังงาน/ยาสูงขึ้น, วัฒนาเวชฯ ล่าช้ากว่าแผนจากผังเมือง กทม. | Yield ยังรักษาได้ ~5%+</div>
+      </div>
+    </div>
+    <div class="hl-green">📐 <strong>Margin of Safety:</strong> Q2/2569 ยืนยันว่ากำไรสุทธิยังโตเร็วกว่ารายได้ (Operating Leverage) แม้ Non-Capitation หดตัวเล็กน้อย เพราะ Capitation ที่โต +16.9% และการควบคุมต้นทุนช่วยชดเชย — ความเสี่ยงกำไรติดลบยังต่ำในระยะ 12 เดือน ด้วย D/E เพียง 0.15×</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">💡</div>กลยุทธ์การลงทุน (Investment Strategy)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>สถานการณ์</th><th>แนะนำ</th></tr></thead>
+        <tbody>
+          <tr><td class="tb">ยังไม่มีหุ้น</td><td>สะสม "ไม้แรก" 25-30% ที่ราคา ฿8.30-8.75 — เปิด position</td></tr>
+          <tr><td class="tb">มีหุ้นอยู่แล้ว</td><td>ถือ (Hold) — เตรียม War Chest เพิ่มน้ำหนักช่วง J-Curve dip เมื่อวัฒนาเวชฯ เปิด</td></tr>
+          <tr><td class="tb">จุด "โอกาสทอง"</td><td>ช่วง Depreciation กดกำไรชั่วคราวหลังวัฒนาเวชฯ เปิด แต่ EBITDA โต → ราคาอาจ underreact</td></tr>
+          <tr><td class="tb">ระยะถือครอง</td><td>3-4 ปี เพื่อเก็บ Tertiary growth เต็มรอบ</td></tr>
+          <tr><td class="tb" style="color:var(--red2)">Stop criteria</td><td style="color:var(--red2)">Net Margin ต่ำกว่า 10% ต่อเนื่องหลายไตรมาส OR สภาพคล่อง 1.4 พันล้านหายไปเป็น OPEX แทนการลงทุน</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="verdict-box">
+    <h3>🎯 Final Investment Verdict</h3>
+    <p>VIH ยังคงเป็น <strong>"Spring-Loaded Stock"</strong> — Q2/2569 ยืนยันคุณภาพกำไรต่อเนื่อง (กำไรสุทธิ +11.61% YoY เร็วกว่ารายได้ +3.82% ถึง 3 เท่า) พร้อมสภาพคล่อง 1.4 พันล้านบาท และ D/E เพียง 0.15× <strong>ธุรกิจหลักไม่สั่นคลอน</strong> แม้กลุ่มลูกค้าเงินสด/ประกันชีวิตชะลอตัวเล็กน้อย เพราะ Capitation ที่โต +16.9% ช่วยชดเชยได้ดี</p>
+    <p style="margin-top:10px">ณ ราคา ฿8.75 Dividend Yield ~4.57% (อิงปันผลปี 2568 ที่จ่ายแล้ว) ยังอยู่ในระดับน่าสนใจสำหรับ Value Investor ที่พร้อมรอข้ามช่วง J-Curve การก่อสร้างวัฒนาเวชฯ นี่คือ <strong>Asymmetric Risk/Reward</strong> ที่ยังน่าสนใจติดตาม</p>
+    <div class="verdict-score">🏆 Overall Score: 8.3/10 — Selective Buy ด้วย Position Sizing</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB: DIVIDEND
+═══════════════════════════════════════════ -->
+<div id="tab-dividend" class="section">
+  <div class="card">
+    <div class="card-title"><div class="card-icon">📜</div>ประวัติเงินปันผล VIH</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ปี</th><th class="tr">กำไร (MB)</th><th class="tr">EPS (฿)</th><th class="tr">ปันผล (฿/หุ้น)</th><th class="tr">Payout %</th><th class="tr">ราคาหุ้น</th><th class="tr">Yield</th></tr></thead>
+        <tbody>
+          <tr><td>2564</td><td class="tr">1,255</td><td class="tr">—</td><td class="tr">0.50</td><td class="tr">24.3%</td><td class="tr">11.20</td><td class="tr">4.46%</td></tr>
+          <tr><td>2565</td><td class="tr">697</td><td class="tr">—</td><td class="tr">0.45</td><td class="tr">39.5%</td><td class="tr">8.95</td><td class="tr">5.03%</td></tr>
+          <tr><td>2566</td><td class="tr">284</td><td class="tr">0.50</td><td class="tr">0.20</td><td class="tr">43.5%</td><td class="tr">7.45</td><td class="tr">2.68%</td></tr>
+          <tr><td>2567</td><td class="tr">315</td><td class="tr">0.53</td><td class="tr">0.25</td><td class="tr">48.1%</td><td class="tr">8.35</td><td class="tr">3.0%</td></tr>
+          <tr style="background:#f0fdf4;font-weight:700"><td>2568 (จ่ายแล้ว)</td><td class="tr">437</td><td class="tr">0.7168</td><td class="tr" style="color:var(--accent)">0.40</td><td class="tr">55.8%</td><td class="tr">9.05*</td><td class="tr" style="color:var(--accent)">4.42%*</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:var(--muted);margin-top:4px">*ราคาหุ้น ณ วันประกาศจ่ายปันผล (3 เม.ย. 69); ที่ราคาปัจจุบัน ฿8.75 (28 ส.ค. 69) ปันผล ฿0.40 คิดเป็น Yield ~4.57%</p>
+    <div class="hl-gold">📌 Payout ratio ลดจาก 71% → 56% = สัญญาณ "Cash Hoarding" เพื่อก่อสร้างโรงพยาบาลใหม่ ไม่ใช่สัญญาณลบของธุรกิจ นโยบายปันผลขั้นต่ำ 50% ของกำไรสุทธิ (งบเฉพาะกิจการ) — ผู้บริหารยืนยันใน OppDay Q2/2569 ว่าไม่เคยจ่าย Payout ต่ำกว่า 70% ในอดีต และการปรับนโยบายจะไม่กระทบผู้ถือหุ้นด้านเงินปันผล</div>
+  </div>
+
+  <div class="div-hero">
+    <h3>📐 เป้าหมายรายได้ปันผล — คำนวณจากปันผล ฿0.40/หุ้น ณ ราคาปัจจุบัน ฿8.75</h3>
+    <div class="table-wrap" style="margin-top:12px">
+      <table>
+        <thead>
+          <tr>
+            <th>เป้าปันผล/ปี</th>
+            <th class="tr">จำนวนหุ้น</th>
+            <th class="tr">เงินลงทุน (ณ ฿8.75)</th>
+            <th class="tr">ปันผลก่อนหักภาษี</th>
+            <th class="tr">ปันผลสุทธิ (หักภาษี 10%)</th>
+            <th class="tr">Yield on Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="color:white"><td>5,000 บ./ปี</td><td class="tr">12,500</td><td class="tr">109,375</td><td class="tr">5,000</td><td class="tr">4,500</td><td class="tr">4.57%</td></tr>
+          <tr style="color:white"><td>10,000 บ./ปี</td><td class="tr">25,000</td><td class="tr">218,750</td><td class="tr">10,000</td><td class="tr">9,000</td><td class="tr">4.57%</td></tr>
+          <tr style="color:white"><td>20,000 บ./ปี</td><td class="tr">50,000</td><td class="tr">437,500</td><td class="tr">20,000</td><td class="tr">18,000</td><td class="tr">4.57%</td></tr>
+          <tr style="color:white"><td>50,000 บ./ปี</td><td class="tr">125,000</td><td class="tr">1,093,750</td><td class="tr">50,000</td><td class="tr">45,000</td><td class="tr">4.57%</td></tr>
+          <tr style="color:white"><td>100,000 บ./ปี</td><td class="tr">250,000</td><td class="tr">2,187,500</td><td class="tr">100,000</td><td class="tr">90,000</td><td class="tr">4.57%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">📊</div>DCA Simulation — สะสม 1,000 หุ้น/รอบ</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>รอบที่</th>
+            <th class="tr">ราคาซื้อ</th>
+            <th class="tr">หุ้นสะสม</th>
+            <th class="tr">ต้นทุนรวม (฿)</th>
+            <th class="tr">ต้นทุนเฉลี่ย</th>
+            <th class="tr">ปันผลรับ/ปี*</th>
+            <th class="tr">Yield on Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td class="tr">฿7.50 (−14%)</td><td class="tr">1,000</td><td class="tr">7,500</td><td class="tr">7.50</td><td class="tr">400</td><td class="tr"><span class="b-green">5.33%</span></td></tr>
+          <tr><td>2</td><td class="tr">฿8.00 (−9%)</td><td class="tr">2,000</td><td class="tr">15,500</td><td class="tr">7.75</td><td class="tr">800</td><td class="tr"><span class="b-green">5.16%</span></td></tr>
+          <tr style="background:#f0fdf4;font-weight:700"><td>3</td><td class="tr tb">฿8.75 (ราคาตลาด)</td><td class="tr tb">3,000</td><td class="tr tb">24,250</td><td class="tr tb">8.08</td><td class="tr tb">1,200</td><td class="tr"><span class="b-green">4.95%</span></td></tr>
+          <tr><td>4</td><td class="tr">฿9.25 (+6%)</td><td class="tr">4,000</td><td class="tr">33,500</td><td class="tr">8.38</td><td class="tr">1,600</td><td class="tr"><span class="b-gold">4.78%</span></td></tr>
+          <tr><td>5</td><td class="tr">฿9.75 (+11%)</td><td class="tr">5,000</td><td class="tr">43,250</td><td class="tr">8.65</td><td class="tr">2,000</td><td class="tr"><span class="b-gold">4.62%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11.5px;color:var(--muted);margin-top:8px">* คำนวณจากปันผล ฿0.40/หุ้น ก่อนหักภาษี | เป็นเพียงการจำลอง ไม่ใช่คำแนะนำการลงทุน</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">🧾</div>Tax Credit Table — เครดิตภาษีปันผล (บริษัทเสียภาษี 20%)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>รายการ</th><th class="tr">ปันผล ฿0.40/หุ้น</th><th class="tr">เครดิตภาษี</th><th class="tr">รายได้รวม</th><th class="tr">ภาษีต้องชำระ (ฐาน 20%)</th><th class="tr">รับสุทธิ (ฐาน 20%)</th></tr></thead>
+        <tbody>
+          <tr><td>บริษัทเสียภาษี 20%</td><td class="tr">0.40</td><td class="tr">+0.10</td><td class="tr">0.50</td><td class="tr">0.10</td><td class="tr tb" style="color:var(--accent)">0.40</td></tr>
+          <tr><td>นักลงทุนฐาน 30%</td><td class="tr">0.40</td><td class="tr">+0.10</td><td class="tr">0.50</td><td class="tr">0.15</td><td class="tr tb" style="color:var(--gold)">0.35</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11.5px;color:var(--muted);margin-top:6px">* การคำนวณขึ้นอยู่กับฐานภาษีส่วนบุคคลของผู้ลงทุน โปรดปรึกษาผู้เชี่ยวชาญด้านภาษี</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB: OPPDAY Q&A
+═══════════════════════════════════════════ -->
+<div id="tab-oppday" class="section">
+  <div class="hl-blue" style="margin-bottom:18px">
+    📢 <strong>OppDay Q2/2569 — Opportunity Day ครั้งที่ 3</strong><br>
+    นำเสนอ 28 สิงหาคม 2569 | ผู้บริหาร: นพ.มงคล วณิชภักดีเดชา (รอง CEO), ดร.ศักดา ตั้งจิตวัฒนากร (CFO), นพ.กร ตาลทิพย์ (รอง CEO)
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi top-green"><div class="kpi-label">Q2/69 Revenue</div><div class="kpi-val green">766.68 MB</div><div class="kpi-sub">+3.82% YoY</div></div>
+    <div class="kpi top-green"><div class="kpi-label">Q2/69 Net Profit</div><div class="kpi-val green">+11.61%</div><div class="kpi-sub">YoY (108.34 MB)</div></div>
+    <div class="kpi top-blue"><div class="kpi-label">Gross Margin Q2</div><div class="kpi-val blue">27.47%</div><div class="kpi-sub">จาก 26.13% ปีก่อน</div></div>
+    <div class="kpi top-warn"><div class="kpi-label">EBITDA Margin Q2</div><div class="kpi-val warn">23.99%</div><div class="kpi-sub">จาก 22.65% ปีก่อน</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">🧠</div>Highlight Cards — สาระสำคัญจาก OppDay Q2/2569</div>
+    <div class="highlight-grid">
+      <div class="highlight-card tone-bullish">
+        <div class="hc-top"><div class="hc-icon">🚀</div><span class="tone-badge bullish">Bullish</span></div>
+        <div class="hc-title">กำไรโตเร็วกว่ารายได้ 3 เท่า</div>
+        <div class="hc-body">Q2 กำไรสุทธิ +11.61% vs รายได้ +3.82% สะท้อน Operating Leverage ที่ทำงานได้ดี</div>
+      </div>
+      <div class="highlight-card tone-bullish">
+        <div class="hc-top"><div class="hc-icon">💰</div><span class="tone-badge bullish">Bullish</span></div>
+        <div class="hc-title">Capitation โต +16.92% (Q2)</div>
+        <div class="hc-body">มาจาก Adjust RW ที่ดีขึ้นจากการรักษาโรคซับซ้อน ไม่ใช่จำนวนผู้ประกันตนเพิ่ม — ยั่งยืนกว่า</div>
+      </div>
+      <div class="highlight-card tone-neutral">
+        <div class="hc-top"><div class="hc-icon">⚠️</div><span class="tone-badge neutral">Neutral</span></div>
+        <div class="hc-title">SG&A ผันผวนจากรายการ One-off</div>
+        <div class="hc-body">ตั้งสำรองค่าใช้จ่ายที่สาขาหนองแขม ~5 MB ครั้งเดียว ผู้บริหารยืนยันปรับสัญญาแล้วไม่เกิดซ้ำ</div>
+      </div>
+      <div class="highlight-card tone-bearish">
+        <div class="hc-top"><div class="hc-icon">📉</div><span class="tone-badge bearish">Bearish</span></div>
+        <div class="hc-title">Non-Capitation หด −0.77% (Q2)</div>
+        <div class="hc-body">กลุ่มคนไข้เงินสด/ประกันชีวิต Simple Disease ชะลอตัวจากกำลังซื้อ — ผู้บริหารยอมรับตรงไปตรงมา</div>
+      </div>
+      <div class="highlight-card tone-neutral">
+        <div class="hc-top"><div class="hc-icon">🏗️</div><span class="tone-badge neutral">Neutral</span></div>
+        <div class="hc-title">วัฒนาเวชฯ รอผังเมือง กทม. ฉบับใหม่</div>
+        <div class="hc-body">คาดประกาศใช้ปี 2569 ก่อนสรุปแบบก่อสร้างสุดท้ายเพื่อใช้ที่ดินให้เต็มศักยภาพ</div>
+      </div>
+      <div class="highlight-card tone-bullish">
+        <div class="hc-top"><div class="hc-icon">🧠</div><span class="tone-badge bullish">Bullish</span></div>
+        <div class="hc-title">ศูนย์สมอง/หัวใจดัน Gross Margin ต่อเนื่อง</div>
+        <div class="hc-body">ความสามารถรักษาโรคซับซ้อนที่เพิ่มขึ้นเป็นตัวขับเคลื่อนหลักของ Margin ที่ดีขึ้นทุกไตรมาส</div>
+      </div>
+      <div class="highlight-card tone-bullish">
+        <div class="hc-top"><div class="hc-icon">💵</div><span class="tone-badge bullish">Bullish</span></div>
+        <div class="hc-title">Payout Ratio ไม่เคยต่ำกว่า 70% ในอดีต</div>
+        <div class="hc-body">แม้นโยบายกำหนดขั้นต่ำ 50% แต่ในทางปฏิบัติจ่ายสูงกว่ามาตลอด — ความเสี่ยงต่อผู้ถือหุ้นด้านปันผลต่ำ</div>
+      </div>
+      <div class="highlight-card tone-neutral">
+        <div class="hc-top"><div class="hc-icon">🌏</div><span class="tone-badge neutral">Neutral</span></div>
+        <div class="hc-title">ฐานลูกค้าต่างชาติขยายที่สมุทรสาคร/MFM</div>
+        <div class="hc-body">แรงงานเมียนมาเป็นฐานสูติกรรมหลักต่อเนื่อง เริ่มเห็นสัญชาติอื่นเพิ่มขึ้นตามการเติบโตของพื้นที่</div>
+      </div>
+      <div class="highlight-card tone-neutral">
+        <div class="hc-top"><div class="hc-icon">🏥</div><span class="tone-badge neutral">Neutral</span></div>
+        <div class="hc-title">ค่าเวชภัณฑ์/พลังงานควบคุมได้</div>
+        <div class="hc-body">Inventory เตรียมล่วงหน้า โลจิสติกส์ปกติ — ต้นทุนยาโรคซับซ้อนสูงขึ้นแต่แลกมาด้วย Margin ที่สูงขึ้น</div>
+      </div>
+      <div class="highlight-card tone-neutral">
+        <div class="hc-top"><div class="hc-icon">🩺</div><span class="tone-badge neutral">Neutral</span></div>
+        <div class="hc-title">แผนซื้อหุ้นเพิ่ม รพ. แม่สอด ยังไม่สรุป</div>
+        <div class="hc-body">อยู่ระหว่างพิจารณา ผลประกอบการปัจจุบันของแม่สอด (ถือ ~8%) ยังดีต่อเนื่องแม้มีความไม่สงบใกล้เคียง</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">💬</div>Interactive Q&A — คำถามจากนักวิเคราะห์/นักลงทุน (คลิกเพื่อดูคำตอบฉบับเต็ม)</div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q1: สัดส่วนรายได้จากกลุ่มโรคซับซ้อนใน Q2 ผลักดันอัตรากำไรขั้นต้นแค่ไหน และมีแผนขยายบริการอย่างไร?</div>
+        <div class="q-badges">
+          <span class="tone-badge bullish">Bullish</span>
+          <span class="stars">⭐⭐⭐⭐⭐</span>
+          <span class="conf-badge conf-high">High</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> เป็นปัจจัยสำคัญมาก การรักษาคนไข้ IPD กลุ่ม Simple Disease ยากขึ้นในหลายส่วน โดยเฉพาะฝั่งประกัน แต่การชิฟต์มาดูแลคนไข้ <strong>โรคซับซ้อน</strong> (หัวใจ, สมอง, ผ่าตัดแผลเล็ก) เกือบไม่มีประเด็นกับบริษัทประกันเพราะเป็นการรักษาที่จำเป็น ส่งผลบวกต่อเนื่องไปถึง Q3-Q4/2569
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69), นพ.กร ตาลทิพย์</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge bullish">Bullish</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-high">High</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q2: ประสิทธิภาพควบคุมต้นทุนทางการแพทย์และ SG&A ในงวดล่าสุด เกิดจากการปรับโครงสร้างถาวรหรือปัจจัยชั่วคราว?</div>
+        <div class="q-badges">
+          <span class="tone-badge neutral">Neutral</span>
+          <span class="stars">⭐⭐⭐⭐</span>
+          <span class="conf-badge conf-high">High</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> ผลกระทบ SG&A ส่วนหนึ่งมาจากการ <strong>ตั้งค่าเผื่อที่สาขาหนองแขม (one-off ครั้งเดียว)</strong> ซึ่งฝ่ายบริหารได้ปรับปรุงข้อสัญญาให้รัดกุมแล้วจะไม่เกิดซ้ำ อีกส่วนคือค่าใช้จ่ายการตลาดที่ <strong>ลดลง</strong> ที่สาขาสมุทรสาคร เพราะปีนี้มีการตรวจแรงงานต่างด้าวน้อยกว่าปกติ (เป็นผลบวกชั่วคราว)
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69), ดร.ศักดา ตั้งจิตวัฒนากร (CFO)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge neutral">Neutral — ชี้แจงตรงไปตรงมา</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-high">High</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q3: รายได้และจำนวนผู้ประกันตนในเครือข่ายประกันสังคมช่วยสร้างความมั่นคงกระแสเงินสดแค่ไหน?</div>
+        <div class="q-badges">
+          <span class="tone-badge bullish">Bullish</span>
+          <span class="stars">⭐⭐⭐⭐⭐</span>
+          <span class="conf-badge conf-high">High</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> ระบบ Capitation จ่ายแบบเหมาจ่ายปลายปิด กลยุทธ์คือหาโรคที่เบิกเพิ่มได้ เช่น หนองแขมเปิดศูนย์หัวใจก็เบิกเคสหัวใจได้มากขึ้น แยกไฟฉายเปิดศูนย์สูตินรีเวชก็เบิกด้านนี้ได้มากขึ้น ทำให้มี Margin จาก Capitation เป็นฐานรายได้ที่มั่นคงในภาวะวิกฤต — <strong>ไม่ได้เน้นเพิ่มจำนวนหัวผู้ประกันตน</strong> แต่เน้นบริหารจัดการให้เบิกได้เต็มประสิทธิภาพ
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69), นพ.มงคล วณิชภักดีเดชา</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge bullish">Bullish</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-high">High</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q4: การแข่งขันแย่งชิงบุคลากรทางการแพทย์สร้างแรงกดดันต้นทุนค่าจ้างมากน้อยเพียงใด?</div>
+        <div class="q-badges">
+          <span class="tone-badge bullish">Bullish</span>
+          <span class="stars">⭐⭐⭐⭐</span>
+          <span class="conf-badge conf-mid">Mid</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> ไม่มีต้นทุนพิเศษ เพราะแต่ละสาขาดำเนินการมามากกว่า 30 ปี มี Community ของแพทย์/พยาบาลที่มั่นคง ใช้วิธี Referral จากคนรู้จักเป็นหลักมากกว่าการซื้อตัว บุคลากรส่วนใหญ่อยู่กับบริษัทอย่างน้อย 10 ปี
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge bullish">Bullish</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-mid">Mid — ไม่มีตัวเลขเชิงปริมาณอ้างอิง</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q5: ภาวะหนี้ครัวเรือนและกำลังซื้อที่ชะลอตัวกระทบกลุ่มผู้ป่วยเงินสดชัดเจนแค่ไหน?</div>
+        <div class="q-badges">
+          <span class="tone-badge bearish">Bearish</span>
+          <span class="stars">⭐⭐⭐⭐</span>
+          <span class="conf-badge conf-mid">Mid</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> เห็นผลชัดกับกลุ่ม <strong>Simple Disease</strong> ตั้งแต่ Q2 แล้ว และบริษัทปรับตัวรับมือแล้ว ต่อจากนี้จะเน้นโรคซับซ้อนซึ่งเป็นโรคที่รอไม่ได้ คนไข้บางส่วนอาจหันไปใช้บริการโรงพยาบาลรัฐ แต่กลุ่มที่ยังมารักษาที่ VIH ยังเติบโตน่าประทับใจ สะท้อนว่า Demand ยังมีอยู่ เพียงต้องวางตำแหน่งโรงพยาบาลให้เหมาะสม
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge neutral">Neutral — ยอมรับความเสี่ยงตรงไปตรงมา</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-mid">Mid — ไม่ระบุ Timeline ฟื้นตัวชัดเจน</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q6: ความผันผวนราคาเวชภัณฑ์/สาธารณูปโภคจากสถานการณ์โลกกระทบความสามารถทำกำไรระยะถัดไปแค่ไหน?</div>
+        <div class="q-badges">
+          <span class="tone-badge bullish">Bullish</span>
+          <span class="stars">⭐⭐⭐⭐</span>
+          <span class="conf-badge conf-high">High</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> แทบไม่มีผลกระทบ เพราะเพิ่ม Inventory ยา/เวชภัณฑ์ล่วงหน้าไว้แล้ว โลจิสติกส์กลับสู่ภาวะปกติ ต้นทุนยา/เวชภัณฑ์โดยรวมยังอยู่ใน Control มีเพียงต้นทุนยาสำหรับโรคซับซ้อนที่สูงขึ้นตามธรรมชาติของการรักษา ซึ่งแลกมาด้วย Margin ที่สูงขึ้นเช่นกัน
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69), ดร.ศักดา ตั้งจิตวัฒนากร (CFO)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge bullish">Bullish</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-high">High</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q7: แนวโน้มผลประกอบการ Q3/2569 จะโตหรือชะลอตัวอย่างไรภายใต้ High Season โรคหน้าฝน?</div>
+        <div class="q-badges">
+          <span class="tone-badge neutral">Neutral</span>
+          <span class="stars">⭐⭐</span>
+          <span class="conf-badge conf-low">Low</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> ผู้บริหารยังไม่สามารถให้ตัวเลขได้ชัดเจนเพราะอยู่ระหว่างไตรมาส แต่ให้ความมั่นใจว่ากลุ่มยังคง Performance ที่น่าประทับใจต่อเนื่อง โดยพบว่าคนไข้เพิ่มขึ้นตั้งแต่ช่วง RSV ใน Q2 ต่อเนื่องมาถึงโควิด-19 และไข้หวัดใหญ่ที่กำลังระบาด
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge neutral">Neutral — ระมัดระวังไม่ให้ Guidance</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-low">Low — ไม่มีตัวเลขยืนยัน</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q8: บริษัทมีแผนปรับ Payout Ratio ขึ้นหรือไม่?</div>
+        <div class="q-badges">
+          <span class="tone-badge bullish">Bullish</span>
+          <span class="stars">⭐⭐⭐⭐⭐</span>
+          <span class="conf-badge conf-high">High</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> นโยบายเดิมกำหนด Payout ขั้นต่ำไม่ต่ำกว่า 50% แต่ในทางปฏิบัติบริษัท <strong>ไม่เคยจ่ายต่ำกว่า 70%</strong> มาก่อน ดังนั้นการปรับหรือไม่ปรับ Policy จะไม่กระทบผู้ถือหุ้นด้านเงินปันผลอย่างมีนัยสำคัญ
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69), ดร.ศักดา ตั้งจิตวัฒนากร (CFO)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge bullish">Bullish — ยืนยันชัดเจน</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-high">High</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q9: ความคืบหน้าโรงพยาบาลแห่งใหม่ (วัฒนาเวชฯ) เป็นอย่างไรบ้าง?</div>
+        <div class="q-badges">
+          <span class="tone-badge neutral">Neutral</span>
+          <span class="stars">⭐⭐⭐</span>
+          <span class="conf-badge conf-mid">Mid</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> มีประเด็นเรื่อง<strong>ผังเมือง กทม. ฉบับใหม่</strong> ที่คาดว่าจะประกาศใช้ในปี 2569 (จากฉบับปี 2556, ทบทวนปี 2566) ซึ่งอาจทำให้ Utilization ของที่ดินโครงการทำได้ดีขึ้น ฝ่ายบริหารจึงรอความชัดเจนก่อนสรุปแบบก่อสร้างสุดท้าย เพื่อให้ใช้ประโยชน์ที่ดินได้เต็มศักยภาพ — ขอให้นักลงทุนใจเย็นรอความชัดเจนนี้ก่อน
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge neutral">Neutral — ขอความอดทนรอความชัดเจน</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-mid">Mid — Timeline ยังไม่ล็อก</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q10: แผนบริหารสภาพคล่อง 1,400 ล้านบาท จะใช้ในโครงการใหม่เท่าไหร่?</div>
+        <div class="q-badges">
+          <span class="tone-badge neutral">Neutral</span>
+          <span class="stars">⭐⭐⭐</span>
+          <span class="conf-badge conf-mid">Mid</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> ไม่ได้วางแผนใช้เงินทั้งหมดกับโครงการใหม่อย่างเดียว ส่วนหนึ่งสำรองไว้สำหรับพัฒนา <strong>Medical Excellence</strong> (เทคโนโลยีทางการแพทย์ใหม่ๆ เช่น Calcium Score, Liquid Biopsy ตรวจ DNA มะเร็ง, หุ่นยนต์ทำกายภาพบำบัด) ซึ่งเข้ามาเร็วทุกไตรมาส การมีสภาพคล่องสูงช่วยให้บริหารบนความไม่ประมาทท่ามกลางภาวะเศรษฐกิจปัจจุบัน
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69), ดร.ศักดา ตั้งจิตวัฒนากร (CFO)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge neutral">Neutral</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-mid">Mid — ไม่ระบุสัดส่วน %</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q11: มีแผนซื้อหุ้นเพิ่มในโรงพยาบาลแม่สอด (ถือ ~8%) หรือไม่ และผลประกอบการเป็นอย่างไร?</div>
+        <div class="q-badges">
+          <span class="tone-badge neutral">Neutral</span>
+          <span class="stars">⭐⭐</span>
+          <span class="conf-badge conf-low">Low</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> อยู่ระหว่างพิจารณา ยังไม่มีข้อสรุป ผลประกอบการโรงพยาบาลแม่สอดอินเตอร์เนชั่นแนล (คนไข้เงินสด/margin สูง) ยังดีต่อเนื่อง แม้พื้นที่ใกล้เคียงมีความไม่สงบ สะท้อนความเชื่อถือของคนไข้ทั้งสองฝั่งชายแดน
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge neutral">Neutral — ยังไม่ตัดสินใจ</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-low">Low — ไม่มีข้อสรุป/Timeline</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q12: สัดส่วนลูกค้าคนไทยกับต่างชาติของศูนย์ MFM (เวชศาสตร์มารดาและทารก) และภาพรวมลูกค้าต่างชาติ?</div>
+        <div class="q-badges">
+          <span class="tone-badge neutral">Neutral</span>
+          <span class="stars">⭐⭐⭐</span>
+          <span class="conf-badge conf-mid">Mid</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> ส่วนใหญ่ยังเป็นคนไทย เริ่มแนะนำบริการให้ต่างชาติผ่านหน่วยงานที่มาเยี่ยมชม ส่วนสาขาสมุทรสาครมีฐานลูกค้าต่างชาติ (โดยเฉพาะแรงงานเมียนมา) เป็นลูกค้าหลักของงานสูติกรรมมาอย่างต่อเนื่อง และเริ่มเห็นสัญชาติอื่นเข้ามาใช้บริการเพิ่มขึ้นตามการเติบโตของพื้นที่
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge neutral">Neutral</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-mid">Mid — เชิงคุณภาพ ไม่มีตัวเลข %</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="q-text">Q13: โควตาผู้ประกันตนในเครือข่ายประกันสังคมมีเท่าไหร่ และปัจจุบันใช้สิทธิ์อยู่กี่คน?</div>
+        <div class="q-badges">
+          <span class="tone-badge bullish">Bullish</span>
+          <span class="stars">⭐⭐⭐⭐</span>
+          <span class="conf-badge conf-high">High</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+      </button>
+      <div class="accordion-body">
+        <strong>คำตอบ:</strong> โควตารวมประมาณ <strong>258,000–260,000 ราย</strong> ปัจจุบันใช้อยู่ประมาณ <strong>210,000 ราย</strong> ยังขยายได้อีก 40,000–50,000 ราย แต่บริษัทเน้นการบริหารจัดการเพื่อประสิทธิภาพในการรักษามากกว่าการเพิ่มจำนวนหัวผู้ประกันตน
+        <div class="meta-row">
+          <div class="meta-item"><span class="meta-label">แหล่งข้อมูล:</span> OppDay Q2/2569 (28 ส.ค. 69)</div>
+          <div class="meta-item"><span class="meta-label">น้ำเสียงผู้บริหาร:</span> <span class="tone-badge bullish">Bullish — มี Headroom เหลือ</span></div>
+          <div class="meta-item"><span class="meta-label">ระดับความมั่นใจ:</span> <span class="conf-badge conf-high">High — มีตัวเลขระบุชัดเจน</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon">📌</div>คำถามแนะนำสำหรับ OppDay ครั้งถัดไป (Q3/2569)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>คำถาม</th><th>สิ่งที่ต้องการรู้</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>ผังเมือง กทม. ฉบับใหม่ประกาศใช้แล้วหรือยัง? กระทบแบบก่อสร้างวัฒนาเวชฯ อย่างไร?</td><td>ยืนยัน Timeline + Design + Budget</td></tr>
+          <tr><td>2</td><td>Non-Capitation ที่หดตัว −0.77% ใน Q2 ฟื้นตัวใน Q3 หรือยัง?</td><td>ทิศทางกำลังซื้อกลุ่มเงินสด/ประกันชีวิต</td></tr>
+          <tr><td>3</td><td>Capitation ยังรักษาอัตราโต 15%+ ต่อได้ไหมหลัง Base สูงขึ้น?</td><td>ความยั่งยืนของ SSO growth</td></tr>
+          <tr><td>4</td><td>สภาพคล่อง 1,416 MB มีสัดส่วนจัดสรรเพื่อก่อสร้าง vs Medical Excellence เท่าไหร่?</td><td>Capital allocation discipline</td></tr>
+          <tr><td>5</td><td>แผนซื้อหุ้นเพิ่มโรงพยาบาลแม่สอดมีความคืบหน้าหรือไม่?</td><td>M&A optionality</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+</div><!-- end .main -->
+
+<div class="footer">
+  ⚠️ รายงานนี้จัดทำเพื่อการศึกษาและวิเคราะห์เท่านั้น ไม่ถือเป็นคำแนะนำการลงทุน การลงทุนมีความเสี่ยง ผู้ลงทุนควรศึกษาข้อมูลและตัดสินใจด้วยวิจารณญาณของตนเอง<br>
+  ข้อมูลอ้างอิง: งบการเงิน VIH ไตรมาส 2/2569 และปี 2568 (BE), One Report 56-1, OppDay 28 ส.ค. 2569, set.or.th · ราคาหุ้น ณ 28 ส.ค. 2569 = ฿8.75 · อัตราส่วนมูลค่า (P/E, P/BV, EV/EBITDA) เป็นการประมาณการจากข้อมูลย้อนหลัง 4 ไตรมาส (TTM) โปรดตรวจสอบราคาและอัตราส่วนล่าสุดจาก set.or.th ก่อนตัดสินใจลงทุน
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function toggleAcc(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  // close all
+  document.querySelectorAll('.acc-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.acc-head').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    body.classList.add('open');
+    btn.classList.add('open');
+  }
+}
+
+function toggleAccordion(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  // close all (independent multi-open allowed — only toggle this one)
+  body.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+</script>
+</body>
+</html>
