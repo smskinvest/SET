@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BH — Bumrungrad Hospital · Deep-Dive Analysis 2/4/2569</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --teal:#006E6E;--teal2:#008080;--teal3:#00A896;--teal-light:#E0F4F4;
+  --gold:#C4933F;--gold2:#E8B04B;
+  --bg:#F5F7FA;--surface:#FFF;--surface2:#F0F3F8;
+  --text:#1A2B3C;--text2:#4A5568;--text3:#8A9AB0;
+  --green:#1a7a4a;--green-bg:#E8F5EE;
+  --red:#b91c1c;--red-bg:#FEF2F2;
+  --amber:#92400e;--amber-bg:#FFFBEB;
+  --blue:#1e40af;--blue-bg:#EFF6FF;
+  --border:#DDE3EE;--radius:10px;--radius-lg:16px;
+  --shadow:0 2px 12px rgba(0,110,110,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+.header{background:linear-gradient(135deg,#004d4d,var(--teal2));color:#fff;padding:0 24px;display:flex;align-items:center;position:sticky;top:0;z-index:100;height:64px;border-bottom:3px solid var(--gold)}
+.logo-badge{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;margin-right:14px;flex-shrink:0}
+.header-title{font-size:17px;font-weight:600}
+.header-sub{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px}
+.header-metrics{display:flex;gap:20px;margin-left:auto;align-items:center}
+.hm-val{font-size:18px;font-weight:600;color:var(--gold2)}
+.hm-lbl{font-size:10px;color:rgba(255,255,255,0.55)}
+.set-strip{background:#004d4d;padding:5px 24px;display:flex;gap:16px;overflow-x:auto;border-bottom:1px solid rgba(255,255,255,0.1);align-items:center;flex-wrap:nowrap}
+.set-item{font-size:11px;color:rgba(255,255,255,0.7);white-space:nowrap;flex-shrink:0}
+.set-val{font-weight:600;color:var(--gold2)}
+.broker-strip{background:var(--teal2);padding:5px 24px;display:flex;gap:12px;overflow-x:auto;border-bottom:1px solid rgba(255,255,255,0.08)}
+.broker-pill{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:11px;color:rgba(255,255,255,0.75);flex-shrink:0}
+.br-buy{background:#1a7a4a;color:#fff;padding:1px 7px;border-radius:20px;font-size:10px;font-weight:600}
+.br-hold{background:#92400e;color:#fff;padding:1px 7px;border-radius:20px;font-size:10px;font-weight:600}
+.br-trading{background:#1e40af;color:#fff;padding:1px 7px;border-radius:20px;font-size:10px;font-weight:600}
+.nav{background:var(--teal2);display:flex;gap:2px;padding:0 24px;overflow-x:auto}
+.nav-btn{padding:9px 14px;font-size:12px;color:rgba(255,255,255,0.6);background:none;border:none;cursor:pointer;font-family:'Noto Sans Thai',sans-serif;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.nav-btn:hover{color:#fff}
+.nav-btn.active{color:var(--gold2);border-bottom-color:var(--gold2);font-weight:500}
+.container{max-width:1100px;margin:0 auto;padding:18px}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.metric-card{background:var(--surface);border-radius:var(--radius);padding:12px 14px;border:1px solid var(--border);box-shadow:var(--shadow)}
+.metric-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px}
+.metric-value{font-size:22px;font-weight:600;color:var(--text);line-height:1.1}
+.metric-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-amber{background:var(--amber-bg);color:var(--amber)}
+.badge-blue{background:var(--blue-bg);color:var(--blue)}
+.badge-teal{background:var(--teal-light);color:var(--teal)}
+.badge-navy{background:#004d4d;color:#fff}
+.card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);box-shadow:var(--shadow);padding:18px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title-icon{width:22px;height:22px;border-radius:6px;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;flex-shrink:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl thead th{background:var(--surface2);padding:7px 9px;text-align:left;font-weight:500;color:var(--text2);font-size:11px;border-bottom:1px solid var(--border)}
+.tbl tbody td{padding:7px 9px;border-bottom:1px solid var(--border);color:var(--text)}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover{background:var(--surface2)}
+.r{text-align:right}.c{text-align:center}
+.strong{font-weight:600}
+.chart-wrap{position:relative;width:100%}
+.chart-wrap.h200{height:200px}
+.chart-wrap.h250{height:250px}
+.chart-wrap.h300{height:300px}
+.chart-wrap.h350{height:350px}
+.chart-wrap.h400{height:400px}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.slider-label{font-size:12px;color:var(--text2);min-width:140px}
+.slider-val{font-size:13px;font-weight:600;min-width:60px;text-align:right;color:var(--teal)}
+input[type=range]{-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border);outline:none;flex:1}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal);cursor:pointer}
+.sc-card{border-left:4px solid;border-radius:0 var(--radius) var(--radius) 0;padding:10px 14px;margin-bottom:8px}
+.sc-bull{border-color:#1a7a4a;background:#f0faf4}
+.sc-base{border-color:#1e40af;background:#f0f5ff}
+.sc-bear{border-color:#b91c1c;background:#fff5f5}
+.sc-warn{border-color:#b45309;background:#fffaf0}
+.sc-teal{border-color:var(--teal);background:var(--teal-light)}
+.sc-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.sc-body{font-size:12px;color:var(--text2);line-height:1.7}
+.hl-box{background:linear-gradient(135deg,#004d4d,var(--teal2));color:#fff;border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:14px}
+.hl-box h3{font-size:14px;font-weight:600;color:var(--gold2);margin-bottom:6px}
+.hl-box p{font-size:12px;color:rgba(255,255,255,0.82);line-height:1.7}
+.flag{padding:7px 11px;border-radius:8px;font-size:12px;display:flex;align-items:flex-start;gap:7px;line-height:1.5;margin-bottom:5px}
+.flag-warn{background:var(--red-bg);color:var(--red)}
+.flag-ok{background:var(--green-bg);color:var(--green)}
+.flag-info{background:var(--blue-bg);color:var(--blue)}
+.invest-output{background:linear-gradient(135deg,#004d4d,var(--teal2));color:#fff;border-radius:var(--radius-lg);padding:14px 18px}
+.invest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+.invest-item .il{font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:2px}
+.invest-item .iv{font-size:16px;font-weight:600;color:var(--gold2)}
+.sticky-note{background:#fffde7;border:1px solid #f9a825;border-radius:var(--radius);padding:9px 12px;font-size:11px;color:#5d4037;margin-top:10px;line-height:1.6}
+.divider{height:1px;background:var(--border);margin:12px 0}
+/* Business Cycle */
+.cycle-container{position:relative;width:100%;height:340px;overflow:visible}
+.cycle-svg{width:100%;height:100%}
+@media(max-width:700px){.metrics-row{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-badge">BH</div>
+  <div>
+    <div class="header-title">Bumrungrad Hospital PCL — BH TB</div>
+    <div class="header-sub">SET · Healthcare · ราคาอ้างอิง 2 เมษายน 2569 · แหล่งข้อมูล: SET Factsheet + Broker Reports</div>
+  </div>
+  <div class="header-metrics">
+    <div><div class="hm-val">168.50 ฿</div><div class="hm-lbl">ราคา 2/4/69</div></div>
+    <div><div class="hm-val">17.83x</div><div class="hm-lbl">P/E FY68</div></div>
+    <div><div class="hm-val">4.34x</div><div class="hm-lbl">P/BV</div></div>
+    <div><div class="hm-val">2.97%</div><div class="hm-lbl">Div Yield 69E</div></div>
+  </div>
+</div>
+
+<div class="set-strip">
+  <div class="set-item">📊 SET Factsheet (6 มี.ค. 2569):</div>
+  <div class="set-item">Market Cap <span class="set-val">133,923 M฿</span></div>
+  <div class="set-item">EV <span class="set-val">134,748 M฿</span></div>
+  <div class="set-item">EBITDA (Trailing) <span class="set-val">10,375 M฿</span></div>
+  <div class="set-item">EV/EBITDA <span class="set-val">12.99x</span></div>
+  <div class="set-item">P/E <span class="set-val">17.83x</span></div>
+  <div class="set-item">P/BV <span class="set-val">4.34x</span></div>
+  <div class="set-item">52W H/L <span class="set-val">214/130 ฿</span></div>
+  <div class="set-item">Paid-up <span class="set-val">794.97M หุ้น · Par 1฿</span></div>
+  <div class="set-item">Auditor <span class="set-val">EY (สำนักงาน อีวาย จำกัด)</span></div>
+</div>
+
+<div class="broker-strip">
+  <div class="broker-pill">Consensus:</div>
+  <div class="broker-pill">MST <span class="br-hold">HOLD</span> TP 190</div>
+  <div class="broker-pill">YUANTA <span class="br-buy">BUY</span> TP 219</div>
+  <div class="broker-pill">KSS <span class="br-buy">BUY</span> TP 210</div>
+  <div class="broker-pill">BLS <span class="br-buy">BUY</span> TP 195</div>
+  <div class="broker-pill">ASPS <span class="br-trading">TRADING</span> TP 180</div>
+  <div class="broker-pill">Mean TP: <span style="color:var(--gold2);font-weight:600">199 ฿ (+18% จาก 168.50)</span></div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showTab('overview')">📊 ภาพรวม</button>
+  <button class="nav-btn" onclick="showTab('revenue')">💊 Revenue Mix</button>
+  <button class="nav-btn" onclick="showTab('financial')">📈 Financial</button>
+  <button class="nav-btn" onclick="showTab('valuation')">💎 Valuation</button>
+  <button class="nav-btn" onclick="showTab('capex')">🏗️ CAPEX vs Revenue</button>
+  <button class="nav-btn" onclick="showTab('phuket')">🏖️ Phuket Projection</button>
+  <button class="nav-btn" onclick="showTab('noME')">⚠️ No ME/Cambodia</button>
+  <button class="nav-btn" onclick="showTab('oppday')">📣 OppDay + Cycle</button>
+  <button class="nav-btn" onclick="showTab('dividend')">💰 Dividend</button>
+</div>
+
+<!-- ============ OVERVIEW ============ -->
+<div id="tab-overview" class="tab-content active">
+<div class="container">
+
+  <div style="background:var(--red-bg);border:1px solid var(--red);border-radius:var(--radius);padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--red)">
+    ✅ ราคาที่ใช้วิเคราะห์: <strong>168.50 ฿</strong> (2 เมษายน 2569) · ข้อมูลพื้นฐานจาก SET Factsheet BH (6 มี.ค. 2569): Market Cap 133,923M · P/E 17.83x · P/BV 4.34x · EV/EBITDA 12.99x
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric-card"><div class="metric-label">Market Cap (168.50฿)</div><div class="metric-value">133,923 M</div><div class="metric-sub">795M หุ้น · Par 1฿</div></div>
+    <div class="metric-card"><div class="metric-label">P/E (EPS 9.45฿)</div><div class="metric-value">17.83x</div><div class="metric-sub">vs Mean PE 24.9x (-2.0 SD)</div></div>
+    <div class="metric-card"><div class="metric-label">EV/EBITDA</div><div class="metric-value">12.99x</div><div class="metric-sub">จาก SET Factsheet</div></div>
+    <div class="metric-card"><div class="metric-label">Div. Yield 69E</div><div class="metric-value">2.97%</div><div class="metric-sub">DPS 5.00฿ ÷ 168.50</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><div class="card-title-icon">🏥</div>Business Profile</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:10px">
+        BH = <strong>Premium International Hospital</strong> สุขุมวิท ซอย 3 กรุงเทพฯ · ผู้ป่วยต่างชาติ 65.6% · JCIA Accredited (แห่งแรกในเอเชีย) · 580 licensed beds · OPD capacity 5,500+ ต่อวัน
+      </div>
+      <div class="grid2" style="gap:8px;margin-bottom:10px">
+        <div style="background:var(--surface2);border-radius:8px;padding:8px;font-size:11px"><div style="font-weight:600;color:var(--teal)">🌍 ME Hub</div>Qatar 16%, UAE 4%, Oman 2%, Kuwait 1%</div>
+        <div style="background:var(--surface2);border-radius:8px;padding:8px;font-size:11px"><div style="font-weight:600;color:var(--teal)">🎯 CoE</div>Oncology, Cardiac, Neuroscience — High margin</div>
+        <div style="background:var(--surface2);border-radius:8px;padding:8px;font-size:11px"><div style="font-weight:600;color:var(--teal)">🤖 AI 2569</div>Imaging, EHR, Workflow Automation</div>
+        <div style="background:var(--surface2);border-radius:8px;padding:8px;font-size:11px"><div style="font-weight:600;color:var(--teal)">🏖️ Expansion</div>Phuket 212 beds, เปิด 2H27</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="card-title-icon">⚡</div>Key Strengths & Risks</div>
+      <div class="flag flag-ok" style="margin-bottom:4px"><span>✅</span><span>EBITDA Margin 39.2% + Net Margin 30% สูงสุดในกลุ่ม</span></div>
+      <div class="flag flag-ok" style="margin-bottom:4px"><span>✅</span><span>Net Cash: เงินสด 7,595M vs หนี้ 107M = แข็งแกร่งมาก</span></div>
+      <div class="flag flag-ok" style="margin-bottom:4px"><span>✅</span><span>P/E 17.83x ต่ำกว่า Mean 24.9x (-2SD) — Rare Entry Point</span></div>
+      <div class="flag flag-warn" style="margin-bottom:4px"><span>⚠️</span><span>ME Exposure 23.7% ได้รับผลกระทบจากสงคราม Iran โดยตรง</span></div>
+      <div class="flag flag-warn" style="margin-bottom:4px"><span>⚠️</span><span>1Q69: Revenue -2.6% YoY, Profit -1.9% YoY (Ramadan + War)</span></div>
+      <div class="flag flag-warn" style="margin-bottom:4px"><span>⚠️</span><span>Cambodia หายตั้งแต่กลางปี 68 (-47%), China ยังไม่ฟื้น (-14%)</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📊</div>Peer Comparison</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>หุ้น</th><th class="r">Price</th><th class="r">Mkt Cap M฿</th><th class="r">Revenue 68 M฿</th><th class="r">EBITDA%</th><th class="r">NPM%</th><th class="r">P/E 68</th><th class="r">ROE%</th><th class="r">ME%</th></tr></thead>
+      <tbody>
+        <tr style="background:var(--teal-light)"><td class="strong">BH</td><td class="r">168.50</td><td class="r">133,923</td><td class="r">25,134</td><td class="r strong" style="color:var(--green)">39.2</td><td class="r strong" style="color:var(--green)">30.0</td><td class="r strong">17.8</td><td class="r">25.7</td><td class="r"><span class="badge badge-red">23.7%</span></td></tr>
+        <tr><td>BDMS</td><td class="r">~26</td><td class="r">~520,000</td><td class="r">~70,000</td><td class="r">~25</td><td class="r">~10</td><td class="r">~18</td><td class="r">~16</td><td class="r"><span class="badge badge-green">4%</span></td></tr>
+        <tr><td>BCH</td><td class="r">~9.7</td><td class="r">~27,000</td><td class="r">~16,000</td><td class="r">~20</td><td class="r">~8</td><td class="r">~16</td><td class="r">~10</td><td class="r"><span class="badge badge-green">4%</span></td></tr>
+        <tr><td>CHG</td><td class="r">~1.5</td><td class="r">~26,000</td><td class="r">~12,000</td><td class="r">~18</td><td class="r">~8</td><td class="r">~16</td><td class="r">~12</td><td class="r"><span class="badge badge-green">2%</span></td></tr>
+        <tr><td>PR9</td><td class="r">~17</td><td class="r">~26,000</td><td class="r">~8,000</td><td class="r">~22</td><td class="r">~12</td><td class="r">~14</td><td class="r">~14</td><td class="r"><span class="badge badge-amber">11%</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📋</div>Investment Conclusion (ณ 168.50 ฿)</div>
+    <div class="grid3" style="gap:10px;margin-bottom:12px">
+      <div style="text-align:center;padding:12px;background:var(--surface2);border-radius:var(--radius)">
+        <div style="font-size:10px;color:var(--text3)">Growth Rating</div>
+        <div style="font-size:24px;font-weight:600;color:var(--amber)">7/10</div>
+        <div style="font-size:10px;color:var(--text3)">Iran กดระยะสั้น, LT แข็ง</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--surface2);border-radius:var(--radius)">
+        <div style="font-size:10px;color:var(--text3)">Safety Rating</div>
+        <div style="font-size:24px;font-weight:600;color:var(--green)">8/10</div>
+        <div style="font-size:10px;color:var(--text3)">Net Cash, No Debt</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--surface2);border-radius:var(--radius)">
+        <div style="font-size:10px;color:var(--text3)">Dividend Rating</div>
+        <div style="font-size:24px;font-weight:600;color:var(--blue)">7/10</div>
+        <div style="font-size:10px;color:var(--text3)">Yield 3.0%, Sustainable</div>
+      </div>
+    </div>
+    <div style="padding:12px 16px;background:linear-gradient(135deg,#004d4d,var(--teal2));border-radius:var(--radius);color:#fff;font-size:12px;line-height:1.8">
+      <span style="color:var(--gold2);font-weight:600">Investment Thesis (168.50฿):</span> BH ปัจจุบันเทรดที่ P/E 17.8x — ต่ำกว่า Mean 24.9x ถึง -2 SD ซึ่งเกิดขึ้นเฉพาะช่วง COVID ราคาปัจจุบันสะท้อนความเสี่ยง Iran War ไปมากแล้ว · Broker Mean TP 199฿ (+18%) · รวม Dividend 3% → Total Return ~21% ในปีนี้ · เมื่อ Phuket เปิดปี 70 = กำไรเพิ่ม 15-20% จาก Base
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ REVENUE MIX ============ -->
+<div id="tab-revenue" class="tab-content">
+<div class="container">
+  <div class="metrics-row">
+    <div class="metric-card"><div class="metric-label">Thai Patients</div><div class="metric-value">34.4%</div><div class="metric-sub">8,646M ฿ FY68</div></div>
+    <div class="metric-card"><div class="metric-label">Non-Thai</div><div class="metric-value">65.6%</div><div class="metric-sub">16,488M ฿</div></div>
+    <div class="metric-card"><div class="metric-label">Middle East</div><div class="metric-value">23.7%</div><div class="metric-sub" style="color:var(--red)">Risk สูงสุด Iran War</div></div>
+    <div class="metric-card"><div class="metric-label">OPD/Visit</div><div class="metric-value">12,404฿</div><div class="metric-sub">2,748 visits/day</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><div class="card-title-icon">🌏</div>Revenue by Nationality</div>
+      <div class="chart-wrap h200"><canvas id="natChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="card-title-icon">📊</div>ME Markets Growth 4Q68</div>
+      <table class="tbl">
+        <thead><tr><th>ตลาด</th><th class="r">% Total</th><th class="r">4Q68 Growth</th><th class="r">FY68 Growth</th></tr></thead>
+        <tbody>
+          <tr><td>🇶🇦 Qatar</td><td class="r strong" style="color:var(--red)">16%</td><td class="r"><span class="badge badge-green">+19.6%</span></td><td class="r"><span class="badge badge-red">-1.1%</span></td></tr>
+          <tr><td>🇦🇪 UAE</td><td class="r">4%</td><td class="r"><span class="badge badge-green">+29.4%</span></td><td class="r"><span class="badge badge-green">+1.2%</span></td></tr>
+          <tr><td>🇴🇲 Oman</td><td class="r">2%</td><td class="r"><span class="badge badge-green">+3.5%</span></td><td class="r"><span class="badge badge-red">-17%</span></td></tr>
+          <tr><td>🇰🇼 Kuwait</td><td class="r">1%</td><td class="r">Low</td><td class="r">—</td></tr>
+          <tr><td>🇲🇲 Myanmar</td><td class="r">7%</td><td class="r"><span class="badge badge-green">+25.5%</span></td><td class="r"><span class="badge badge-green">+19.5%</span></td></tr>
+          <tr><td>🇺🇸 USA</td><td class="r">2%</td><td class="r"><span class="badge badge-green">+15.7%</span></td><td class="r"><span class="badge badge-green">+14%</span></td></tr>
+          <tr><td>🇧🇩 Bangladesh</td><td class="r">4%</td><td class="r"><span class="badge badge-green">+1.7%</span></td><td class="r"><span class="badge badge-green">+5%</span></td></tr>
+          <tr><td>🇨🇳 China</td><td class="r">3%</td><td class="r"><span class="badge badge-red">-15.6%</span></td><td class="r"><span class="badge badge-red">-14.4%</span></td></tr>
+          <tr style="background:var(--red-bg)"><td>🇰🇭 Cambodia</td><td class="r">2%</td><td class="r"><span class="badge badge-red">-79.2%</span></td><td class="r"><span class="badge badge-red">-47.2%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">💳</div>Revenue by Payment Type (FY68)</div>
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center">
+      <div class="chart-wrap h180"><canvas id="payChart"></canvas></div>
+      <table class="tbl">
+        <thead><tr><th>ประเภท</th><th class="r">%</th><th>ลักษณะ Cash Flow</th><th>Margin</th></tr></thead>
+        <tbody>
+          <tr><td>💵 Self-Pay (Cash)</td><td class="r">18%</td><td><span class="badge badge-green">Cash ทันที</span></td><td>สูง</td></tr>
+          <tr><td>🏦 Insurance</td><td class="r">62%</td><td><span class="badge badge-amber">ล่าช้า 30-90 วัน</span></td><td>ปานกลาง</td></tr>
+          <tr><td>🏛️ Government Welfare</td><td class="r">19%</td><td><span class="badge badge-blue">Capitation</span></td><td>ต่ำ</td></tr>
+          <tr><td>📋 Other 3rd Party</td><td class="r">1%</td><td>ล่าช้า</td><td>ต่ำ</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ FINANCIAL ============ -->
+<div id="tab-financial" class="tab-content">
+<div class="container">
+  <div class="metrics-row">
+    <div class="metric-card"><div class="metric-label">Revenue FY68</div><div class="metric-value">25,134M</div><div class="metric-sub">GPM 51.7%</div></div>
+    <div class="metric-card"><div class="metric-label">EBITDA FY68</div><div class="metric-value">9,849M</div><div class="metric-sub">Margin 39.2%</div></div>
+    <div class="metric-card"><div class="metric-label">Net Profit FY68</div><div class="metric-value">7,512M</div><div class="metric-sub">NPM 30% · EPS 9.45฿</div></div>
+    <div class="metric-card"><div class="metric-label">FCF FY68</div><div class="metric-value">6,156M</div><div class="metric-sub">Yield 3.65% @168.50</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📊</div>P&L Quarterly (ล้านบาท)</div>
+    <div class="chart-wrap h250"><canvas id="plChart"></canvas></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><div class="card-title-icon">📉</div>Margin Trend %</div>
+      <div class="chart-wrap h200"><canvas id="marginChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="card-title-icon">📋</div>Multi-Year Summary</div>
+      <table class="tbl">
+        <thead><tr><th>รายการ</th><th class="r">FY66</th><th class="r">FY67</th><th class="r">FY68</th><th class="r">FY69E</th></tr></thead>
+        <tbody>
+          <tr><td>Revenue (M฿)</td><td class="r">25,296</td><td class="r">25,634</td><td class="r">25,134</td><td class="r">24,334-26,058</td></tr>
+          <tr><td>EBITDA%</td><td class="r">36.8</td><td class="r">39.2</td><td class="r">39.2</td><td class="r">38.9-39.4</td></tr>
+          <tr style="background:var(--teal-light)"><td class="strong">Net Profit</td><td class="r strong">7,006</td><td class="r strong">7,775</td><td class="r strong">7,512</td><td class="r strong">7,321-7,849</td></tr>
+          <tr><td>EPS (฿)</td><td class="r">8.81</td><td class="r">9.78</td><td class="r">9.45</td><td class="r">9.20-9.86</td></tr>
+          <tr><td>DPS (฿)</td><td class="r">4.50</td><td class="r">5.00</td><td class="r">11.00*</td><td class="r">5.00</td></tr>
+          <tr><td>ROE%</td><td class="r">32.2</td><td class="r">30.3</td><td class="r">25.7</td><td class="r">23-24</td></tr>
+          <tr><td>Net Cash</td><td class="r">✅</td><td class="r">✅</td><td class="r">✅</td><td class="r">✅</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10px;color:var(--text3);margin-top:6px">* FY68 DPS รวม Special Div 6฿</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ VALUATION ============ -->
+<div id="tab-valuation" class="tab-content">
+<div class="container">
+  <div class="metrics-row">
+    <div class="metric-card"><div class="metric-label">Broker Mean TP</div><div class="metric-value" style="color:var(--green)">199 ฿</div><div class="metric-sub">Upside +18.1% จาก 168.50</div></div>
+    <div class="metric-card"><div class="metric-label">P/E Mean Reversion TP</div><div class="metric-value" style="color:var(--teal)">~235 ฿</div><div class="metric-sub">EPS 9.45 × Mean 24.9x</div></div>
+    <div class="metric-card"><div class="metric-label">P/E vs Mean</div><div class="metric-value" style="color:var(--red)">-2.0 SD</div><div class="metric-sub">17.83x vs Mean 24.9x</div></div>
+    <div class="metric-card"><div class="metric-label">DCF Range</div><div class="metric-value" style="color:var(--blue)">180-210 ฿</div><div class="metric-sub">WACC 6.8-7.1%</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📐</div>DCF Sensitivity (฿/หุ้น) — ราคาปัจจุบัน 168.50 ฿</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>WACC \ g</th><th class="c">2.0%</th><th class="c" style="background:#dbeafe">2.5%</th><th class="c">3.0%</th><th class="c">3.5%</th></tr></thead>
+      <tbody>
+        <tr><td>6.0%</td><td class="c"><span class="badge badge-green">244</span></td><td class="c"><span class="badge badge-green">279</span></td><td class="c"><span class="badge badge-green">329</span></td><td class="c"><span class="badge badge-green">410</span></td></tr>
+        <tr style="background:#dbeafe"><td>6.8% (MST Base)</td><td class="c"><span class="badge badge-blue">182</span></td><td class="c" style="background:#dbeafe"><span class="badge badge-blue">190</span></td><td class="c"><span class="badge badge-blue">205</span></td><td class="c"><span class="badge badge-blue">230</span></td></tr>
+        <tr><td>7.1% (KSS Base)</td><td class="c"><span class="badge badge-blue">168</span></td><td class="c"><span class="badge badge-blue">181</span></td><td class="c"><span class="badge badge-amber">198</span></td><td class="c"><span class="badge badge-amber">222</span></td></tr>
+        <tr style="background:#fff0e0"><td>8.0%</td><td class="c"><span class="badge badge-amber">133</span></td><td class="c"><span class="badge badge-amber">141</span></td><td class="c"><span class="badge badge-amber">151</span></td><td class="c"><span class="badge badge-amber">164</span></td></tr>
+        <tr><td>9.0%</td><td class="c"><span class="badge badge-red">105</span></td><td class="c"><span class="badge badge-red">111</span></td><td class="c"><span class="badge badge-red">118</span></td><td class="c"><span class="badge badge-red">127</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-top:6px">ราคา 168.50 ฿ implied WACC ~8% ซึ่งสูงเกินจริงสำหรับ BH ที่มี Net Cash และ Low Beta 0.62</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">🎯</div>Scenario Fair Value Chart</div>
+    <div class="chart-wrap h220"><canvas id="scenChart"></canvas></div>
+    <div style="margin-top:10px;padding:10px;background:var(--teal-light);border-radius:8px;font-size:12px;color:var(--teal)">
+      Weighted Expected Value (20%×270 + 45%×195 + 25%×150 + 10%×110) = <strong>192.5 ฿</strong> → Upside +14.2% + Div 3.0% = Total ~17.2%
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ CAPEX vs REVENUE ============ -->
+<div id="tab-capex" class="tab-content">
+<div class="container">
+  <div class="hl-box">
+    <h3>🏗️ CAPEX 2026-2030 vs Revenue & OCF — ความสามารถในการรองรับการลงทุน</h3>
+    <p>BH วางแผน CAPEX รวม ~16,800M ใน 5 ปี (2026-2030) หลักๆ คือ Phuket Hospital (~10,000M) + Sukhumvit CoE (~2,500M) + Technology/AI (~1,500M) · Net Cash 7,595M + OCF ~8,000-10,000M/ปี = รองรับได้สบาย ไม่ต้องกู้เพิ่ม</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📊</div>CAPEX vs Revenue vs OCF (2025-2030E)</div>
+    <div class="chart-wrap h350"><canvas id="capexChart"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📈</div>CAPEX Ratio Analysis</div>
+    <div class="chart-wrap h250"><canvas id="capexRatioChart"></canvas></div>
+    <div class="sticky-note">
+      📌 CAPEX/Revenue ปี 2027-2028 จะพุ่งถึง ~14-16% (Phuket Construction Peak) → ต่ำลงเป็น ~7% เมื่อ Phuket เสร็จ · ปัจจุบัน BH มี Net Cash 7,595M ซึ่งเป็น Buffer ขนาดใหญ่ · FCF/CAPEX ยังเป็น Positive ตลอดช่วง → ไม่จำเป็นต้องออกหุ้นใหม่
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📋</div>CAPEX Detail Breakdown (2026-2030, ล้านบาท)</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>โครงการ</th><th class="r">2026E</th><th class="r">2027E</th><th class="r">2028E</th><th class="r">2029E</th><th class="r">2030E</th><th class="r">รวม</th></tr></thead>
+      <tbody>
+        <tr><td>🏖️ Phuket Hospital</td><td class="r">1,500</td><td class="r">3,000</td><td class="r">3,000</td><td class="r">1,500</td><td class="r">1,000</td><td class="r strong">10,000</td></tr>
+        <tr><td>🏙️ Sukhumvit CoE (+59 beds)</td><td class="r">800</td><td class="r">1,200</td><td class="r">500</td><td class="r">0</td><td class="r">0</td><td class="r strong">2,500</td></tr>
+        <tr><td>🤖 Technology / AI</td><td class="r">400</td><td class="r">400</td><td class="r">300</td><td class="r">200</td><td class="r">200</td><td class="r strong">1,500</td></tr>
+        <tr><td>🔧 Maintenance CAPEX</td><td class="r">615</td><td class="r">615</td><td class="r">715</td><td class="r">715</td><td class="r">715</td><td class="r strong">3,375</td></tr>
+        <tr style="background:var(--teal-light)"><td class="strong">รวม CAPEX</td><td class="r strong">3,315</td><td class="r strong">5,215</td><td class="r strong">4,515</td><td class="r strong">2,415</td><td class="r strong">1,915</td><td class="r strong">17,375</td></tr>
+        <tr><td>OCF Estimate</td><td class="r">8,200</td><td class="r">8,700</td><td class="r">9,000</td><td class="r">9,500</td><td class="r">10,000</td><td class="r strong">45,400</td></tr>
+        <tr><td>FCF (OCF-CAPEX)</td><td class="r" style="color:var(--green)">4,885</td><td class="r" style="color:var(--green)">3,485</td><td class="r" style="color:var(--green)">4,485</td><td class="r" style="color:var(--green)">7,085</td><td class="r" style="color:var(--green)">8,085</td><td class="r strong" style="color:var(--green)">28,025</td></tr>
+        <tr><td>CAPEX/Revenue %</td><td class="r">12.9%</td><td class="r"><span style="color:var(--red)">19.4%</span></td><td class="r">16.4%</td><td class="r">8.6%</td><td class="r">6.5%</td><td class="r">~13%</td></tr>
+        <tr><td>CAPEX/OCF %</td><td class="r">40%</td><td class="r"><span style="color:var(--red)">60%</span></td><td class="r">50%</td><td class="r">25%</td><td class="r">19%</td><td class="r">~38%</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ PHUKET PROJECTION ============ -->
+<div id="tab-phuket" class="tab-content">
+<div class="container">
+  <div class="hl-box">
+    <h3>🏖️ Phuket Hospital — Revenue Projection & Profit Impact</h3>
+    <p>BH Phuket: 212 licensed beds (เฟส 1 เปิด 120 beds ใน 2H27) · ตั้งอยู่ที่ภูเก็ต ซึ่งเป็น Medical Tourism Hub ขนาดใหญ่ · เน้น International Patients (นักท่องเที่ยว + Expat) · ใช้ cost benchmark จาก BH Bangkok เป็น Reference</p>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric-card"><div class="metric-label">Revenue/Bed/Year (BKK)</div><div class="metric-value">43.3M฿</div><div class="metric-sub">25,134M ÷ 580 beds</div></div>
+    <div class="metric-card"><div class="metric-label">IPD Revenue/Patient-day</div><div class="metric-value">100,662฿</div><div class="metric-sub">จาก KSS (FY68 actual)</div></div>
+    <div class="metric-card"><div class="metric-label">OPD Revenue/Visit</div><div class="metric-value">12,404฿</div><div class="metric-sub">2,748 visits/day (BKK)</div></div>
+    <div class="metric-card"><div class="metric-label">Break-even Occupancy</div><div class="metric-value">~45%</div><div class="metric-sub">ประมาณการ (Hospital)</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">🏖️</div>Phuket Revenue Ramp-up Model (Interactive)</div>
+    <div class="slider-row">
+      <span class="slider-label">Occupancy Rate (%)</span>
+      <input type="range" min="20" max="80" value="50" id="phuketOcc" step="5">
+      <span class="slider-val" id="phuketOccVal">50%</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Revenue Premium vs BKK</span>
+      <input type="range" min="60" max="100" value="80" id="phuketPremium" step="5">
+      <span class="slider-val" id="phuketPremiumVal">80%</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Beds Operational</span>
+      <input type="range" min="60" max="212" value="120" id="phuketBeds" step="12">
+      <span class="slider-val" id="phuketBedsVal">120</span>
+    </div>
+    <div style="background:var(--surface2);border-radius:var(--radius);padding:14px;margin:10px 0">
+      <div class="grid3">
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--text3)">Phuket Annual Revenue</div>
+          <div style="font-size:22px;font-weight:600;color:var(--teal)" id="phuketRev">2,600M</div>
+          <div style="font-size:10px;color:var(--text3)">IPD + OPD Combined</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--text3)">% เพิ่มขึ้นจาก BH Total</div>
+          <div style="font-size:22px;font-weight:600;color:var(--green)" id="phuketRevPct">+10.3%</div>
+          <div style="font-size:10px;color:var(--text3)">ของ Revenue 25,134M</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--text3)">Contribution to Profit</div>
+          <div style="font-size:22px;font-weight:600;color:var(--amber)" id="phuketProfit">+3.5%</div>
+          <div style="font-size:10px;color:var(--text3)">หลัง Operating Leverage</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--text2);padding:10px;background:var(--teal-light);border-radius:8px">
+      <strong>คำอธิบายการคำนวณ:</strong>
+      <div style="line-height:1.9;margin-top:4px">
+        IPD Revenue = Beds × Occupancy × 365 วัน × 100,662 ฿/วัน × Premium Factor<br>
+        OPD Revenue = (Beds/580 × 2,748 OPD/day) × Occ × 365 × 12,404 ฿/visit × Premium<br>
+        Gross Margin assumed = 48% (ต่ำกว่า BKK เพราะยัง Pre-breakeven)<br>
+        Operating Leverage: ทุก 10% Occupancy เพิ่มขึ้น = Profit +8-12% (High Fixed Cost)
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📊</div>Phuket Revenue Ramp-up Projection (ล้านบาท)</div>
+    <div class="chart-wrap h300"><canvas id="phuketChart"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📋</div>Phuket P&L Forecast (ประมาณการ Base Case)</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>รายการ</th><th class="r">FY2570 (เปิด 2H)</th><th class="r">FY2571 (เต็มปี)</th><th class="r">FY2572 (Ramp-up)</th><th class="r">FY2573 (Stable)</th></tr></thead>
+      <tbody>
+        <tr><td>Beds Operational</td><td class="r">120</td><td class="r">120</td><td class="r">120~212</td><td class="r">212</td></tr>
+        <tr><td>Occupancy Rate</td><td class="r">30%</td><td class="r">45%</td><td class="r">55%</td><td class="r">65%</td></tr>
+        <tr><td>Phuket Revenue (M฿)</td><td class="r">750</td><td class="r">2,100</td><td class="r">3,800</td><td class="r">6,200</td></tr>
+        <tr><td>% เพิ่มจาก Group</td><td class="r">+2.8%</td><td class="r">+7.9%</td><td class="r">+14.3%</td><td class="r">+23.3%</td></tr>
+        <tr><td>Operating Margin</td><td class="r" style="color:var(--red)">-5% (Pre-BEP)</td><td class="r" style="color:var(--amber)">5%</td><td class="r" style="color:var(--green)">15%</td><td class="r" style="color:var(--green)">25%</td></tr>
+        <tr style="background:var(--teal-light)"><td class="strong">Phuket Profit (M฿)</td><td class="r strong" style="color:var(--red)">-38</td><td class="r strong" style="color:var(--amber)">+105</td><td class="r strong" style="color:var(--green)">+570</td><td class="r strong" style="color:var(--green)">+1,550</td></tr>
+        <tr><td>% ของ Group Profit</td><td class="r" style="color:var(--red)">-0.5%</td><td class="r">+1.4%</td><td class="r">+7.2%</td><td class="r strong" style="color:var(--green)">+19.6%</td></tr>
+        <tr><td>Annual Depreciation (Phuket)</td><td class="r">167</td><td class="r">333</td><td class="r">400</td><td class="r">400</td></tr>
+        <tr><td>CAPEX Status</td><td class="r">Under Construction</td><td class="r">Construction</td><td class="r">Expanding</td><td class="r">Complete</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="sticky-note">
+      📌 Phuket จะกด Group Profit ในช่วง FY70-71 (Depreciation + Pre-BEP) แต่จะเป็น Catalyst สำคัญตั้งแต่ FY72 เป็นต้นไป · เมื่อ Stable ที่ 212 beds, 65% occupancy → เพิ่ม Revenue กลุ่มได้ ~23% และ Profit ~20%
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ NO ME / CAMBODIA ============ -->
+<div id="tab-noME" class="tab-content">
+<div class="container">
+  <div class="hl-box">
+    <h3>⚠️ Worst Case: สมมติ ME + Cambodia = 0 ทั้งหมด — ราคาหุ้น BH ควรอยู่ที่เท่าไหร่?</h3>
+    <p>Analysis นี้ตั้งสมมติฐาน Structural Loss (ไม่ใช่ชั่วคราว) ว่าผู้ป่วยจากตะวันออกกลาง (23.7%) และกัมพูชา (2%) หายไปทั้งหมด — และคำนวณว่า EPS จะเหลือเท่าไหร่ และ Fair Price ควรเป็นเท่าไหร่</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">🧮</div>Scenario Calculator (Interactive)</div>
+    <div class="slider-row">
+      <span class="slider-label">ME Revenue หายไป %</span>
+      <input type="range" min="0" max="100" value="100" id="mePct" step="10">
+      <span class="slider-val" id="mePctVal">100%</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Cambodia Revenue หายไป %</span>
+      <input type="range" min="0" max="100" value="100" id="camPct" step="10">
+      <span class="slider-val" id="camPctVal">100%</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Target P/E ที่ใช้ประเมิน</span>
+      <input type="range" min="12" max="30" value="18" id="targetPE" step="1">
+      <span class="slider-val" id="targetPEVal">18x</span>
+    </div>
+
+    <div style="background:var(--surface2);border-radius:var(--radius);padding:14px;margin:12px 0">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Revenue ที่เหลือ</div>
+          <div style="font-size:20px;font-weight:600;color:var(--amber)" id="remainRev">18,674M</div>
+          <div style="font-size:10px;color:var(--text3)" id="remainRevPct">-25.7% จาก 25,134M</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:3px">EPS ที่เหลือ (฿)</div>
+          <div style="font-size:26px;font-weight:700;color:var(--red)" id="remainEPS">6.67</div>
+          <div style="font-size:10px;color:var(--text3)" id="epsChange">-29.4% จาก 9.45฿</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:3px">Fair Price ที่ PE นี้</div>
+          <div style="font-size:26px;font-weight:700;color:var(--red)" id="fairPriceCalc">120 ฿</div>
+          <div style="font-size:10px;color:var(--text3)" id="vsCurrentPrice">ราคาปัจจุบัน 168.50 ฿</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--red-bg);border-radius:var(--radius);padding:12px;font-size:12px;color:var(--text2);line-height:1.8">
+      <strong style="color:var(--red)">ข้อสรุปสำคัญ:</strong> ถ้า ME + Cambodia หายไปถาวรทั้งหมด และตลาดใช้ PE 18x (ปัจจุบัน) → ราคา Fair ควรอยู่ที่ ~120 ฿ · แต่ราคาปัจจุบัน 168.50 ฿ บ่งชี้ว่า<strong style="color:var(--green)"> ตลาดไม่ได้มองว่า ME จะหายถาวร</strong> — มองว่าจะกลับมาบางส่วน · หาก ME กลับมา 50% → EPS ~7.9฿ → ราคา Fair 18x = 142 ฿ (ใกล้กับ 130 ฿ ซึ่งเป็น 52W Low)
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📊</div>Profit Impact Analysis — No ME / No Cambodia</div>
+    <div class="chart-wrap h300"><canvas id="noMEChart"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📋</div>Detailed Impact Table</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr>
+        <th>Scenario</th><th class="r">Revenue (M฿)</th><th class="r">Revenue Change</th><th class="r">Net Profit (M฿)</th><th class="r">EPS (฿)</th><th class="r">Fair Price (PE 18x)</th><th class="r">Fair Price (PE 24.9x)</th><th class="r">vs 168.50฿</th>
+      </tr></thead>
+      <tbody>
+        <tr style="background:var(--teal-light)"><td class="strong">FY68 Baseline</td><td class="r strong">25,134</td><td class="r">—</td><td class="r strong">7,512</td><td class="r strong">9.45</td><td class="r strong">170</td><td class="r strong">235</td><td class="r">—</td></tr>
+        <tr><td>Iran War Base (-20% ME, 10wks)</td><td class="r">24,334</td><td class="r"><span class="badge badge-red">-3.2%</span></td><td class="r">7,321</td><td class="r">9.20</td><td class="r">166</td><td class="r">229</td><td class="r"><span class="badge badge-amber">-1.5%</span></td></tr>
+        <tr><td>ME หายไปทั้งปี (-100%)</td><td class="r">19,177</td><td class="r"><span class="badge badge-red">-23.7%</span></td><td class="r">5,405</td><td class="r">6.80</td><td class="r">122</td><td class="r">169</td><td class="r"><span class="badge badge-red">-27.6%</span></td></tr>
+        <tr style="background:var(--red-bg)"><td class="strong">ME + Cambodia = 0 ทั้งหมด</td><td class="r strong">18,674</td><td class="r"><span class="badge badge-red">-25.7%</span></td><td class="r strong">5,301</td><td class="r strong">6.67</td><td class="r strong">120</td><td class="r strong">166</td><td class="r"><span class="badge badge-red">-28.8%</span></td></tr>
+        <tr><td>ME กลับมา 50% + No Cambodia</td><td class="r">21,652</td><td class="r"><span class="badge badge-amber">-13.9%</span></td><td class="r">6,407</td><td class="r">8.06</td><td class="r">145</td><td class="r">201</td><td class="r"><span class="badge badge-amber">-14%</span></td></tr>
+        <tr><td>ME กลับมา 80% + Cambodia 30%</td><td class="r">24,085</td><td class="r"><span class="badge badge-amber">-4.2%</span></td><td class="r">7,197</td><td class="r">9.06</td><td class="r">163</td><td class="r">225</td><td class="r"><span class="badge badge-amber">-3.3%</span></td></tr>
+        <tr style="background:var(--green-bg)"><td>ME + Cambodia กลับมาปกติ (FY70E)</td><td class="r">27,000+</td><td class="r"><span class="badge badge-green">+7.4%</span></td><td class="r">8,100+</td><td class="r">10.19</td><td class="r">183</td><td class="r">254</td><td class="r"><span class="badge badge-green">+8.6%</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="sticky-note">
+      📌 สรุป: ราคาปัจจุบัน 168.50 ฿ ≈ Scenario "ME กลับมา 80%+Cambodia 30%" → ตลาดยังมองว่า ME จะไม่หายถาวร · หากมองโลกในแง่ดี (ME กลับ + Phuket) → Fair Price ควรเป็น 200+ ฿ · หากมองโลกในแง่ร้าย (ME หายถาวร, PE 18x) → Fair Price ~120 ฿ = 52W Low ที่เคยเกิดขึ้นแล้ว
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ OPPDAY + BUSINESS CYCLE ============ -->
+<div id="tab-oppday" class="tab-content">
+<div class="container">
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">🔄</div>Business Cycle Position — BH อยู่ที่จุดไหน?</div>
+    <div style="position:relative;width:100%;height:380px">
+      <canvas id="businessCycleChart"></canvas>
+    </div>
+    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div style="background:var(--green-bg);border-radius:8px;padding:10px;font-size:12px">
+        <div style="font-weight:600;color:var(--green);margin-bottom:4px">✅ BKK Hospital (ปัจจุบัน)</div>
+        <div style="color:var(--text2)">Post-Breakeven Mature Phase · EBITDA 39% · Profit ~30% · แต่กำลังเผชิญ Iran War Headwind ชั่วคราว → อยู่ใน "Cyclical Downturn" ของ Mature Phase</div>
+      </div>
+      <div style="background:var(--amber-bg);border-radius:8px;padding:10px;font-size:12px">
+        <div style="font-weight:600;color:var(--amber);margin-bottom:4px">⏳ Phuket Hospital (2027-2029)</div>
+        <div style="color:var(--text2)">Pre-Breakeven Phase · CAPEX หนัก → Depreciation สูง → กด Group Profit ชั่วคราว → นักลงทุน "รอ" ก่อนลงทุน หรือซื้อก่อน Breakeven</div>
+      </div>
+      <div style="background:var(--blue-bg);border-radius:8px;padding:10px;font-size:12px">
+        <div style="font-weight:600;color:var(--blue);margin-bottom:4px">🚀 Phuket (2030+)</div>
+        <div style="color:var(--text2)">Post-Breakeven Growth Phase · Revenue Ramp → Margin Expansion → Profit Surge · ประวัติ: BKK ผ่านช่วงนี้ → หุ้น Rally แรงมาก (Pattern เดิม)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📣</div>OppDay สรุป — Analyst Meeting 25 ก.พ. 2569</div>
+    <div class="grid2">
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--teal);margin-bottom:8px">กลยุทธ์หลักปี 2569</div>
+        <div class="flag flag-ok" style="margin-bottom:4px"><span>🎯</span><span>"Quality of Revenue" เน้น Complex Case ≠ Volume</span></div>
+        <div class="flag flag-ok" style="margin-bottom:4px"><span>💰</span><span>ปรับราคาค่ารักษาเฉลี่ย ~4% รักษา EBITDA Margin</span></div>
+        <div class="flag flag-ok" style="margin-bottom:4px"><span>🌏</span><span>JV Bangladesh Diagnostic Center → ส่งผู้ป่วยเข้าไทย</span></div>
+        <div class="flag flag-ok" style="margin-bottom:4px"><span>🤖</span><span>AI 4 แกน: Imaging, Workflow, HIS/EHR, Cybersecurity</span></div>
+        <div class="flag flag-ok" style="margin-bottom:4px"><span>🏖️</span><span>Phuket เปิด 2H27 เฟส 1 = 120 beds (ขยายถึง 212)</span></div>
+        <div class="flag flag-ok" style="margin-bottom:4px"><span>💊</span><span>VitalLife Longevity + Well-being: High-margin recurring</span></div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--teal);margin-bottom:8px">Upside Catalysts ที่ยังไม่ใน TP</div>
+        <div class="sc-card sc-bull" style="margin-bottom:6px">
+          <div class="sc-title" style="color:var(--green)">🚀 Kuwait GOP กลับมา</div>
+          <div class="sc-body">Kuwait Government Welfare → อาจ +1% ของ Total Revenue</div>
+        </div>
+        <div class="sc-card sc-bull" style="margin-bottom:6px">
+          <div class="sc-title" style="color:var(--green)">🇰🇭 Cambodia Clinic</div>
+          <div class="sc-body">แพทย์จากไทยบินไปรักษาที่กัมพูชา → Revenue กลับมาบางส่วน</div>
+        </div>
+        <div class="sc-card sc-base" style="margin-bottom:6px">
+          <div class="sc-title" style="color:var(--blue)">🇨🇳 China Partnership</div>
+          <div class="sc-body">ร่วมมือกับ Local Partner จีน → ผู้ป่วยจีนเพิ่ม (ปัจจุบัน -14%)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📊</div>Historical Business Cycle vs Stock Price</div>
+    <div class="chart-wrap h280"><canvas id="cycleHistChart"></canvas></div>
+    <div style="margin-top:10px;font-size:12px;color:var(--text2);background:var(--surface2);padding:10px;border-radius:8px">
+      <strong>Pattern สำคัญ:</strong> Pre-breakeven (CAPEX phase) → หุ้น Sideways · ผ่าน Breakeven → Profit Surge → หุ้น Rally แรง · BH Bangkok ผ่าน Pattern นี้แล้ว · Phuket Hospital = New Cycle ที่กำลังจะเกิดขึ้นใน 2027-2030
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ DIVIDEND ============ -->
+<div id="tab-dividend" class="tab-content">
+<div class="container">
+  <div class="metrics-row">
+    <div class="metric-card"><div class="metric-label">DPS FY68 (จริง)</div><div class="metric-value">11.00฿</div><div class="metric-sub">รวม Special 6฿</div></div>
+    <div class="metric-card"><div class="metric-label">DPS FY69E (ปกติ)</div><div class="metric-value">5.00฿</div><div class="metric-sub">Yield 2.97% @168.50</div></div>
+    <div class="metric-card"><div class="metric-label">Payout Ratio</div><div class="metric-value">52.9%</div><div class="metric-sub">Policy ≥50%</div></div>
+    <div class="metric-card"><div class="metric-label">Tax Credit (BH 20%)</div><div class="metric-value">25%</div><div class="metric-sub">Credit = 20/80 = 25%</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">🎛️</div>Dividend & Tax Credit Calculator</div>
+    <div class="slider-row">
+      <span class="slider-label">ราคาซื้อ (฿/หุ้น)</span>
+      <input type="range" min="100" max="260" value="168.50" id="buyPrice" step="0.50">
+      <span class="slider-val" id="buyPriceVal">168.50</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">จำนวนหุ้น</span>
+      <input type="range" min="1000" max="200000" value="10000" id="numShares" step="1000">
+      <span class="slider-val" id="numSharesVal">10,000</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">DPS ที่ใช้คำนวณ (฿)</span>
+      <input type="range" min="3" max="12" value="5" id="dpsInput" step="0.5">
+      <span class="slider-val" id="dpsVal">5.00</span>
+    </div>
+    <div class="invest-output">
+      <div class="invest-grid">
+        <div class="invest-item"><div class="il">เงินลงทุน</div><div class="iv" id="totalInvest">1,685,000฿</div></div>
+        <div class="invest-item"><div class="il">ปันผลรับ</div><div class="iv" id="divReceived">50,000฿</div></div>
+        <div class="invest-item"><div class="il">Div Yield</div><div class="iv" id="divYield">2.97%</div></div>
+        <div class="invest-item"><div class="il">Tax Credit 25%</div><div class="iv" id="taxCredit">12,500฿</div></div>
+        <div class="invest-item"><div class="il">Gross Dividend</div><div class="iv" id="grossDiv">62,500฿</div></div>
+        <div class="invest-item"><div class="il">หุ้นเพื่อ 100K฿/ปี</div><div class="iv" id="sharesNeeded">20,000</div></div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">ปันผลสุทธิตามฐานภาษีบุคคล</div>
+    <div style="overflow-x:auto">
+    <table class="tbl" id="taxDetailTable">
+      <thead><tr>
+        <th>ฐานภาษี</th><th class="r">ปันผลรับ</th><th class="r">Tax Credit</th><th class="r">Gross Div</th><th class="r">ภาษีต้องจ่าย</th><th class="r">คืน/(จ่ายเพิ่ม)</th><th class="r">ปันผลสุทธิ</th><th class="r">Eff. Yield</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+    <div class="sticky-note">📌 BH จ่ายภาษีนิติบุคคล 20% → Tax Credit = 20/80 = 25% ของปันผล · ฐานภาษี 0-5% ได้ประโยชน์สูงสุด ขอคืนภาษีได้</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">🏆</div>DCA Simulation @DPS 5.00฿</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>ราคาซื้อ</th><th class="r">หุ้น/100K฿</th><th class="r">Div/ปี</th><th class="r">Yield</th><th class="r">DPS (ภาษี 0%)</th><th class="r">DPS (ภาษี 15%)</th><th class="r">DPS (ภาษี 25%)</th></tr></thead>
+      <tbody>
+        <tr style="background:#f0faf4"><td><strong>130 ฿</strong> <span class="badge badge-green">-23%</span></td><td class="r">769</td><td class="r">3,846</td><td class="r strong" style="color:var(--green)">3.85%</td><td class="r">5.00</td><td class="r">5.13</td><td class="r">4.81</td></tr>
+        <tr><td><strong>150 ฿</strong> <span class="badge badge-amber">-11%</span></td><td class="r">667</td><td class="r">3,333</td><td class="r strong">3.33%</td><td class="r">5.00</td><td class="r">5.13</td><td class="r">4.81</td></tr>
+        <tr style="background:var(--teal-light)"><td><strong>168.50 ฿</strong> <span class="badge badge-teal">ปัจจุบัน</span></td><td class="r">594</td><td class="r">2,967</td><td class="r strong" style="color:var(--teal)">2.97%</td><td class="r">5.00</td><td class="r">5.13</td><td class="r">4.81</td></tr>
+        <tr><td><strong>180 ฿</strong> (ASPS TP) <span class="badge badge-blue">+6.8%</span></td><td class="r">556</td><td class="r">2,778</td><td class="r strong">2.78%</td><td class="r">5.00</td><td class="r">5.13</td><td class="r">4.81</td></tr>
+        <tr><td><strong>199 ฿</strong> (Mean TP) <span class="badge badge-blue">+18.1%</span></td><td class="r">503</td><td class="r">2,513</td><td class="r strong">2.51%</td><td class="r">5.00</td><td class="r">5.13</td><td class="r">4.81</td></tr>
+        <tr><td><strong>219 ฿</strong> (YUANTA TP) <span class="badge badge-green">+30%</span></td><td class="r">457</td><td class="r">2,283</td><td class="r strong">2.28%</td><td class="r">5.00</td><td class="r">5.13</td><td class="r">4.81</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<div style="text-align:center;padding:12px;font-size:11px;color:#aaa;border-top:1px solid var(--border);background:var(--surface)">
+  BH Deep-Dive · ราคา 168.50 ฿ (2/4/69) · ข้อมูล SET Factsheet + MST, YUANTA, KSS, BLS, ASPS · ไม่ใช่คำแนะนำการลงทุน
+</div>
+
+<script>
+// ======= NAV =======
+function showTab(t){
+  document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  event.target.classList.add('active');
+  setTimeout(()=>renderCharts(t),80);
+}
+const ci={};
+function dc(id){if(ci[id]){ci[id].destroy();delete ci[id];}}
+
+function renderCharts(t){
+  if(t==='revenue') initRevenue();
+  else if(t==='financial') initFinancial();
+  else if(t==='valuation') initValuation();
+  else if(t==='capex') initCapex();
+  else if(t==='phuket') initPhuket();
+  else if(t==='noME') initNoME();
+  else if(t==='oppday') initOppday();
+  else if(t==='dividend') initDividend();
+}
+
+// ======= REVENUE =======
+function initRevenue(){
+  dc('natChart');dc('payChart');
+  ci['natChart']=new Chart(document.getElementById('natChart').getContext('2d'),{type:'doughnut',data:{labels:['Qatar','Myanmar','Bangladesh','China','USA','Oman','UAE','Kuwait','Cambodia','Thai','Others'],datasets:[{data:[16,7,4,3,2,2,4,1,2,34,25],backgroundColor:['#b91c1c','#1e40af','#1a7a4a','#f59e0b','#6366f1','#0891b2','#dc2626','#7c3aed','#064e3b','#006E6E','#9CA3AF'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},color:'#4A5568'}}}}});
+  ci['payChart']=new Chart(document.getElementById('payChart').getContext('2d'),{type:'doughnut',data:{labels:['Insurance 62%','Govt/Welfare 19%','Self-pay 18%','Other 1%'],datasets:[{data:[62,19,18,1],backgroundColor:['#006E6E','#1e40af','#C4933F','#9CA3AF'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10},color:'#4A5568'}}}}});
+}
+
+// ======= FINANCIAL =======
+function initFinancial(){
+  dc('plChart');dc('marginChart');
+  const quarters=['1Q67','2Q67','3Q67','4Q67','1Q68','2Q68','3Q68','4Q68'];
+  ci['plChart']=new Chart(document.getElementById('plChart').getContext('2d'),{type:'bar',data:{labels:quarters,datasets:[{label:'Revenue',data:[6516,6282,6384,6452,6120,6005,6492,6517],backgroundColor:'#006E6E44',borderColor:'#006E6E',borderWidth:1,borderRadius:3},{label:'EBITDA',data:[2421,2356,2524,2734,2404,2587,2784,2616],backgroundColor:'#C4933F99',borderRadius:3},{label:'Net Profit',data:[1975,1937,1990,1896,1734,1858,2035,1885],backgroundColor:'#1a7a4a99',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#4A5568',font:{size:11}}}},scales:{x:{ticks:{color:'#4A5568'}},y:{ticks:{color:'#4A5568',callback:v=>v+'M'}}}}});
+  const gpm=[51.7,52.1,51.6,49.5,50.3,52.3,52.9,51.1];
+  const npm=[30.5,30.8,31.2,29.4,28.3,30.9,31.3,28.9];
+  ci['marginChart']=new Chart(document.getElementById('marginChart').getContext('2d'),{type:'line',data:{labels:quarters,datasets:[{label:'GPM %',data:gpm,borderColor:'#006E6E',backgroundColor:'#006E6E22',fill:true,tension:0.3,pointRadius:4,pointBackgroundColor:'#006E6E'},{label:'NPM %',data:npm,borderColor:'#C4933F',fill:false,tension:0.3,pointRadius:4,pointBackgroundColor:'#C4933F'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#4A5568',font:{size:11}}}},scales:{y:{min:24,max:58,ticks:{callback:v=>v+'%',color:'#4A5568'}},x:{ticks:{color:'#4A5568'}}}}});
+}
+
+// ======= VALUATION =======
+function initValuation(){
+  dc('scenChart');
+  ci['scenChart']=new Chart(document.getElementById('scenChart').getContext('2d'),{type:'bar',data:{labels:['Extreme Bear (10%)','Bear (25%)','Base (45%)','Bull (20%)'],datasets:[{label:'Fair Value ฿',data:[110,150,195,270],backgroundColor:['#b91c1c88','#f9730099','#006E6Eaa','#1a7a4aaa'],borderRadius:5},{label:'ราคาปัจจุบัน 168.50฿',data:[168.5,168.5,168.5,168.5],type:'line',borderColor:'#C4933F',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#C4933F',fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#4A5568',font:{size:11}}}},scales:{x:{ticks:{color:'#4A5568'}},y:{min:80,max:290,ticks:{callback:v=>v+' ฿',color:'#4A5568'}}}}});
+}
+
+// ======= CAPEX =======
+function initCapex(){
+  dc('capexChart');dc('capexRatioChart');
+  const years=['FY68 Actual','FY69E','FY70E','FY71E','FY72E','FY73E'];
+  const revenue=[25134,25700,26800,27600,30500,33000];
+  const ocf=[8253,8200,8700,9000,9500,10000];
+  const capex=[2097,3315,5215,4515,2415,1915];
+  const fcf=ocf.map((o,i)=>o-capex[i]);
+  ci['capexChart']=new Chart(document.getElementById('capexChart').getContext('2d'),{type:'bar',data:{labels:years,datasets:[{label:'Revenue',data:revenue,backgroundColor:'#006E6E33',borderColor:'#006E6E',borderWidth:1.5,borderRadius:3},{label:'OCF',data:ocf,backgroundColor:'#1a7a4a99',borderRadius:3},{label:'CAPEX',data:capex,backgroundColor:'#b91c1c99',borderRadius:3},{label:'FCF (OCF-CAPEX)',data:fcf,type:'line',borderColor:'#C4933F',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#C4933F',fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#4A5568',font:{size:11}}}},scales:{x:{ticks:{color:'#4A5568'}},y:{ticks:{color:'#4A5568',callback:v=>(v/1000).toFixed(1)+'K M'}}}}});
+  const capexRevRatio=capex.map((c,i)=>(c/revenue[i]*100).toFixed(1));
+  const capexOcfRatio=capex.map((c,i)=>(c/ocf[i]*100).toFixed(1));
+  ci['capexRatioChart']=new Chart(document.getElementById('capexRatioChart').getContext('2d'),{type:'bar',data:{labels:years,datasets:[{label:'CAPEX/Revenue %',data:capexRevRatio,backgroundColor:'#b91c1c88',borderRadius:3},{label:'CAPEX/OCF %',data:capexOcfRatio,backgroundColor:'#f9730088',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#4A5568',font:{size:11}}}},scales:{x:{ticks:{color:'#4A5568'}},y:{min:0,max:70,ticks:{callback:v=>v+'%',color:'#4A5568'}}}}});
+}
+
+// ======= PHUKET =======
+const phuketSliders=['phuketOcc','phuketPremium','phuketBeds'];
+function calcPhuket(){
+  const occ=parseInt(document.getElementById('phuketOcc').value)/100;
+  const premium=parseInt(document.getElementById('phuketPremium').value)/100;
+  const beds=parseInt(document.getElementById('phuketBeds').value);
+  document.getElementById('phuketOccVal').textContent=Math.round(occ*100)+'%';
+  document.getElementById('phuketPremiumVal').textContent=Math.round(premium*100)+'%';
+  document.getElementById('phuketBedsVal').textContent=beds;
+  // IPD
+  const ipd=beds*occ*365*100662*premium/1e6;
+  // OPD (scaled from BKK)
+  const opdPerBed=2748/580;
+  const opd=beds*occ*opdPerBed*365*12404*premium/1e6;
+  const total=Math.round(ipd+opd);
+  const pctRev=(total/25134*100).toFixed(1);
+  // Profit: assume GP 48%, pre-BEP so operating overhead ~45% of revenue
+  const profitPct=occ>=0.5?((occ-0.4)*0.8*100).toFixed(1):((occ-0.45)*0.8*100).toFixed(1);
+  const profit=(total*parseFloat(profitPct)/100).toFixed(0);
+  const profitPctGroup=(profit/7512*100).toFixed(1);
+  document.getElementById('phuketRev').textContent=(total).toLocaleString()+'M';
+  document.getElementById('phuketRevPct').textContent='+'+pctRev+'%';
+  document.getElementById('phuketProfit').textContent=(parseFloat(profitPctGroup)>=0?'+':'')+profitPctGroup+'%';
+}
+function initPhuket(){
+  phuketSliders.forEach(id=>document.getElementById(id).addEventListener('input',calcPhuket));
+  calcPhuket();
+  dc('phuketChart');
+  const yrs=['2570 (H2)','2571','2572','2573','2574'];
+  const pRev=[750,2100,3800,6200,7800];
+  const pProfit=[-38,105,570,1550,2100];
+  const pOcc=[30,45,55,65,72];
+  ci['phuketChart']=new Chart(document.getElementById('phuketChart').getContext('2d'),{type:'bar',data:{labels:yrs,datasets:[{label:'Phuket Revenue (M฿)',data:pRev,backgroundColor:'#006E6E99',borderRadius:4,yAxisID:'y'},{label:'Phuket Profit (M฿)',data:pProfit,backgroundColor:pProfit.map(v=>v<0?'#b91c1c99':'#1a7a4a99'),borderRadius:4,yAxisID:'y'},{label:'Occupancy %',data:pOcc,type:'line',borderColor:'#C4933F',borderWidth:2,pointRadius:5,pointBackgroundColor:'#C4933F',yAxisID:'y2',fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#4A5568',font:{size:11}}}},scales:{y:{position:'left',ticks:{callback:v=>v+'M',color:'#4A5568'},title:{display:true,text:'ล้านบาท',color:'#8A9AB0'}},y2:{position:'right',min:0,max:90,ticks:{callback:v=>v+'%',color:'#C4933F'},grid:{drawOnChartArea:false}},x:{ticks:{color:'#4A5568'}}}}});
+}
+
+// ======= NO ME =======
+function calcNoME(){
+  const mePct=parseInt(document.getElementById('mePct').value)/100;
+  const camPct=parseInt(document.getElementById('camPct').value)/100;
+  const pe=parseInt(document.getElementById('targetPE').value);
+  document.getElementById('mePctVal').textContent=Math.round(mePct*100)+'%';
+  document.getElementById('camPctVal').textContent=Math.round(camPct*100)+'%';
+  document.getElementById('targetPEVal').textContent=pe+'x';
+  const meRev=5947*mePct;
+  const camRev=503*camPct;
+  const remainRev=25134-meRev-camRev;
+  const remainRevPct=((remainRev-25134)/25134*100).toFixed(1);
+  // ME net margin ~35%, Cambodia ~25%
+  const profitLost=meRev*0.35+camRev*0.25;
+  const remainProfit=7512-profitLost;
+  const remainEPS=(remainProfit/794.97).toFixed(2);
+  const fairPrice=Math.round(parseFloat(remainEPS)*pe);
+  document.getElementById('remainRev').textContent=Math.round(remainRev).toLocaleString()+'M';
+  document.getElementById('remainRevPct').textContent=remainRevPct+'% จาก 25,134M';
+  document.getElementById('remainEPS').textContent=remainEPS;
+  document.getElementById('epsChange').textContent=((remainEPS-9.45)/9.45*100).toFixed(1)+'% จาก 9.45฿';
+  document.getElementById('fairPriceCalc').textContent=fairPrice+' ฿';
+  document.getElementById('vsCurrentPrice').textContent='ราคาปัจจุบัน 168.50 ฿ ('+(((fairPrice-168.5)/168.5)*100).toFixed(1)+'%)';
+}
+function initNoME(){
+  ['mePct','camPct','targetPE'].forEach(id=>document.getElementById(id).addEventListener('input',calcNoME));
+  calcNoME();
+  dc('noMEChart');
+  const sc=['Baseline','Iran Base\n-20% ME 10wks','ME หาย 100%','ME+Cam=0','ME 50%+\nno Cam','ME 80%+\nCam 30%','ME+Cam\nกลับมา FY70'];
+  const revs=[25134,24334,19177,18674,21652,24085,27000];
+  const profits=[7512,7321,5405,5301,6407,7197,8100];
+  const eps=profits.map(p=>(p/794.97).toFixed(2));
+  const fairPrices=profits.map(p=>Math.round(p/794.97*18));
+  ci['noMEChart']=new Chart(document.getElementById('noMEChart').getContext('2d'),{type:'bar',data:{labels:sc,datasets:[{label:'Revenue (M฿)',data:revs,backgroundColor:'#006E6E55',borderRadius:3,yAxisID:'y'},{label:'Net Profit (M฿)',data:profits,backgroundColor:profits.map((_,i)=>i===0?'#1a7a4a99':i<3?'#b91c1c99':i===3?'#b91c1c99':'#f9730099'),borderRadius:3,yAxisID:'y'},{label:'Fair Price @PE18x (฿)',data:fairPrices,type:'line',borderColor:'#C4933F',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#C4933F',yAxisID:'y2',fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#4A5568',font:{size:11}}}},scales:{y:{position:'left',ticks:{callback:v=>(v/1000).toFixed(0)+'K',color:'#4A5568'},title:{display:true,text:'ล้านบาท',color:'#8A9AB0'}},y2:{position:'right',min:50,max:280,ticks:{callback:v=>v+' ฿',color:'#C4933F'},grid:{drawOnChartArea:false}},x:{ticks:{color:'#4A5568',font:{size:10}}}}}});
+}
+
+// ======= OPPDAY + BUSINESS CYCLE =======
+function initOppday(){
+  dc('businessCycleChart');dc('cycleHistChart');
+  // Business Cycle Chart - S-curve style
+  const ctx=document.getElementById('businessCycleChart').getContext('2d');
+  // Custom wave data representing business cycle phases
+  const x=Array.from({length:100},(_,i)=>i);
+  // Sine-based curve representing profit over time
+  const profitCurve=x.map(i=>{
+    if(i<20) return 5+i*0.3; // Pre-breakeven rising slowly
+    if(i<35) return 11+Math.pow(i-20,1.8)*0.08; // Post-breakeven surge
+    if(i<55) return 30+Math.sin((i-35)*0.15)*5; // Mature phase (slight fluctuation)
+    if(i<58) return 30; // Iran War dip start
+    if(i<65) return 30-(i-58)*2.5; // Iran War dip
+    if(i<70) return 12.5+(i-65)*1.5; // Recovery
+    if(i<80) return 20-Math.pow(i-70,0.5)*0.5+i*0.1; // Phuket pre-BEP
+    if(i<90) return 28+Math.pow(i-80,1.6)*0.15; // Phuket post-BEP surge
+    return 45+i*0.1;
+  });
+  const labels=x.map(i=>{
+    const map={0:'2000',10:'2005',20:'2010',25:'2013',35:'2015',55:'2024',63:'Iran\nWar',70:'2026',80:'Phuket\nPre-BEP',90:'Phuket\nPost-BEP',99:'2035'};
+    return map[i]||'';
+  });
+  // Position marker colors
+  const pointColors=profitCurve.map((_,i)=>{
+    if(i===63) return '#b91c1c'; // Iran War
+    if(i===65) return '#b91c1c';
+    if(i===67) return '#b91c1c';
+    return 'transparent';
+  });
+  // Mark current position (Iran War dip ~i=64)
+  ci['businessCycleChart']=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Business Cycle (Profit Trend)',data:profitCurve,borderColor:'#006E6E',backgroundColor:'#006E6E15',fill:true,tension:0.4,pointRadius:profitCurve.map((_,i)=>{
+    const marks=[0,20,35,55,63,67,80,90];
+    return marks.includes(i)?8:0;
+  }),pointBackgroundColor:profitCurve.map((_,i)=>{
+    if(i===63||i===67) return '#b91c1c';
+    if(i===55||i===80) return '#C4933F';
+    if(i===0||i===20) return '#9CA3AF';
+    if(i===35||i===90) return '#1a7a4a';
+    return '#006E6E';
+  }),pointBorderColor:'#fff',pointBorderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>`Profit Index: ${c.parsed.y.toFixed(0)}`}}},scales:{x:{ticks:{color:'#4A5568',maxRotation:0,font:{size:10}},grid:{display:false}},y:{display:false}},animation:{duration:600}}});
+  // Annotations via drawing
+  // History chart
+  const histYrs=['FY63(COVID)','FY64','FY65','FY66','FY67','FY68(Iran)','FY69E'];
+  const histRev=[8000,17000,20700,25300,25634,25134,24900];
+  const histProfit=[900,3000,4900,7006,7775,7512,7400];
+  ci['cycleHistChart']=new Chart(document.getElementById('cycleHistChart').getContext('2d'),{type:'bar',data:{labels:histYrs,datasets:[{label:'Revenue',data:histRev,backgroundColor:'#006E6E55',borderRadius:3,yAxisID:'y'},{label:'Net Profit',data:histProfit,backgroundColor:histProfit.map((_,i)=>i===0?'#b91c1c88':i===5?'#f9730099':'#1a7a4a88'),borderRadius:3,yAxisID:'y'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#4A5568',font:{size:11}}}},scales:{y:{position:'left',ticks:{callback:v=>(v/1000).toFixed(0)+'K',color:'#4A5568'},title:{display:true,text:'ล้านบาท'}},x:{ticks:{color:'#4A5568'}}}}});
+}
+
+// ======= DIVIDEND =======
+const CORP_TAX=0.20;
+const TAX_BRACKETS=[{l:'0%',r:0},{l:'5%',r:0.05},{l:'10%',r:0.10},{l:'15%',r:0.15},{l:'20%',r:0.20},{l:'25%',r:0.25},{l:'30%',r:0.30},{l:'35%',r:0.35}];
+function updateDivCalc(){
+  const price=parseFloat(document.getElementById('buyPrice').value);
+  const shares=parseInt(document.getElementById('numShares').value);
+  const dps=parseFloat(document.getElementById('dpsInput').value);
+  document.getElementById('buyPriceVal').textContent=price.toFixed(2);
+  document.getElementById('numSharesVal').textContent=shares.toLocaleString();
+  document.getElementById('dpsVal').textContent=dps.toFixed(2);
+  const totalInv=price*shares;
+  const divAmt=dps*shares;
+  const credit=divAmt*(CORP_TAX/(1-CORP_TAX));
+  const gross=divAmt+credit;
+  document.getElementById('totalInvest').textContent=totalInv.toLocaleString('th-TH',{maximumFractionDigits:0})+'฿';
+  document.getElementById('divReceived').textContent=divAmt.toLocaleString('th-TH',{maximumFractionDigits:0})+'฿';
+  document.getElementById('divYield').textContent=(dps/price*100).toFixed(2)+'%';
+  document.getElementById('taxCredit').textContent=credit.toFixed(0)+'฿';
+  document.getElementById('grossDiv').textContent=gross.toFixed(0)+'฿';
+  document.getElementById('sharesNeeded').textContent=Math.ceil(100000/dps).toLocaleString();
+  const tbody=document.querySelector('#taxDetailTable tbody');
+  tbody.innerHTML=TAX_BRACKETS.map(b=>{
+    const taxDue=gross*b.r;
+    const net=divAmt-(taxDue-credit);
+    const diff=credit-taxDue;
+    const dStr=diff>=0?`<span style="color:#1a7a4a">+${diff.toFixed(0)}</span>`:`<span style="color:#b91c1c">${diff.toFixed(0)}</span>`;
+    return `<tr><td>${b.l}</td><td class="r">${divAmt.toFixed(0)}</td><td class="r">${credit.toFixed(0)}</td><td class="r">${gross.toFixed(0)}</td><td class="r">${taxDue.toFixed(0)}</td><td class="r">${dStr}</td><td class="r strong">${net.toFixed(0)}</td><td class="r">${(net/totalInv*100).toFixed(2)}%</td></tr>`;
+  }).join('');
+}
+function initDividend(){
+  ['buyPrice','numShares','dpsInput'].forEach(id=>document.getElementById(id).addEventListener('input',updateDivCalc));
+  updateDivCalc();
+  dc('divHistChart');
+}
+
+// ======= INIT =======
+renderCharts('overview');
+</script>
+</body>
+</html>
