@@ -497,7 +497,7 @@
     const sign = delta > 0 ? '+' : '';
 
     return `
-    <a class="card" href="${s.t}.html" data-ticker="${s.t}" data-name="${s.name}">
+    <a class="card" href="${s.t.toLowerCase()}/${s.t.toLowerCase()}.html" data-ticker="${s.t}" data-name="${s.name}">
       <div class="card-top">
         <span class="ticker">${s.t}</span>
         <span class="go-arrow" aria-hidden="true">
