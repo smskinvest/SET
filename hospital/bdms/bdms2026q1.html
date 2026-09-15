@@ -153,6 +153,101 @@ input[type=range]{flex:1;height:5px;accent-color:var(--blue2);cursor:pointer}
 .wci-label{font-size:11px;color:var(--text3);font-weight:700}
 .wci-val{font-size:18px;font-weight:800;color:var(--red);margin-top:2px}
 .wci-desc{font-size:10px;color:var(--text3);margin-top:2px}
+
+Claude finished the response
+Ran a command
+โค้ดตอนนี้ตั้งไว้ถูกต้องแล้วครับ — ทุกการ์ดลิงก์ไปที่ {ticker}/{ticker}.html ตัวพิมพ์เล็ก ตรงกับโครงสร้างจริงบน GitHub เช่น hospital/bdms/bdms.html
+
+ส่งไฟล์ landing page ตัวเต็ม (เหมือนเดิมทุกอย่าง แค่ลิงก์การ์ดแก้ให้ตรงโครงสร้างแล้ว) ให้อีกครั้งครับ:
+
+Ran a command, shared files
+ตัวอย่างการ์ดที่จะได้:
+
+BDMS → hospital/bdms/bdms.html
+BH → hospital/bh/bh.html
+CHG → hospital/chg/chg.html
+ไฟล์นี้เอาไปวางทับ hospital/index.html บน GitHub ได้เลย ไม่กระทบไฟล์รายตัว (เช่น bdms/bdms.html) ที่มีอยู่แล้ว เพราะแก้แค่หน้ารวม ไม่ได้แตะไฟล์ในโฟลเดอร์ย่อย
+
+
+Index
+Code·HTML 
+
+<!DOCTYPE html> <html lang="th"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>BDMS — วิเคราะห์เชิงลึก | ณ 28 ส.ค. 2569 (อัปเดต Q2/2026)</title> <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="http
+
+pasted
+
+เพิ่มการ์ด อีกอันด้านบนถัดจากการ์ดราคา เพื่อลิงค์ไปยัง ข้อมูล   2026 Q1 ซึ่งเป็น  html file name= bdms2026q1 ในโฟล์เดอร์เดียวกันนี้ และเตรียมการ์ดสำหรับอัพเดท ไตรมาสถัดๆไปสิ้นปี 2028 ขนาดของการ์ดให้เหมาะสมกับขนาดอักษร ไม่ใหญ่เกินไป
+
+Save the user's BDMS deep-dive page to disk before editing
+
+<!DOCTYPE html> <html lang="th"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>BDMS — วิเคราะห์เชิงลึก | ณ 28 ส.ค. 2569 (อัปเดต Q2/2026)</title> <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="http
+
+pasted
+
+เพิ่มการ์ด อีกอันด้านบนถัดจากการ์ดราคา เพื่อลิงค์ไปยัง ข้อมูล   2026 Q1 ซึ่งเป็น  html file name= bdms2026q1 ในโฟล์เดอร์เดียวกันนี้ และเตรียมการ์ดสําหรับอัพเดท ไตรมาสถัดๆไปสิ้นปี 2028 ขนาดของการ์ดให้เหมาะสมกับขนาดอักษร ไม่ใหญ่เกินไป
+
+Edited a file, ran a command, shared files
+เพิ่มการ์ดใหม่ต่อจากการ์ดราคาแล้วครับ — เป็นการ์ดเล็ก "📅 ข้อมูลรายไตรมาส" ขนาดตัวอักษร 0.7rem (เล็กพอดี ไม่แย่งพื้นที่การ์ดราคา) วางเป็นแถวปุ่มเรียงกัน:
+
+ปุ่ม	สถานะ
+Q1/26	ลิงก์ใช้งานได้จริง → bdms2026q1.html (ไฟล์ในโฟลเดอร์เดียวกัน)
+Q2/26	ไฮไลต์สีทอง = หน้าที่กำลังดูอยู่ (ไม่ใช่ลิงก์)
+Q3/26 – Q4/28	เตรียมไว้ล่วงหน้าถึงสิ้นปี 2028 (รวม 10 ไตรมาส) แสดงจางลง กดไม่ได้ (pointer-events:none) จนกว่าจะมีไฟล์จริง
+ตั้งชื่อไฟล์ตามรูปแบบเดียวกันไว้ล่วงหน้าให้แล้ว: bdms2026q3.html, bdms2026q4.html, bdms2027q1.html ... ไปจนถึง bdms2028q4.html — พอมีข้อมูลไตรมาสไหนพร้อม แค่สร้างไฟล์ตามชื่อนี้แล้ววาง แล้วลบ class disabled ออกจากปุ่มนั้น ก็จะกดใช้งานได้ทันทีโดยไม่ต้องแก้โครงสร้างอื่น
+
+
+Bdms
+Code·HTML 
+ขอโค้ด การ์ดข้อมูลรายไตรมาส จะเอาไปวางในหน้าอื่นๆ บอกวิธีวางด้วย
+
+Building a reusable quarter-nav card component for stock pages.
+นี่คือโค้ดการ์ด "ข้อมูลรายไตรมาส" แบบแยกเดี่ยว เอาไปวางหน้าไหนก็ได้ครับ (ใส่ fallback สีไว้แล้ว เผื่อหน้านั้นไม่มีตัวแปรสี teal/gold เหมือน BDMS):
+
+html
+<!-- ===== ใส่ใน <style> ===== -->
+<style>
+  .quarter-nav {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 14px 18px;
+    max-width: 260px;
+    backdrop-filter: blur(8px);
+  }
+  .quarter-nav .qn-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    opacity: 0.65;
+    margin-bottom: 9px;
+    color: #fff;
+  }
+  .quarter-grid { display:flex; flex-wrap:wrap; gap:6px; }
+  .q-pill {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.16);
+    transition: background 0.15s ease;
+    line-height: 1.5;
+  }
+  .q-pill:hover { background: rgba(255,255,255,0.24); }
+  .q-pill.current {
+    background: var(--gold, #c9a84c);
+    color: var(--teal-deep, #0d3d3a);
+    border-color: var(--gold, #c9a84c);
+    cursor: default;
+  }
+  .q-pill.disabled {
+    opacity: 0.32;
+    pointer-events: none;
+    cursor: default;
+  }
 </style>
 </head>
 <body>
@@ -173,6 +268,23 @@ input[type=range]{flex:1;height:5px;accent-color:var(--blue2);cursor:pointer}
     <div class="hs"><div class="hs-l">DPS 2025 (ทั้งปี)</div><div class="hs-v">฿1.00</div><div class="hs-s">Yield 5.26% · XD 10 มี.ค. 69</div></div>
     <div class="hs"><div class="hs-l">EBITDA Margin</div><div class="hs-v">23.9%</div><div class="hs-s">2025A · คาด 24.3-24.4% ปี 69</div></div>
     <div class="hs"><div class="hs-l">Revenue 2025</div><div class="hs-v">111,507</div><div class="hs-s">ล้านบาท (+3.4% YoY)</div></div>
+    <div class="quarter-nav">
+  <div class="qn-label">📅 ข้อมูลรายไตรมาส</div>
+  <div class="quarter-grid">
+    <a class="q-pill" href="TICKER2026q1.html">Q1/26</a>
+    <a class="q-pill" href="TICKER2026q2.html">Q2/26</a>
+    <span class="q-pill current" title="กำลังดูหน้านี้อยู่">Q3/26</span>
+    <a class="q-pill disabled" href="TICKER2026q4.html" title="รอข้อมูลอัปเดต">Q4/26</a>
+    <a class="q-pill disabled" href="TICKER2027q1.html" title="รอข้อมูลอัปเดต">Q1/27</a>
+    <a class="q-pill disabled" href="TICKER2027q2.html" title="รอข้อมูลอัปเดต">Q2/27</a>
+    <a class="q-pill disabled" href="TICKER2027q3.html" title="รอข้อมูลอัปเดต">Q3/27</a>
+    <a class="q-pill disabled" href="TICKER2027q4.html" title="รอข้อมูลอัปเดต">Q4/27</a>
+    <a class="q-pill disabled" href="TICKER2028q1.html" title="รอข้อมูลอัปเดต">Q1/28</a>
+    <a class="q-pill disabled" href="TICKER2028q2.html" title="รอข้อมูลอัปเดต">Q2/28</a>
+    <a class="q-pill disabled" href="TICKER2028q3.html" title="รอข้อมูลอัปเดต">Q3/28</a>
+    <a class="q-pill disabled" href="TICKER2028q4.html" title="รอข้อมูลอัปเดต">Q4/28</a>
+  </div>
+</div>
   </div>
 </div>
 
