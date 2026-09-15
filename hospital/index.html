@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SET Hospital Watch — โรงพยาบาลในตลาดหลักทรัพย์ไทย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F1F6F4;
+    --paper: #FFFFFF;
+    --ink: #122A28;
+    --ink-soft: #4F6864;
+    --line: #DCE6E2;
+    --pine: #0B3D3E;
+    --pine-deep: #082B2C;
+    --mint: #3FA593;
+    --mint-soft: #E4F1ED;
+    --pulse: #E4572E;
+    --pulse-soft: #FBE6DE;
+    --focus: #1D7A73;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+
+  /* ---------- Header ---------- */
+
+  header{
+    position:relative;
+    background:var(--pine);
+    color:#EAF4F1;
+    padding:56px 6vw 40px;
+    overflow:hidden;
+  }
+
+  .hospital-mark{
+    position:absolute;
+    top:44px;
+    right:6vw;
+    width:34px;
+    height:34px;
+    opacity:0.85;
+  }
+  .hospital-mark svg{ width:100%; height:100%; }
+
+  .eyebrow-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    letter-spacing:0.02em;
+    color:#8FC9BD;
+    margin:0 0 14px;
+  }
+
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:clamp(32px, 4.4vw, 52px);
+    line-height:1.08;
+    margin:0 0 16px;
+    max-width:14ch;
+  }
+
+  header p.lede{
+    font-size:16px;
+    line-height:1.6;
+    color:#C4E0D8;
+    max-width:56ch;
+    margin:0 0 34px;
+  }
+
+  /* EKG pulse divider */
+  .pulse-wrap{
+    width:100%;
+    max-width:680px;
+    height:52px;
+    position:relative;
+  }
+  .pulse-wrap svg{ width:100%; height:100%; overflow:visible; }
+  .pulse-path{
+    fill:none;
+    stroke:#3FA593;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+  .pulse-dot{
+    fill:var(--pulse);
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .pulse-dot{
+      offset-path: path('M0,26 L46,26 L60,26 L72,6 L86,46 L100,26 L128,26 L138,26 L150,14 L160,38 L172,26 L680,26');
+      animation: travel 3.6s linear 0.4s 1 both;
+    }
+    @keyframes travel{
+      0%{ offset-distance:0%; opacity:0; }
+      3%{ opacity:1; }
+      97%{ opacity:1; }
+      100%{ offset-distance:100%; opacity:0; }
+    }
+  }
+
+  /* ---------- Controls ---------- */
+
+  .controls{
+    max-width:1280px;
+    margin:-26px auto 0;
+    padding:0 6vw;
+    position:relative;
+    z-index:2;
+  }
+
+  .controls-inner{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 22px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    align-items:center;
+    box-shadow:0 12px 28px -18px rgba(8,43,44,0.28);
+  }
+
+  .search-field{
+    flex:1 1 240px;
+    position:relative;
+  }
+  .search-field input{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:11px 14px 11px 38px;
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    color:var(--ink);
+    background:var(--bg);
+  }
+  .search-field input:focus{
+    outline:2px solid var(--focus);
+    outline-offset:1px;
+    background:var(--paper);
+  }
+  .search-field svg{
+    position:absolute;
+    left:12px;
+    top:50%;
+    transform:translateY(-50%);
+    width:16px;
+    height:16px;
+    stroke:var(--ink-soft);
+  }
+
+  .sort-field label{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-right:8px;
+  }
+  .sort-field select{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px 12px;
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    color:var(--ink);
+    background:var(--bg);
+  }
+  .sort-field select:focus{ outline:2px solid var(--focus); outline-offset:1px; }
+
+  .count-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .count-tag strong{ color:var(--pine); }
+
+  /* ---------- Grid ---------- */
+
+  main{
+    max-width:1280px;
+    margin:0 auto;
+    padding:36px 6vw 80px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(258px, 1fr));
+    gap:16px;
+  }
+
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px 20px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    transition:border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    position:relative;
+  }
+  .card:hover, .card:focus-visible{
+    border-color:var(--mint);
+    transform:translateY(-2px);
+    box-shadow:0 14px 26px -20px rgba(8,43,44,0.35);
+  }
+  .card:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  .ticker{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:21px;
+    color:var(--pine);
+    letter-spacing:0.01em;
+  }
+
+  .go-arrow{
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    transition:background 0.15s ease, border-color 0.15s ease;
+  }
+  .go-arrow svg{ width:13px; height:13px; stroke:var(--pine); }
+  .card:hover .go-arrow{ background:var(--pine); border-color:var(--pine); }
+  .card:hover .go-arrow svg{ stroke:#fff; }
+
+  .full-name{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    line-height:1.4;
+    margin-top:-8px;
+  }
+
+  .price-row{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .price{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:24px;
+    color:var(--ink);
+  }
+  .price-unit{
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+
+  .prev-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-top:-8px;
+  }
+  .prev-label{
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+  .prev-price{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .prev-delta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    font-weight:500;
+    display:inline-flex;
+    align-items:center;
+    gap:3px;
+  }
+  .prev-delta svg{ width:11px; height:11px; }
+  .prev-delta.up{ color:var(--mint); }
+  .prev-delta.down{ color:var(--pulse); }
+  .prev-delta.flat{ color:var(--ink-soft); }
+
+  .stat-row{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+    padding-top:12px;
+    border-top:1px dashed var(--line);
+  }
+  .stat{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+  }
+  .stat-label{
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+  .stat-value{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13.5px;
+    color:var(--ink);
+    font-weight:500;
+  }
+
+  .yield-pill{
+    align-self:flex-start;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    font-weight:500;
+    color:var(--mint);
+    background:var(--mint-soft);
+    border-radius:20px;
+    padding:4px 10px;
+  }
+  .yield-pill.dash{
+    color:var(--ink-soft);
+    background:var(--bg);
+  }
+
+  .no-results{
+    grid-column:1/-1;
+    text-align:center;
+    padding:60px 20px;
+    color:var(--ink-soft);
+    font-size:14.5px;
+  }
+  .no-results strong{ display:block; color:var(--pine); font-size:17px; margin-bottom:6px; font-family:'Space Grotesk', sans-serif; }
+
+  footer{
+    max-width:1280px;
+    margin:0 auto;
+    padding:0 6vw 50px;
+    color:var(--ink-soft);
+    font-size:12.5px;
+    line-height:1.7;
+  }
+  footer .rule{
+    border-top:1px solid var(--line);
+    padding-top:20px;
+  }
+
+  @media (max-width:560px){
+    header{ padding:44px 5vw 34px; }
+    .hospital-mark{ top:28px; right:5vw; width:26px; height:26px; }
+    main{ padding:28px 5vw 60px; }
+    .controls{ padding:0 5vw; margin-top:-18px; }
+    .stat-row{ grid-template-columns:1fr 1fr 1fr; gap:8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hospital-mark" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#8FC9BD" stroke-width="1.6">
+      <rect x="3" y="3" width="18" height="18" rx="3"/>
+      <path d="M12 7v10M7 12h10"/>
+    </svg>
+  </div>
+
+  <p class="eyebrow-line">SET · Healthcare &amp; Hospital Services</p>
+  <h1>หุ้นกลุ่มโรงพยาบาล ในตลาดหลักทรัพย์ไทย</h1>
+  <p class="lede">รวมราคาล่าสุด P/E, P/BV และอัตราปันผลของหุ้นโรงพยาบาลและบริการทางการแพทย์ที่จดทะเบียนใน SET กดที่การ์ดเพื่อดูบทวิเคราะห์รายตัว</p>
+
+  <div class="pulse-wrap" aria-hidden="true">
+    <svg viewBox="0 0 680 52" preserveAspectRatio="none">
+      <path class="pulse-path" d="M0,26 L46,26 L60,26 L72,6 L86,46 L100,26 L128,26 L138,26 L150,14 L160,38 L172,26 L680,26"/>
+      <circle class="pulse-dot" r="4"/>
+    </svg>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="controls-inner">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="searchInput" type="text" placeholder="ค้นหาชื่อย่อหรือชื่อโรงพยาบาล เช่น BH, BDMS, Bumrungrad" aria-label="ค้นหาหุ้นโรงพยาบาล">
+    </div>
+    <div class="sort-field">
+      <label for="sortSelect">เรียงตาม</label>
+      <select id="sortSelect" aria-label="เรียงลำดับ">
+        <option value="ticker">ชื่อย่อ (A–Z)</option>
+        <option value="price-desc">ราคา (สูง → ต่ำ)</option>
+        <option value="price-asc">ราคา (ต่ำ → สูง)</option>
+        <option value="yield-desc">ปันผล (สูง → ต่ำ)</option>
+        <option value="pe-asc">P/E (ต่ำ → สูง)</option>
+      </select>
+    </div>
+    <div class="count-tag"><strong id="countNum">35</strong> หลักทรัพย์</div>
+  </div>
+</div>
+
+<main>
+  <div class="grid" id="stockGrid"></div>
+</main>
+
+<footer>
+  <div class="rule">
+    ราคาและอัตราส่วนอ้างอิงจากข้อมูลล่าสุดที่บันทึกไว้ ณ วันที่อัปเดต — ใช้เพื่อการศึกษาประกอบการตัดสินใจลงทุนเท่านั้น ไม่ใช่คำแนะนำการลงทุน กดที่การ์ดแต่ละใบเพื่อเข้าสู่หน้าวิเคราะห์รายตัวในโฟลเดอร์ /hospital
+  </div>
+</footer>
+
+<script>
+  // prevClose = ราคาปิดเมื่อวันทำการก่อนหน้า (ยังเป็นค่าตั้งต้น = ราคาล่าสุด
+  // เนื่องจากไม่มีข้อมูลราคาปิดเมื่อวานจริงในภาพที่แนบมา — แก้ตัวเลขนี้ให้ตรง
+  // กับราคาปิดจริงของแต่ละตัวเพื่อให้ % เปลี่ยนแปลงถูกต้อง)
+  const stocks = [
+    { t:"AHC",    name:"Aikchol Hospital PCL",              price:11.90,  prevClose:11.90,  pe:20.88, pbv:0.85, yld:4.41 },
+    { t:"BCH",    name:"Bangkok Chain Hospital",             price:11.00,  prevClose:11.00,  pe:22.00, pbv:2.10, yld:4.13 },
+    { t:"BDMS",   name:"Bangkok Dusit Medical Services",     price:19.90,  prevClose:19.90,  pe:20.40, pbv:3.11, yld:3.71 },
+    { t:"BH",     name:"Bumrungrad Hospital PCL",            price:195.00, prevClose:195.00, pe:22.42, pbv:5.75, yld:4.07 },
+    { t:"CHG",    name:"Chularat Hospital PCL",              price:1.54,   prevClose:1.54,   pe:17.44, pbv:2.23, yld:4.55 },
+    { t:"CMR",    name:"Chiang Mai Ram Medical",             price:1.29,   prevClose:1.29,   pe:2.10,  pbv:1.17, yld:0.21 },
+    { t:"D",      name:"Dental Corporation PCL",             price:3.02,   prevClose:3.02,   pe:11.46, pbv:1.22, yld:4.83 },
+    { t:"EKH",    name:"Ekachai Medical Care PCL",           price:5.15,   prevClose:5.15,   pe:15.29, pbv:1.86, yld:5.77 },
+    { t:"GFC",    name:"Genesis Fertility Center",           price:2.22,   prevClose:2.22,   pe:26.25, pbv:0.87, yld:6.25 },
+    { t:"HANN",   name:"Mukdahan International Hospital",    price:0.80,   prevClose:0.80,   pe:82.00, pbv:1.50, yld:null },
+    { t:"IMH",    name:"Intermedical Care and Lab",          price:3.68,   prevClose:3.68,   pe:0.02,  pbv:1.45, yld:null },
+    { t:"IVF",    name:"Inspire IVF PCL",                    price:0.72,   prevClose:0.72,   pe:null,  pbv:0.64, yld:null },
+    { t:"KDH",    name:"Thonburi Medical Center",            price:84.50,  prevClose:84.50,  pe:10.42, pbv:1.75, yld:3.20 },
+    { t:"KTMS",   name:"KT Medical Service PCL",             price:1.38,   prevClose:1.38,   pe:11.00, pbv:0.72, yld:0.98 },
+    { t:"LDC",    name:"LDC Dental PCL",                     price:0.22,   prevClose:0.22,   pe:8.78,  pbv:0.62, yld:null },
+    { t:"LPH",    name:"Ladprao General Hospital",           price:3.60,   prevClose:3.60,   pe:13.85, pbv:1.30, yld:5.56 },
+    { t:"MASTER", name:"Master Style PCL",                   price:8.40,   prevClose:8.40,   pe:12.01, pbv:0.76, yld:4.62 },
+    { t:"MEDEZE", name:"Medeze Group PCL",                   price:6.30,   prevClose:6.30,   pe:49.23, pbv:2.32, yld:3.72 },
+    { t:"NEW",    name:"Wattana Karnpaet PCL",                price:92.75,  prevClose:92.75,  pe:22.84, pbv:1.77, yld:1.73 },
+    { t:"NKT",    name:"Nakornthon Hospital PCL",             price:3.72,   prevClose:3.72,   pe:16.17, pbv:1.02, yld:4.84 },
+    { t:"NTV",    name:"Nonthavej Hospital PCL",              price:19.10,  prevClose:19.10,  pe:13.48, pbv:1.11, yld:5.47 },
+    { t:"PHG",    name:"Patrangsit Healthcare Group",         price:10.20,  prevClose:10.20,  pe:13.08, pbv:1.46, yld:6.86 },
+    { t:"PR9",    name:"Praram 9 Hospital PCL",               price:19.40,  prevClose:19.40,  pe:18.93, pbv:2.55, yld:2.59 },
+    { t:"PRINC",  name:"Principal Capital PCL",               price:1.70,   prevClose:1.70,   pe:7.48,  pbv:0.78, yld:0.70 },
+    { t:"RAM",    name:"Ramkhamhaeng Hospital PCL",           price:17.50,  prevClose:17.50,  pe:7.66,  pbv:0.93, yld:0.57 },
+    { t:"RJH",    name:"Rajthanee Hospital PCL",              price:15.10,  prevClose:15.10,  pe:11.81, pbv:1.95, yld:5.41 },
+    { t:"RPH",    name:"Ratchaphruek Hospital PCL",           price:4.86,   prevClose:4.86,   pe:16.90, pbv:1.49, yld:5.33 },
+    { t:"SAFE",   name:"Safe Fertility Group PCL",            price:5.30,   prevClose:5.30,   pe:12.74, pbv:0.98, yld:7.66 },
+    { t:"SKR",    name:"Sikarin PCL",                         price:7.85,   prevClose:7.85,   pe:25.65, pbv:2.04, yld:3.29 },
+    { t:"THG",    name:"Thonburi Healthcare Group PCL",       price:7.15,   prevClose:7.15,   pe:60.00, pbv:0.95, yld:1.94 },
+    { t:"TNH",    name:"Thai Nakarin Hospital PCL",           price:28.50,  prevClose:28.50,  pe:15.47, pbv:1.45, yld:2.11 },
+    { t:"TRP",    name:"Aesthetic Connect PCL",               price:3.94,   prevClose:3.94,   pe:15.38, pbv:0.83, yld:6.25 },
+    { t:"VIBHA",  name:"Vibhavadi Medical Center PCL",        price:1.35,   prevClose:1.35,   pe:9.00,  pbv:1.60, yld:4.44 },
+    { t:"VIH",    name:"Srivichaivejvivat PCL",               price:8.40,   prevClose:8.40,   pe:11.64, pbv:1.35, yld:4.73 },
+    { t:"WPH",    name:"Wattanapat Hospital Trang PCL",       price:6.25,   prevClose:6.25,   pe:13.23, pbv:2.19, yld:null },
+  ];
+
+  // หา "เมื่อวาน" แบบข้ามวันหยุดสุดสัปดาห์ (วันทำการก่อนหน้าล่าสุด)
+  function yesterdayLabel(){
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    if(d.getDay() === 0) d.setDate(d.getDate() - 2); // Sun -> Fri
+    if(d.getDay() === 6) d.setDate(d.getDate() - 1); // Sat -> Fri
+    return d.toLocaleDateString('th-TH', { day:'2-digit', month:'short' });
+  }
+  const YESTERDAY = yesterdayLabel();
+
+  const grid = document.getElementById('stockGrid');
+  const searchInput = document.getElementById('searchInput');
+  const sortSelect = document.getElementById('sortSelect');
+  const countNum = document.getElementById('countNum');
+
+  function fmt(v, digits=2){
+    return (v === null || v === undefined) ? '—' : v.toFixed(digits);
+  }
+
+  function cardHTML(s){
+    const yieldHTML = s.yld === null
+      ? `<span class="yield-pill dash">ไม่มีปันผล</span>`
+      : `<span class="yield-pill">ปันผล ${s.yld.toFixed(2)}%</span>`;
+
+    const delta = s.price - s.prevClose;
+    const deltaPct = s.prevClose ? (delta / s.prevClose) * 100 : 0;
+    const dir = delta > 0.001 ? 'up' : delta < -0.001 ? 'down' : 'flat';
+    const arrow = dir === 'up'
+      ? '<path d="M12 19V5M5 12l7-7 7 7"/>'
+      : dir === 'down'
+        ? '<path d="M12 5v14M19 12l-7 7-7-7"/>'
+        : '<path d="M5 12h14"/>';
+    const sign = delta > 0 ? '+' : '';
+
+    return `
+    <a class="card" href="hospital/${s.t}.html" data-ticker="${s.t}" data-name="${s.name}">
+      <div class="card-top">
+        <span class="ticker">${s.t}</span>
+        <span class="go-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+      <div class="full-name">${s.name}</div>
+      <div class="price-row">
+        <span class="price">${fmt(s.price)}</span>
+        <span class="price-unit">THB</span>
+      </div>
+      <div class="prev-row">
+        <span class="prev-label">เมื่อวาน (${YESTERDAY})</span>
+        <span class="prev-price">${fmt(s.prevClose)}</span>
+        <span class="prev-delta ${dir}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${arrow}</svg>
+          ${sign}${fmt(delta)} (${sign}${deltaPct.toFixed(2)}%)
+        </span>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><span class="stat-label">P/E</span><span class="stat-value">${fmt(s.pe)}</span></div>
+        <div class="stat"><span class="stat-label">P/BV</span><span class="stat-value">${fmt(s.pbv)}</span></div>
+        <div class="stat"><span class="stat-label">Yield</span><span class="stat-value">${s.yld === null ? '—' : s.yld.toFixed(2)+'%'}</span></div>
+      </div>
+      ${yieldHTML}
+    </a>`;
+  }
+
+  function render(){
+    const q = searchInput.value.trim().toLowerCase();
+    let list = stocks.filter(s => s.t.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
+
+    const sortMode = sortSelect.value;
+    if(sortMode === 'ticker') list.sort((a,b)=> a.t.localeCompare(b.t));
+    else if(sortMode === 'price-desc') list.sort((a,b)=> b.price - a.price);
+    else if(sortMode === 'price-asc') list.sort((a,b)=> a.price - b.price);
+    else if(sortMode === 'yield-desc') list.sort((a,b)=> (b.yld ?? -1) - (a.yld ?? -1));
+    else if(sortMode === 'pe-asc') list.sort((a,b)=> (a.pe ?? Infinity) - (b.pe ?? Infinity));
+
+    countNum.textContent = list.length;
+
+    grid.innerHTML = list.length
+      ? list.map(cardHTML).join('')
+      : `<div class="no-results"><strong>ไม่พบหุ้นที่ค้นหา</strong>ลองค้นหาด้วยชื่อย่ออื่น เช่น BH หรือ BDMS</div>`;
+  }
+
+  searchInput.addEventListener('input', render);
+  sortSelect.addEventListener('change', render);
+  render();
+</script>
+
+</body>
+</html>
