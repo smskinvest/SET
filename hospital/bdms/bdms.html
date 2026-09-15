@@ -79,6 +79,49 @@
   }
   .price-badge .price { font-size:2.2rem; font-weight:700; color:var(--gold-light); }
   .price-badge .price-label { font-size:0.8rem; opacity:0.7; margin-top:2px; }
+
+  /* ── QUARTER ARCHIVE NAV ── */
+  .quarter-nav {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 14px 18px;
+    max-width: 260px;
+    backdrop-filter: blur(8px);
+  }
+  .quarter-nav .qn-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    opacity: 0.65;
+    margin-bottom: 9px;
+  }
+  .quarter-grid { display:flex; flex-wrap:wrap; gap:6px; }
+  .q-pill {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.16);
+    transition: background 0.15s ease;
+    line-height: 1.5;
+  }
+  .q-pill:hover { background: rgba(255,255,255,0.24); }
+  .q-pill.current {
+    background: var(--gold);
+    color: var(--teal-deep);
+    border-color: var(--gold);
+    cursor: default;
+  }
+  .q-pill.disabled {
+    opacity: 0.32;
+    pointer-events: none;
+    cursor: default;
+  }
   .verdict-strip {
     display:flex; gap:12px; flex-wrap:wrap; margin-top:20px;
   }
@@ -382,6 +425,24 @@
       <div class="price-label">ราคาปิด 28 ส.ค. 69</div>
       <div style="margin-top:8px;font-size:0.82rem;opacity:0.8">P/E (TTM) ~20.2x | P/BV ~3.0x</div>
       <div style="font-size:0.8rem;color:var(--gold-light);margin-top:4px">Yield ~5.1%</div>
+    </div>
+
+    <div class="quarter-nav">
+      <div class="qn-label">📅 ข้อมูลรายไตรมาส</div>
+      <div class="quarter-grid">
+        <a class="q-pill" href="bdms2026q1.html">Q1/26</a>
+        <span class="q-pill current" title="กำลังดูหน้านี้อยู่">Q2/26</span>
+        <a class="q-pill disabled" href="bdms2026q3.html" title="รอข้อมูลอัปเดต">Q3/26</a>
+        <a class="q-pill disabled" href="bdms2026q4.html" title="รอข้อมูลอัปเดต">Q4/26</a>
+        <a class="q-pill disabled" href="bdms2027q1.html" title="รอข้อมูลอัปเดต">Q1/27</a>
+        <a class="q-pill disabled" href="bdms2027q2.html" title="รอข้อมูลอัปเดต">Q2/27</a>
+        <a class="q-pill disabled" href="bdms2027q3.html" title="รอข้อมูลอัปเดต">Q3/27</a>
+        <a class="q-pill disabled" href="bdms2027q4.html" title="รอข้อมูลอัปเดต">Q4/27</a>
+        <a class="q-pill disabled" href="bdms2028q1.html" title="รอข้อมูลอัปเดต">Q1/28</a>
+        <a class="q-pill disabled" href="bdms2028q2.html" title="รอข้อมูลอัปเดต">Q2/28</a>
+        <a class="q-pill disabled" href="bdms2028q3.html" title="รอข้อมูลอัปเดต">Q3/28</a>
+        <a class="q-pill disabled" href="bdms2028q4.html" title="รอข้อมูลอัปเดต">Q4/28</a>
+      </div>
     </div>
   </div>
 </header>
