@@ -6,20 +6,7 @@
 <title>BDMS — วิเคราะห์หุ้นเชิงลึก | ฉบับสมบูรณ์ 2569</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-   <div class="backnav-group">
-  <a class="backnav-card" href="index.html">
-    <span class="bn-icon">🏠</span> กลับหน้า SET (รวมหุ้น)
-  </a>
-  <a class="backnav-card" href="https://smskinvest.github.io/SET/hospital/index.html">
-    <span class="bn-icon">🏥</span> กลับหน้ากลุ่มโรงพยาบาล
-  </a>
-</div>
 <style>
-  
- 
-  
-
-  
 :root {
   --navy:#0d2a4e; --blue:#1565c0; --blue2:#1976d2; --teal:#00838f;
   --green:#2e7d32; --gbg:#e8f5e9; --amber:#e65100; --abg:#fff3e0;
@@ -30,30 +17,12 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Noto Sans Thai','Sarabun',sans-serif;background:var(--bg);color:var(--text2);font-size:14px;line-height:1.7}
-  /* ── BACK-NAV CARDS ── */
-.backnav-group { display:flex; flex-direction:column; gap:8px; }
-.backnav-card {
-  display:flex; align-items:center; gap:8px;
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.22);
-  border-radius: 12px;
-  padding: 9px 16px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: rgba(255,255,255,0.92);
-  text-decoration: none;
-  backdrop-filter: blur(8px);
-  transition: background 0.15s ease, transform 0.15s ease;
-  min-width: 190px;
-}
-.backnav-card:hover { background: rgba(255,255,255,0.22); transform: translateX(-2px); }
-.backnav-card .bn-icon { font-size:1rem; }
 
 /* HERO */
 .hero{background:linear-gradient(135deg,#0d2a4e 0%,#1565c0 55%,#00838f 100%);color:#fff;padding:36px 28px 28px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.05)}
 .hero::after{content:'';position:absolute;bottom:-70px;left:35%;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.04)}
-.hero-top{display:flex;align-items:center;gap:18px;margin-bottom:22px;position:relative;z-index:1}
+.hero-top{display:flex;align-items:center;gap:18px;margin-bottom:22px;position:relative;z-index:1;flex-wrap:wrap}
 .ticker{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:10px 20px;border-radius:8px;font-size:28px;font-weight:800;letter-spacing:2px;backdrop-filter:blur(4px)}
 .hero-title{font-size:19px;font-weight:700;opacity:.95;margin-bottom:3px}
 .hero-sub{font-size:12px;opacity:.72}
@@ -62,6 +31,25 @@ body{font-family:'Noto Sans Thai','Sarabun',sans-serif;background:var(--bg);colo
 .hs-l{font-size:10px;opacity:.72;margin-bottom:2px}
 .hs-v{font-size:20px;font-weight:800}
 .hs-s{font-size:10px;opacity:.68}
+
+/* BACK-NAV CARDS */
+.backnav-group { display:flex; flex-direction:column; gap:8px; margin-left:auto; position:relative; z-index:1; }
+.backnav-card {
+  display:flex; align-items:center; gap:8px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px;
+  padding: 8px 15px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+  transition: background 0.15s ease, transform 0.15s ease;
+  min-width: 190px;
+}
+.backnav-card:hover { background: rgba(255,255,255,0.24); transform: translateX(-2px); }
+.backnav-card .bn-icon { font-size:13px; }
 
 /* QUARTER ARCHIVE NAV */
 .quarter-nav {
@@ -240,6 +228,15 @@ input[type=range]{flex:1;height:5px;accent-color:var(--blue2);cursor:pointer}
     <div>
       <div class="hero-title">บริษัท กรุงเทพดุสิตเวชการ จำกัด (มหาชน)</div>
       <div class="hero-sub">Bangkok Dusit Medical Services PCL · SET:BDMS · Health Care Services · ราคา ณ 1 เม.ย. 69</div>
+    </div>
+
+    <div class="backnav-group">
+      <a class="backnav-card" href="index.html">
+        <span class="bn-icon">🏠</span> กลับหน้า SET (รวมหุ้น)
+      </a>
+      <a class="backnav-card" href="https://smskinvest.github.io/SET/hospital/index.html">
+        <span class="bn-icon">🏥</span> กลับหน้ากลุ่มโรงพยาบาล
+      </a>
     </div>
   </div>
   <div class="hs-grid">
