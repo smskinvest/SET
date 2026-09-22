@@ -80,6 +80,25 @@
   .price-badge .price { font-size:2.2rem; font-weight:700; color:var(--gold-light); }
   .price-badge .price-label { font-size:0.8rem; opacity:0.7; margin-top:2px; }
 
+  /* ── BACK-NAV CARDS ── */
+  .backnav-group { display:flex; flex-direction:column; gap:8px; }
+  .backnav-card {
+    display:flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 12px;
+    padding: 9px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.92);
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: background 0.15s ease, transform 0.15s ease;
+    min-width: 190px;
+  }
+  .backnav-card:hover { background: rgba(255,255,255,0.22); transform: translateX(-2px); }
+  .backnav-card .bn-icon { font-size:1rem; }
+
   /* ── QUARTER ARCHIVE NAV ── */
   .quarter-nav {
     background: rgba(255,255,255,0.08);
@@ -425,6 +444,15 @@
       <div class="price-label">ราคาปิด 28 ส.ค. 69</div>
       <div style="margin-top:8px;font-size:0.82rem;opacity:0.8">P/E (TTM) ~20.2x | P/BV ~3.0x</div>
       <div style="font-size:0.8rem;color:var(--gold-light);margin-top:4px">Yield ~5.1%</div>
+    </div>
+
+    <div class="backnav-group">
+      <a class="backnav-card" href="index.html">
+        <span class="bn-icon">🏠</span> กลับหน้า SET (รวมหุ้น)
+      </a>
+      <a class="backnav-card" href="https://smskinvest.github.io/SET/hospital/index.html">
+        <span class="bn-icon">🏥</span> กลับหน้ากลุ่มโรงพยาบาล
+      </a>
     </div>
 
     <div class="quarter-nav">
